@@ -1,0 +1,603 @@
+@import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css);
+/* @import '~bootstrap/scss/bootstrap'; */
+body {
+    background-color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.01em;
+    color: #39464e;
+}
+
+body.preload * {
+    animation-duration: 0s !important;
+    -webkit-animation-duration: 0s !important;
+    transition: background-color 0s, opacity 0s, color 0s, width 0s, height 0s, padding 0s, margin 0s !important;
+}
+
+
+.link-header {
+    font-size: 15px;
+    transition: 0.4s;
+    color: rgba(0, 0, 0, 0.5);
+    position: relative;
+    text-decoration: none;
+    margin-right: 5px;
+}
+
+.link-header:hover {
+    transition: 0.4s;
+    color: rgba(0, 0, 0, 1);
+}
+
+
+/* Navbar */
+.navbar-default {
+    background-color: #FFF;
+    margin-left: 200px;
+}
+.navbar-default .link-nav {
+    transition: 0.4s;
+    color: rgba(0, 0, 0, 0.5);
+}
+.navbar-default .link-nav:hover {
+    transition: 0.4s;
+    color: black;
+}
+
+.brand-visibility {
+    display: none;
+}
+
+.active-lang {
+    color: red;
+}
+
+.navbar-toggle {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.link-visibility {
+    display: none !important;
+}
+
+
+
+ul.nv,
+ul.ns {
+    position: relative;
+    padding: 0;
+    list-style: none;
+}
+
+.nv {
+    /*ns: nav-sub*/
+}
+.nv li {
+    display: block;
+    position: relative;
+}
+.nv li::before {
+    clear: both;
+    content: "";
+    display: table;
+}
+.nv li a {
+    color: #444;
+    padding: 10px 25px;
+    display: block;
+}
+.nv li a .ic {
+    font-size: 16px;
+    margin-right: 5px;
+    font-weight: 300;
+    display: inline-block;
+}
+.nv .ns li a {
+    padding: 10px 50px;
+}
+
+/*main content wrapper*/
+.mcw {
+    margin-left: 200px;
+    position: relative;
+    min-height: 100%;
+    /*content view*/
+    /*  .cv {} */
+}
+
+/*globals*/
+a,
+a:focus,
+a:hover {
+    text-decoration: none;
+    transition: 0.4s !important;
+}
+
+button,
+button:active,
+button:focus,
+button:hover {
+    transition: 0.4s !important;
+    outline: none !important;
+}
+
+.inbox .container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+}
+.inbox ul,
+.inbox li {
+    margin: 0;
+    padding: 0;
+}
+.inbox ul li {
+    list-style: none;
+}
+.inbox ul li a {
+    display: block;
+    padding: 10px 20px;
+}
+
+.msb,
+.mnb {
+    -webkit-animation: slidein 300ms forwards;
+    animation: slidein 300ms forwards;
+    transform-style: preserve-3d;
+}
+
+.mcw {
+    -webkit-animation: bodyslidein 300ms forwards;
+    animation: bodyslidein 300ms forwards;
+    transform-style: preserve-3d;
+}
+
+body.msb-x .mcw,
+body.msb-x .mnb {
+    margin-left: 0;
+    -webkit-animation: bodyslideout 300ms forwards;
+    animation: bodyslideout 300ms forwards;
+    transform-style: preserve-3d;
+}
+body.msb-x .msb {
+    -webkit-animation: slideout 300ms forwards;
+    animation: slideout 300ms forwards;
+    transform-style: preserve-3d;
+}
+
+/* Slide in animation */
+@-webkit-keyframes slidein {
+    0% {
+        left: -200px;
+    }
+    100% {
+        left: 0;
+    }
+}
+@keyframes slidein {
+    0% {
+        left: -200px;
+    }
+    100% {
+        left: 0;
+    }
+}
+@-webkit-keyframes slideout {
+    0% {
+        left: 0;
+    }
+    100% {
+        left: -200px;
+    }
+}
+@keyframes slideout {
+    0% {
+        left: 0;
+    }
+    100% {
+        left: -200px;
+    }
+}
+@-webkit-keyframes bodyslidein {
+    0% {
+        left: 0;
+    }
+    100% {
+        left: 0;
+    }
+}
+@keyframes bodyslidein {
+    0% {
+        margin-left: 0;
+    }
+    100% {
+        margin-left: 200px;
+    }
+}
+@-webkit-keyframes bodyslideout {
+    0% {
+        margin-left: 200px;
+    }
+    100% {
+        margin-left: 0;
+    }
+}
+@keyframes bodyslideout {
+    0% {
+        margin-left: 200px;
+    }
+    100% {
+        margin-left: 0;
+    }
+}
+/* Tables */
+table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+}
+
+table tr {
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    padding: 0.35em;
+}
+
+table th,
+table td {
+    padding: 0.625em;
+    text-align: center;
+    word-wrap: break-word;
+    width: auto;
+}
+table th p,
+table td p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+table th {
+    font-size: 0.85em;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.table-title {
+    text-align: left;
+}
+
+/* Task Page */
+.icons {
+    font-size: 20px;
+}
+
+.icons-complete {
+    color: green;
+}
+
+.icons-delete {
+    color: red;
+}
+
+.button-action {
+    background: transparent;
+    border: none !important;
+    font-size: 0;
+    margin-right: 5px;
+}
+
+.wrapper-tasks {
+    width: 100%;
+}
+.wrapper-tasks .wrapper-button {
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+.selected-wrapper {
+    display: flex;
+    margin-bottom: 15px;
+}
+.selected-wrapper .form-control:not(:last-child) {
+    margin-right: 10px;
+}
+
+/* Create Page */
+.pull-right {
+    margin-bottom: 10px;
+}
+
+.btn-create {
+    margin-top: 10px;
+    outline: none;
+}
+
+.main-container {
+    width: 100%;
+}
+
+.cards-center {
+    display: flex;
+    justify-content: center;
+}
+.cards-center .cards-wrapper {
+    width: 400px;
+    margin-top: 50px;
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    border-color: #ddd;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.cards-center .cards-wrapper .cards-header {
+    size: 10px;
+    border-bottom: 1px solid #ddd;
+    padding: 8px;
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+.cards-center .cards-create-note {
+    width: 1000px;
+}
+
+.action-wp {
+    display: flex;
+    justify-content: center;
+}
+
+.completed-table {
+    margin-top: 20px;
+}
+
+/* Show Page */
+.form-group-show {
+    margin-top: 55px;
+}
+
+.wrapper-title {
+    margin-bottom: 20px;
+}
+
+.wrapper-content,
+.wrapper-title {
+    word-wrap: break-word;
+}
+
+.wrapper-content {
+    border-bottom: 1px solid #ddd;
+}
+
+.file-link {
+    color: black;
+}
+
+/* Edit Page */
+.add-create-field,
+.add-edit-field {
+    margin-bottom: 10px;
+}
+
+.add-file {
+    margin-bottom: 14px;
+    display: revert !important;
+}
+
+.delete {
+    margin-left: 5px;
+}
+
+.wrapper-not-alert {
+    justify-content: center;
+    display: flex;
+    margin-top: 100px;
+    font-size: 30px;
+}
+
+.wrapper-image-main {
+    width: 150px;
+    margin-bottom: 10px;
+}
+
+.image-main img {
+    width: 100%;
+}
+
+.title-upload-image,
+.title-upload-file {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.wrapper-img {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.wrapper-img .wrapper-image-show {
+    width: 200px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+.wrapper-img .wrapper-image-show .image-show img {
+    width: 100%;
+    height: 200px;
+}
+.wrapper-img .wrapper-image-edit {
+    width: 200px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+.wrapper-img .wrapper-image-edit .image-edit img {
+    width: 100%;
+    height: 200px;
+}
+
+.wrapper-file .wrapper-file-show,
+.wrapper-file .wrapper-file-edit {
+    width: 200px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+.wrapper-file .file-edit,
+.wrapper-file .file-show {
+    display: flex;
+    word-break: break-all;
+}
+
+.title-upload-image,
+.title-upload-file {
+    margin-top: 30px;
+}
+
+.btn-edit-delete {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.name-file {
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 17px;
+}
+
+.fa-download {
+    font-size: 20px;
+}
+
+/* Adaptive */
+@media screen and (min-width: 1200px) {
+    .table-container {
+        width: 950px !important;
+    }
+}
+@media screen and (min-width: 992) {
+    .table-container {
+        width: 750px !important;
+    }
+}
+@media screen and (min-width: 767px) {
+    .table-container {
+        width: 550px;
+    }
+}
+@media screen and (max-width: 767px) {
+    .navbar-header {
+        display: flex;
+        flex-direction: row-reverse;
+    }
+    .navbar-header .brand-visibility {
+        display: inline-block;
+        margin-right: auto;
+    }
+
+    .cards-create-note {
+        width: 100% !important;
+    }
+
+    .link-visibility {
+        display: list-item !important;
+    }
+
+    .nav-adaptive {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .action-wp {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .delete {
+        margin-left: 0px;
+        margin-bottom: 10px;
+    }
+
+    .wrapper-img {
+        display: grid;
+        justify-content: center;
+    }
+
+    .wrapper-image-show {
+        margin-bottom: 15px;
+    }
+
+    .wrapper-image-edit {
+        margin-bottom: 15px;
+    }
+
+    .wrapper-file {
+        display: grid;
+        justify-content: center;
+    }
+
+    #msbo {
+        display: none;
+    }
+
+    .msb {
+        display: none;
+    }
+
+    body .mcw,
+    body .mnb {
+        margin-left: 0;
+        -webkit-animation: bodyslideout 300ms forwards;
+        animation: bodyslideout 300ms forwards;
+        transform-style: preserve-3d;
+    }
+
+    table {
+        border: 0;
+    }
+
+    table thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+
+    table tr {
+        border-bottom: 3px solid #ddd;
+        display: block;
+        margin-bottom: 0.625em;
+    }
+
+    table td,
+    .table-title {
+        border-bottom: 1px solid #ddd;
+        display: block;
+        font-size: 15px;
+        text-align: right;
+        word-wrap: break-word;
+    }
+
+    table td::before {
+        /*
+        * aria-label has no advantage, it won't be read inside a table
+        content: attr(aria-label);
+        */
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-right: 15px;
+    }
+
+    table td:last-child {
+        border-bottom: 0;
+    }
+}
