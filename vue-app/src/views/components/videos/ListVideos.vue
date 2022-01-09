@@ -1,67 +1,84 @@
 <template>
-    <div>
-        <div style="margin-top: 10px" class="row row-cols-1 row-cols-md-3 g-4">
-            <v-card style="margin-bottom: 10px" class="mx-auto" max-width="300" v-for="video in videos.data"
-                :key="video.id">
-                <iframe
-                    :src="`https://player.vimeo.com/video/${video.video_id}?h=791afcfe42&amp;title=0&amp;byline=0&amp;portrait=0&amp;speed=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=234456`"
-                    max-width="100%" frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
-                    :title="`${video.title}`"></iframe>
-
-                <v-card-title>
-                    {{ video.title }}
-                </v-card-title>
-
-                <v-card-actions>
-                    <router-link :to="{ name: 'ShowVideo', params: { id: video.id }}"
-                        style="text-decoration: none; color: inherit; font-size: 20px;"
-                        class="button-action flex-column">
-                        <v-btn color="orange lighten-2" text>
-                            Show Video
-                        </v-btn>
-                    </router-link>
-
-                    <v-spacer></v-spacer>
-                </v-card-actions>
-            </v-card>
-        </div>
-        <div class="text-center">
-            <v-pagination v-model="pagination.current" :length="pagination.total" @input="getVideos" circle>
-            </v-pagination>
-        </div>
+  <div>
+    <div class="row row-cols-1 row-cols-md-3 g-4 wrapper-video">
+      <v-card class="d-flex flex-column card-video" max-width="250" v-for="video in videos.data"
+              :key="video.id">
+        <iframe
+            :src="`https://player.vimeo.com/video/${video.video_id}?h=791afcfe42&amp;title=0&amp;byline=0&amp;portrait=0&amp;speed=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=234456`"
+            max-width="100%" frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
+            :title="`${video.title}`"></iframe>
+        <v-card-title>
+          {{ video.title }}
+        </v-card-title>
+        <v-spacer></v-spacer>
+        <v-card-actions>
+          <router-link :to="{ name: 'ShowVideo', params: { id: video.id }}"
+                       class="button-action flex-column video-show-btn">
+            <v-btn color="orange lighten-2" text>
+              Show Video
+            </v-btn>
+          </router-link>
+        </v-card-actions>
+      </v-card>
     </div>
+    <div class="text-center wrapper-paginate">
+      <v-pagination v-model="pagination.current" :length="pagination.total" @input="getVideos" circle></v-pagination>
+    </div>
+  </div>
 </template>
 
 <script>
-  import Video from "@/service/Video";
+import VideoService from "@/service/VideoService";
 
-  export default ({
-    data() {
-      return {
-        videos: {},
-        pagination: {
-          current: 1,
-          total: 0
-        }
+export default ({
+  data() {
+    return {
+      videos: {},
+      pagination: {
+        current: 1,
+        total: 0
       }
-    },
-    created() {
-      this.getVideos()
-    },
-    methods: {
-      getVideos(current) {
-        Video.video(current).then(response => {
-          this.videos = response.data
-          this.pagination.current = response.data.current_page
-          this.pagination.total = response.data.last_page
-        }).catch(e => {
-          console.log(e)
-        })
-      },
     }
-  })
+  },
+  created() {
+    this.getVideos()
+  },
+  methods: {
+    getVideos(current) {
+      VideoService.video(current).then(response => {
+        this.videos = response.data
+        this.pagination.current = response.data.current_page
+        this.pagination.total = response.data.last_page
+      }).catch(e => {
+        console.log(e)
+      })
+    },
+  }
+})
 </script>
 
 <style scoped lang="scss">
+
+.card-video {
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
+
+.video-show-btn {
+  text-decoration: none;
+  color: inherit;
+  font-size: 20px;
+}
+
+.wrapper-video {
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+  margin-top: 10px
+}
+
+.wrapper-paginate {
+  margin-top: 15px;
+}
 
 </style>

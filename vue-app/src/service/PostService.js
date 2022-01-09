@@ -1,8 +1,8 @@
 import Api from "./Api";
 
 const PostService = {
-    post(page) {
-        return Api().get('/posts?page=' + page);
+    list(page) {
+        return Api().get('/posts' + page);
     },
 
     show(id) {

@@ -3,7 +3,7 @@
     <v-app-bar app color="primary" dark elevation="0">
       <v-app-bar-nav-icon @click.stop="sidebarMenu = !sidebarMenu"></v-app-bar-nav-icon>
       <v-spacer></v-spacer>
-      <v-btn @click="toggleTheme" color="primary" class="mr-2">{{buttonText}}</v-btn>
+      <v-btn @click="toggleTheme" color="primary" class="mr-2">{{ buttonText }}</v-btn>
       <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-icon v-bind="attrs" v-on="on">mdi-account</v-icon>
@@ -33,7 +33,7 @@
       </v-menu>
     </v-app-bar>
     <v-navigation-drawer v-model="sidebarMenu" app floating :permanent="sidebarMenu" :mini-variant.sync="mini"
-      v-if="isLoggedIn">
+                         v-if="isLoggedIn">
       <v-list dense color="primary" dark>
         <v-list-item>
           <v-list-item-action>
@@ -41,7 +41,7 @@
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>
-              <h3 class="font-weight-thin">Vuetify Dashboard</h3>
+              <h3 class="font-weight-thin">Vuetify Admin</h3>
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -84,79 +84,85 @@
 </template>
 
 <script>
-  import User from "../service/User";
-  export default {
-    data() {
-      return {
-        user: null,
-        isLoggedIn: false,
-        sidebarMenu: true,
-        toggleMini: false,
-        items: [{
-            title: "Home",
-            href: "/",
-            icon: "mdi-home-outline"
-          },
-          {
-            title: "Dashboard",
-            href: "/dashboard",
-            icon: "mdi-shield-account"
-          },
-          {
-            title: "Posts",
-            href: "/posts",
-            icon: "mdi-note"
-          },
-          {
-            title: "Videos",
-            href: "/videos",
-            icon: "mdi-video"
-          },
-          {
-            title: "Settings",
-            href: "/settings",
-            icon: "mdi-settings"
-          },
-        ],
-      };
-    },
-    computed: {
-      mini: {
-        get() {
-          return (this.$vuetify.breakpoint.smAndDown) || this.toggleMini
-        },
-        set() {
-          //this.toggleMini = value;
-        },
+import User from "../service/UserService";
+
+export default {
+  data() {
+    return {
+      user: null,
+      isLoggedIn: false,
+      sidebarMenu: true,
+      toggleMini: false,
+      items: [{
+        title: "Home",
+        href: "/",
+        icon: "mdi-home-outline"
       },
-      buttonText() {
-        return !this.$vuetify.theme.dark ? 'Go Dark' : 'Go Light'
-      }
-    },
-    mounted() {
-      this.$root.$on("login", () => {
-        this.isLoggedIn = true;
-      });
-      this.isLoggedIn = !!localStorage.getItem("token");
-      if (this.isLoggedIn) {
-        User.auth().then(response => {
-          this.user = response.data;
-        });
-      }
-    },
-    methods: {
-      logout() {
-        User.logout().then(() => {
-          localStorage.removeItem("token");
-          this.isLoggedIn = false;
-          this.$router.push({
-            name: "Login"
-          });
-        });
+        {
+          title: "Dashboard",
+          href: "/dashboard",
+          icon: "mdi-shield-account"
+        },
+        {
+          title: "Posts",
+          href: "/posts",
+          icon: "mdi-note"
+        },
+        {
+          title: "Videos",
+          href: "/videos",
+          icon: "mdi-video"
+        },
+        {
+          title: "Settings",
+          href: "/settings",
+          icon: "mdi-settings"
+        },
+      ],
+    };
+  },
+  computed: {
+    mini: {
+      get() {
+        return (this.$vuetify.breakpoint.smAndDown) || this.toggleMini
       },
-      toggleTheme() {
-        this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
-      }
+      set() {
+        //this.toggleMini = value;
+      },
+    },
+    buttonText() {
+      return !this.$vuetify.theme.dark ? 'Go Dark' : 'Go Light'
     }
-  };
+  },
+  mounted() {
+    this.$root.$on("login", () => {
+      this.isLoggedIn = true;
+    });
+    this.isLoggedIn = !!localStorage.getItem("token");
+    if (this.isLoggedIn) {
+      User.auth().then(response => {
+        this.user = response.data;
+      });
+    }
+    const theme = localStorage.getItem("dark");
+    if (theme) {
+      this.$vuetify.theme.dark = theme === "true";
+    }
+  },
+  methods: {
+    logout() {
+      User.logout().then(() => {
+        localStorage.removeItem("token");
+        this.isLoggedIn = false;
+        this.$router.push({
+          name: "Login"
+        });
+      });
+    },
+    toggleTheme() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+      localStorage.setItem("dark", this.$vuetify.theme.dark.toString());
+    }
+  }
+};
 </script>

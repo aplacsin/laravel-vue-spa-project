@@ -7,7 +7,7 @@ const VideoService = {
 
     show(id) {
         return Api().get('/videos/show/' + id);
-    },    
+    },
 };
 
 export default VideoService;

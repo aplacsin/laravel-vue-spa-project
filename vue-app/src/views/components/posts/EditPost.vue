@@ -22,30 +22,30 @@
 </template>
 
 <script>
-  import Post from "@/service/Post";
+import PostService from "@/service/PostService";
 
-  export default {
-    data() {
-      return {
-        post: {},
-        message: ""
-      }
+export default {
+  data() {
+    return {
+      post: {},
+      message: ""
+    }
+  },
+  mounted() {
+    this.getEditPost(this.$route.params.id)
+  },
+  methods: {
+    getEditPost(id) {
+      PostService.edit(id).then(response => {
+        this.post = response.data
+      });
     },
-    mounted() {
-      this.getEditPost(this.$route.params.id)
-    },
-    methods: {
-      getEditPost(id) {
-        Post.edit(id).then(response => {
-          this.post = response.data
-        });
-      },
-      updatePost(id) {
-        const data = {
-          title: this.post.title,
-          description: this.post.description
-        };
-        Post.update(id, data)
+    updatePost(id) {
+      const data = {
+        title: this.post.title,
+        description: this.post.description
+      };
+      PostService.update(id, data)
           .then(response => {
             console.log(response.data);
             this.message = 'The post was updated successfully!';
@@ -53,8 +53,8 @@
           .catch(e => {
             console.log(e);
           });
-      },
-    }
-
+    },
   }
+
+}
 </script>

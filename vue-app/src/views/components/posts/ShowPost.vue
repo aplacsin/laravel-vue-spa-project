@@ -13,52 +13,106 @@
         </v-card-text>
       </v-responsive>
       <v-divider></v-divider>
-      <Comments :id="post.id" :type="post.type" />
-      <FetchComments :comments="post.comments" />
+      <div class="create-comment">
+        <div class="comment-title-text">Leave a comment</div>
+        <v-divider></v-divider>
+        <template>
+          <v-container fluid>
+            <v-textarea clearable clear-icon="mdi-close-circle" label="Your comment"
+                        v-model="comments.content"></v-textarea>
+          </v-container>
+          <input hidden v-model="post.id"/>
+          <input hidden v-model="post.type"/>
+          <v-alert v-if="message" dense text type="success">{{ message }}</v-alert>
+          <v-alert dense text type="error" v-if="errors.content">
+            {{ errors.content[0] }}
+          </v-alert>
+          <v-btn class="comment-btn" depressed @click="storeComment()">
+            Add comment
+          </v-btn>
+        </template>
+        <br><br>
+        <v-divider></v-divider>
+        <div class="comment-title-text">Display comment</div>
+        <FetchComments :comments="post.comments"/>
+      </div>
     </v-card>
   </div>
 </template>
 
 <script>
-  import Post from "@/service/Post";
-  import FetchComments from '../comments/FetchComments.vue';
-  import Comments from '../comments/StoreComments.vue'
+import PostService from "@/service/PostService";
+import FetchComments from '../comments/FetchComments.vue';
+import CommentService from "@/service/CommentService";
 
-  export default {
-    components: {
-      FetchComments,
-      Comments
+export default {
+  components: {
+    FetchComments
+  },
+  data() {
+    return {
+      post: [],
+      message: "",
+      errors: [],
+      comments: [],
+    }
+  },
+  mounted() {
+    this.getPost(this.$route.params.id)
+  },
+  methods: {
+    getPost(id) {
+      PostService.show(id).then(response => {
+        this.post = response.data
+      });
     },
-    data() {
-      return {
-        post: [],
-      }
+    domDecoder(str) {
+      const parser = new DOMParser()
+      const dom = parser.parseFromString('<!doctype html><body>' + str, 'text/html')
+      return dom.body.textContent
     },
-    mounted() {
-      this.getPost(this.$route.params.id)
-    },
-    methods: {
-      getPost(id) {
-        Post.show(id).then(response => {
-          this.post = response.data
-        });
-      },
-      domDecoder(str) {
-        let parser = new DOMParser()
-        let dom = parser.parseFromString('<!doctype html><body>' + str, 'text/html')
-        return dom.body.textContent
-      },
+    storeComment() {
+      const data = {
+        id: this.post.id,
+        type: this.post.type,
+        content: this.comments.content,
+      };
+      CommentService.store(data).then(response => {
+        console.log(response.data)
+        this.message = 'The comment was stored successfully!'
+        this.comments.content = ''
+        this.getPost(this.$route.params.id)
+      }).catch(e => {
+        console.log(e);
+        if (e.response.status === 422) {
+          this.errors = e.response.data.errors
+        }
+      });
     }
   }
+}
 </script>
 
 <style scoped lang="scss">
-  .link-btn {
-    text-decoration: none;
-    color: inherit;
-  }
+.link-btn {
+  text-decoration: none;
+  color: inherit;
+}
 
-  .back-btn {
-    margin-bottom: 10px;
-  }
+.back-btn {
+  margin-bottom: 10px;
+}
+
+.comment-title-text {
+  font-size: 25px;
+  margin-left: 10px;
+}
+
+.comment-btn {
+  margin-left: 10px;
+}
+
+.comment-btn v-btn {
+  margin-bottom: 10px;
+}
 </style>

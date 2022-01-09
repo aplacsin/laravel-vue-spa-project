@@ -1,11 +1,12 @@
 <template>
   <div id="app">
-    <Navigation />
+    <Navigation/>
   </div>
 </template>
 
 <script>
 import Navigation from "@/components/Navigation.vue";
+
 export default {
   components: {
     Navigation
@@ -14,5 +15,5 @@ export default {
 </script>
 
 <style lang="scss">
-  @import '@/assets/styles/main.scss';
+
 </style>

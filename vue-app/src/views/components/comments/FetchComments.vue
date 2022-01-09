@@ -6,13 +6,13 @@
         <div><b>{{ comment.user.name }}</b> - {{ new Date(comment.created_at).toLocaleString('ru-ru') }}</div>
       </div>
       <div class="wrapper-content">
-        <div> {{ comment.content }} </div>
+        <div> {{ comment.content }}</div>
       </div>
       <!--      <div class="reply">
-        <button class="reply-button">
-          Reply
-        </button>
-      </div>-->
+              <v-btn class="comment-btn" depressed>
+              Reply
+            </v-btn>
+            </div>-->
     </div>
   </div>
   <div v-else>
@@ -23,21 +23,24 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      comments: []
-    },
-  }
+export default {
+  props: {
+    comments: []
+  },
+}
 </script>
 
 <style scoped lang="scss">
+.user-name-comment {
+  margin-left: 15px;
+}
 
-  .user-name-comment {
-    margin-left: 15px
-  }
+.wrapper-content {
+  margin-left: 15px;
+}
 
-  .wrapper-content {
-    margin-left: 15px
-  }
-
+.comment-btn {
+  margin-bottom: 5px;
+  margin-left: 15px;
+}
 </style>
