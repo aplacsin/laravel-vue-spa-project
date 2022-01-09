@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $parent_id
  * @property string $content
  */
-
 class Comment extends Model
 {
     use HasFactory;

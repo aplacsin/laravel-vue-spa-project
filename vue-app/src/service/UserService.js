@@ -1,6 +1,6 @@
 import Api from "./Api";
 
-export default {
+const AuthUserService = {
     register(form) {
         return Api().post("/register", form);
     },
@@ -17,3 +17,5 @@ export default {
         return Api().get("/user");
     }
 };
+
+export default AuthUserService;

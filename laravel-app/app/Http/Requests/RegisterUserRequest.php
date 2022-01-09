@@ -4,8 +4,17 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @property string $name
+ * @property string $email
+ * @property string $password
+ */
 class RegisterUserRequest extends FormRequest
 {
+    /**
+     * @var mixed
+     */
+
     /**
      * Determine if the user is authorized to make this request.
      *

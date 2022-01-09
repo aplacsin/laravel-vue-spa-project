@@ -1,6 +1,6 @@
 import Api from "./Api";
 
-export default {
+const PostService = {
     post(page) {
         return Api().get('/posts?page=' + page);
     },
@@ -21,3 +21,5 @@ export default {
         return Api().delete('/posts/destroy/' + id);
     },
 };
+
+export default PostService;

@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @property string $guid
  * @property string $type
  */
-
 class Post extends Model
 {
     use HasFactory;

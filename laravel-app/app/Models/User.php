@@ -13,7 +13,6 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $email
  * @property string $password
  */
-
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;

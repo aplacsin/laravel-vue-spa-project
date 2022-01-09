@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use App\Services\VideoService;
+use Illuminate\Http\JsonResponse;
 
 class VideoController extends Controller
 {
@@ -13,14 +15,14 @@ class VideoController extends Controller
         $this->videoService = $videoService;
     }
 
-    public function index()
+    public function list(): JsonResponse
     {
         $videos = $this->videoService->getVideoAll();
 
         return response()->json($videos, 200);
     }
 
-    public function show(int $id)
+    public function show(int $id): JsonResponse
     {
         $video = $this->videoService->getById($id);
 

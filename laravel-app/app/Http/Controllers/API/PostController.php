@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use App\DTO\PostDTO;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
-use App\Policy\PostPolicy;
 use App\Models\User;
+use App\Policy\PostPolicy;
 use App\Services\PostService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
-use voku\helper\ASCII;
 
 class PostController extends Controller
 {

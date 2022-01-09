@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Post;
 use App\Models\Video;
+use App\Models\Comment;
 
 class CommentRepository implements CommentRepositoryInterface
 {
@@ -12,17 +13,13 @@ class CommentRepository implements CommentRepositoryInterface
         return $item->comments()->save($comment);
     }
 
-    public function findByPostId(int $id)
+    public function findById(int $id)
     {
-        return Post::query()
-            ->where('id', $id)
-            ->first();
-    }
-
-    public function findByVideoId(int $id)
-    {
-        return Video::query()
-            ->where('id', $id)
-            ->first();
+        return Comment::query()
+            ->where('commentable_id', $id)
+            ->where('commentable_id', $id)
+            ->with('replies')
+            ->with('user')
+            ->get();
     }
 }

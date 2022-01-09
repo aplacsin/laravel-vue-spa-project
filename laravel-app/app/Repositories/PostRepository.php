@@ -9,10 +9,6 @@ class PostRepository implements PostRepositoryInterface
 {
     public function save(Post $post): bool
     {
-        if ($post == null) {
-            $post->exists = true;
-        }
-
         return $post->save();
     }
 

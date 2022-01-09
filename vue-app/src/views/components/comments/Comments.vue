@@ -4,7 +4,7 @@
     <v-divider></v-divider>
     <template>
       <v-container fluid>
-        <v-textarea clearable clear-icon="mdi-close-circle" label="Your comment" v-model="comment.content"></v-textarea>
+        <v-textarea clearable clear-icon="mdi-close-circle" label="Your comment" v-model="comments.content"></v-textarea>
       </v-container>
       <input hidden v-model="id" />
       <input hidden v-model="type" />
@@ -19,35 +19,49 @@
     <br><br>
     <v-divider></v-divider>
     <div class="comment-title-text">Display comment</div>
+    <FetchComments :comments="comments" />
   </div>
 </template>
 
 <script>
-  import Comment from "@/service/Comment";
+  import CommentService from "@/service/CommentService";
+  import FetchComments from '../comments/FetchComments.vue';
 
   export default {
+    components: {
+      FetchComments
+    },
     props: {
       id: [],
       type: []
     },
     data() {
       return {
-        comment: [],
+        comments: [],
         message: "",
-        errors: []
+        errors: [],            
       }
+    }, 
+    mounted() {
+      this.getComments(this.$route.params.id)
     },
     methods: {
+      getComments(id) {
+        CommentService.show(id).then(response => {
+          this.comments = response.data
+        });
+      },
       storeComment() {
         const data = {
           id: this.id,
           type: this.type,
-          content: this.comment.content,
+          content: this.comments.content,
         };
-        Comment.store(data).then(response => {
+        CommentService.store(data).then(response => {
           console.log(response.data)
           this.message = 'The comment was stored successfully!'
-          this.comment.content = ''
+          this.comments.content = ''
+          this.getComments(this.$route.params.id)
         }).catch(e => {
           console.log(e);
           if (e.response.status === 422) {

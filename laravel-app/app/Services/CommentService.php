@@ -2,55 +2,64 @@
 
 namespace App\Services;
 
-use App\Http\Requests\StoreCommentRequest;
+use App\DTO\CommentDTO;
 use App\Models\Comment;
 use App\Repositories\CommentRepositoryInterface;
 
 class CommentService
 {
     private CommentRepositoryInterface $commentRepository;
+    private PostService $postService;
+    private VideoService $videoService;
 
-    public function __construct(CommentRepositoryInterface $commentRepository)
+    public function __construct(CommentRepositoryInterface $commentRepository, PostService $postService, VideoService $videoService)
     {
         $this->commentRepository = $commentRepository;
+        $this->postService = $postService;
+        $this->videoService = $videoService;
     }
 
-    public function create(StoreCommentRequest $request): void
+    public function create(CommentDTO $commentDTO): void
     {
         $comment = new Comment;
-        $comment->content = $request->input('content');
-        $comment->user()->associate($request->user());
+        $comment->content = $commentDTO->getContent();
+        $comment->user()->associate($commentDTO->getUserId());
 
-        $this->extracted($request, $comment);
+        $this->extracted($commentDTO, $comment);
     }
 
-    public function reply(StoreCommentRequest $request): void
+    public function reply(CommentDTO $commentDTO): void
     {
         $reply = new Comment;
-        $reply->content = $request->input('content');
-        $reply->user()->associate($request->user());
-        $reply->parent_id = $request->get('comment_id');
+        $reply->content = $commentDTO->getContent();
+        $reply->user()->associate($commentDTO->getUserId());
+        $reply->parent_id = $commentDTO->getParentId();
 
-        $this->extracted($request, $reply);
+        $this->extracted($commentDTO, $reply);
     }
 
     /**
-     * @param StoreCommentRequest $request
+     * @param CommentDTO $commentDTO
      * @param Comment $comment
      * @return void
      */
-    public function extracted(StoreCommentRequest $request, Comment $comment): void
+    public function extracted(CommentDTO $commentDTO, Comment $comment): void
     {
-        $type = $request->input('type');
+        $type = $commentDTO->getType();
 
         if ($type == 'post') {
-            $post = $this->commentRepository->findByPostId($request->input('id'));
+            $post = $this->postService->getById($commentDTO->getId());
             $this->commentRepository->save($comment, $post);
         }
 
         if ($type == 'video') {
-            $video = $this->commentRepository->findByVideoId($request->input('id'));
+            $video = $this->videoService->getById($commentDTO->getId());
             $this->commentRepository->save($comment, $video);
         }
+    }
+
+    public function getById(int $id)
+    {
+        return $this->commentRepository->findById($id);
     }
 }

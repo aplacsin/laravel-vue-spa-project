@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Requests\AuthUserRequest;
+use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\RegisterUserRequest;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class AuthController
 {
-    public function login(AuthUserRequest $request)
+    public function login(LoginUserRequest $request): JsonResponse
     {
         $user = User::query()
             ->where('email', $request->email)
@@ -23,7 +24,9 @@ class AuthController
             ]);
         }
 
-        return $user->createToken($request->device_name)->plainTextToken;
+        $token = $user->createToken($request->device_name)->plainTextToken;
+
+        return response()->json(['token' => $token]);
     }
 
     public function register(RegisterUserRequest $request)

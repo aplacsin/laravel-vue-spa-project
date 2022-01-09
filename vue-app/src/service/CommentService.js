@@ -1,8 +1,9 @@
 import Api from "./Api";
 
-export default { 
-
+const CommentService = {
     store(data) {
         return Api().post('/comment/store', data);
     },
 };
+
+export default CommentService;

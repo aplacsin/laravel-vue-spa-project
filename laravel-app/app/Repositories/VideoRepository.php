@@ -9,10 +9,6 @@ class VideoRepository implements VideoRepositoryInterface
 {
     public function save(Video $video): bool
     {
-        if ($video == null) {
-            $video->exists = true;
-        }
-
         return $video->save();
     }
 
@@ -41,6 +37,8 @@ class VideoRepository implements VideoRepositoryInterface
 
     public function removeById(int $id)
     {
-        // TODO: Implement removeById() method.
+        Video::query()
+            ->findOrFail($id)
+            ->delete();
     }
 }

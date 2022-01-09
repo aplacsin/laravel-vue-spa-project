@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @property int $video_id
  * @property string $type
  */
-
 class Video extends Model
 {
     use HasFactory;

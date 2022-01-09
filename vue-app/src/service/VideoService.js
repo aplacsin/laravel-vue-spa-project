@@ -1,6 +1,6 @@
 import Api from "./Api";
 
-export default {
+const VideoService = {
     video(page) {
         return Api().get('/videos?page=' + page);
     },
@@ -9,3 +9,5 @@ export default {
         return Api().get('/videos/show/' + id);
     },    
 };
+
+export default VideoService;

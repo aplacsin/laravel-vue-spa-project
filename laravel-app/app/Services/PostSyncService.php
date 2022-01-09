@@ -22,7 +22,7 @@ class PostSyncService
         ));
         $file = file_get_contents($url, 0, $context);
 
-        if(!$file) {
+        if (!$file) {
             return;
         }
 
