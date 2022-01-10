@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use App\DTO\PostDTO;
+use App\Filters\PostFilter;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PostListRequest;
 use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
 use App\Models\User;
@@ -21,9 +23,14 @@ class PostController extends Controller
         $this->postService = $postService;
     }
 
-    public function list(): JsonResponse
+    public function list(PostListRequest $request): JsonResponse
     {
-        $posts = $this->postService->getPostAll();
+        $postFilter = PostFilter::make(
+            $request->get('page'),
+            $request->get('search')
+        );
+
+        $posts = $this->postService->getPostAll($postFilter);
 
         return response()->json($posts, 200);
     }

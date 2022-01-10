@@ -1,57 +1,57 @@
 <template>
   <div>
     <div>
-        <v-container>
-          <v-row>
-            <v-col
-                cols="12"
-                md="12"
-            >
-              <v-text-field
-                  v-model="keyword"
-                  label="Search..."
-              ></v-text-field>
-            </v-col>
-          </v-row>
-        </v-container>
+      <v-container>
+        <v-row>
+          <v-col
+              cols="12"
+              md="12"
+          >
+            <v-text-field
+                v-model="keyword"
+                label="Search..."
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </v-container>
     </div>
-  <v-simple-table>
-    <template v-slot:default>
-      <thead>
-      <tr>
-        <th class="text-center col-9">
-          Title
-        </th>
-        <th class="text-center">
-          Created At
-        </th>
-        <th class="text-center">
-          Actions
-        </th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for="post in posts" :key="post.id">
-        <td>{{ post.title }}</td>
-        <td>{{ new Date(post.created_at).toLocaleString('ru-RU') }}</td>
-        <td class="td-post-action">
-          <router-link :to="{ name: 'ShowPost', params: { id: post.id }}"
-                       class="button-action flex-column post-action-btn"><span
-              class="mdi mdi-eye"></span></router-link>
-          <router-link :to="{ name: 'EditPost', params: { id: post.id }}"
-                       class="button-action flex-column post-action-btn"><span
-              class="mdi mdi-pencil"></span></router-link>
-          <button class="button-action flex-column post-action-delete-btn"
-                  @click="deletePost(post.id)"><span class="mdi mdi-delete"></span></button>
-        </td>
-      </tr>
-      <ConfirmDlg ref="confirm"/>
-      </tbody>
-      <div class="text-center">
-        <v-pagination v-model="pagination.current" :length="pagination.total" @input="getPosts" circle></v-pagination>
-      </div>
-    </template>
-  </v-simple-table>
+    <v-simple-table>
+      <template v-slot:default>
+        <thead>
+        <tr>
+          <th class="text-center col-9">
+            Title
+          </th>
+          <th class="text-center">
+            Created At
+          </th>
+          <th class="text-center">
+            Actions
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="post in posts.data" :key="post.id">
+          <td>{{ post.title }}</td>
+          <td>{{ new Date(post.created_at).toLocaleString('ru-RU') }}</td>
+          <td class="td-post-action">
+            <router-link :to="{ name: 'ShowPost', params: { id: post.id }}"
+                         class="button-action flex-column post-action-btn"><span
+                class="mdi mdi-eye"></span></router-link>
+            <router-link :to="{ name: 'EditPost', params: { id: post.id }}"
+                         class="button-action flex-column post-action-btn"><span
+                class="mdi mdi-pencil"></span></router-link>
+            <button class="button-action flex-column post-action-delete-btn"
+                    @click="deletePost(post.id)"><span class="mdi mdi-delete"></span></button>
+          </td>
+        </tr>
+        <ConfirmDlg ref="confirm"/>
+        </tbody>
+        <div class="text-center">
+          <v-pagination v-model="pagination.current" :length="pagination.total" @input="getPosts" circle></v-pagination>
+        </div>
+      </template>
+    </v-simple-table>
   </div>
 </template>
 
@@ -79,30 +79,25 @@ export default {
   },
   watch: {
     keyword: debounce(function () {
-      this.searchData(this.keyword)
+      this.getPosts(this.keyword)
     }, 300),
   },
   methods: {
     getPosts() {
       const page = this.pagination.current ?? 1
-      const params = `?page=${page}`
+      let params = `?page=${page}`
+
+      if (this.keyword !== null) {
+        params = params.concat(`&search=${this.keyword}`)
+      }
 
       PostService.list(params).then(response => {
-        this.posts = response.data.data
+        this.posts = response.data
         this.pagination.current = response.data.current_page
         this.pagination.total = response.data.last_page
       }).catch(e => {
         console.log(e)
       })
-    },
-    searchData(val) {
-      if(!val) {
-        this.getPosts()
-      } else {
-        PostService.search(val).then(response => {
-          this.posts = response.data
-        });
-      }
     },
     deletePost(id) {
       if (confirm('Deleted post?')) {

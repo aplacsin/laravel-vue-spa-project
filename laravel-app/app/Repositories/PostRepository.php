@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Post;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 
 class PostRepository implements PostRepositoryInterface
 {
@@ -12,9 +13,19 @@ class PostRepository implements PostRepositoryInterface
         return $post->save();
     }
 
-    public function findAllPost(): LengthAwarePaginator
+    public function list($search): LengthAwarePaginator
     {
+        /*$model = Post::query();
+
+        if ($search) {
+            $model->where('title', 'LIKE', "%${$search}%");
+        }
+        $model->paginate(15);*/
+
         return Post::query()
+            ->when($search->getSearch(), function (Builder $query, string $search): Builder {
+                return $query->where('title', 'LIKE', '%'.$search.'%');
+            })
             ->paginate(15);
     }
 
@@ -40,11 +51,5 @@ class PostRepository implements PostRepositoryInterface
         Post::query()
             ->findOrFail($id)
             ->delete();
-    }
-
-    public function searchByTitle(string $title)
-    {
-       return Post::query()
-            ->where('title', 'LIKE', '%'.$title.'%')->get();
     }
 }

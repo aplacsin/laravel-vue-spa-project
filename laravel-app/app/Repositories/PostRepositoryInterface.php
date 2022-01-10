@@ -9,13 +9,11 @@ interface PostRepositoryInterface
 {
     public function save(Post $post): bool;
 
-    public function findAllPost(): LengthAwarePaginator;
+    public function list($search): LengthAwarePaginator;
 
     public function findByGuId(string $id);
 
     public function findById(int $id);
 
     public function removeById(int $id): void;
-
-    public function searchByTitle(string $title);
 }

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTO\PostDTO;
+use App\Filters\PostFilter;
 use App\Models\Post;
 use App\Repositories\PostRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -38,9 +39,9 @@ class PostService
         $this->postRepository->save($post);
     }
 
-    public function getPostAll(): LengthAwarePaginator
+    public function getPostAll(PostFilter $postFilter): LengthAwarePaginator
     {
-        return $this->postRepository->findAllPost();
+        return $this->postRepository->list($postFilter);
     }
 
     public function getById(int $id)
