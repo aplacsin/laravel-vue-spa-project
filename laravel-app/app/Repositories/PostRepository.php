@@ -41,4 +41,10 @@ class PostRepository implements PostRepositoryInterface
             ->findOrFail($id)
             ->delete();
     }
+
+    public function searchByTitle(string $title)
+    {
+       return Post::query()
+            ->where('title', 'LIKE', '%'.$title.'%')->get();
+    }
 }

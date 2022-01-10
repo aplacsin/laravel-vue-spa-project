@@ -12,14 +12,4 @@ class CommentRepository implements CommentRepositoryInterface
     {
         return $item->comments()->save($comment);
     }
-
-    public function findById(int $id)
-    {
-        return Comment::query()
-            ->where('commentable_id', $id)
-            ->where('commentable_id', $id)
-            ->with('replies')
-            ->with('user')
-            ->get();
-    }
 }

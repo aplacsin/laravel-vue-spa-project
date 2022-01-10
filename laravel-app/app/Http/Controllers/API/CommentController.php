@@ -41,11 +41,4 @@ class CommentController extends Controller
 
         $this->commentService->reply($commentDTO);
     }
-
-    public function show(int $id): JsonResponse
-    {
-        $comment = $this->commentService->getById($id);
-
-        return response()->json($comment, 200);
-    }
 }

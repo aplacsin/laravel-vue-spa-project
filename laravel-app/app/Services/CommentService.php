@@ -57,9 +57,4 @@ class CommentService
             $this->commentRepository->save($comment, $video);
         }
     }
-
-    public function getById(int $id)
-    {
-        return $this->commentRepository->findById($id);
-    }
 }

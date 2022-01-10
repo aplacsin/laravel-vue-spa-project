@@ -20,6 +20,10 @@ const PostService = {
     delete(id) {
         return Api().delete('/posts/destroy/' + id);
     },
+
+    search(val) {
+        return Api().get('/posts/search/' + val);
+    },
 };
 
 export default PostService;

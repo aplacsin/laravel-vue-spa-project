@@ -1,4 +1,20 @@
 <template>
+  <div>
+    <div>
+        <v-container>
+          <v-row>
+            <v-col
+                cols="12"
+                md="12"
+            >
+              <v-text-field
+                  v-model="keyword"
+                  label="Search..."
+              ></v-text-field>
+            </v-col>
+          </v-row>
+        </v-container>
+    </div>
   <v-simple-table>
     <template v-slot:default>
       <thead>
@@ -15,7 +31,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="post in posts.data" :key="post.id">
+      <tr v-for="post in posts" :key="post.id">
         <td>{{ post.title }}</td>
         <td>{{ new Date(post.created_at).toLocaleString('ru-RU') }}</td>
         <td class="td-post-action">
@@ -36,11 +52,13 @@
       </div>
     </template>
   </v-simple-table>
+  </div>
 </template>
 
 <script>
 import PostService from "@/service/PostService";
 import ConfirmDlg from "@/views/components/dialogs/ConfirmDlg";
+import {debounce} from "lodash";
 
 export default {
   components: {
@@ -49,6 +67,7 @@ export default {
   data() {
     return {
       posts: [],
+      keyword: null,
       pagination: {
         current: 1,
         total: 0
@@ -58,32 +77,43 @@ export default {
   created() {
     this.getPosts()
   },
+  watch: {
+    keyword: debounce(function () {
+      this.searchData(this.keyword)
+    }, 300),
+  },
   methods: {
     getPosts() {
       const page = this.pagination.current ?? 1
       const params = `?page=${page}`
 
       PostService.list(params).then(response => {
-        this.posts = response.data
+        this.posts = response.data.data
         this.pagination.current = response.data.current_page
         this.pagination.total = response.data.last_page
       }).catch(e => {
         console.log(e)
       })
     },
+    searchData(val) {
+      if(!val) {
+        this.getPosts()
+      } else {
+        PostService.search(val).then(response => {
+          this.posts = response.data
+        });
+      }
+    },
     deletePost(id) {
-      if (this.$refs.confirm.open(
-          "Confirm",
-          "Are you sure you want to delete this post?"
-      )
-      ) {
+      if (confirm('Deleted post?')) {
         PostService.delete(id).then(() => {
-          let i = this.posts.data.map(data => data.id).indexOf(id)
-          this.posts.data.splice(i, 1)
+          /*const i = this.posts.data.map(data => data.id).indexOf(id)
+          this.posts.data.splice(i, 1)*/
+          this.getPosts()
           console.log('Delete Success')
         });
       }
-    }
+    },
   }
 }
 </script>

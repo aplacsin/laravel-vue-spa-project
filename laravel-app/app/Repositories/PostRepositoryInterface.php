@@ -16,4 +16,6 @@ interface PostRepositoryInterface
     public function findById(int $id);
 
     public function removeById(int $id): void;
+
+    public function searchByTitle(string $title);
 }

@@ -31,6 +31,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('posts/', [PostController::class, 'list']);
     Route::get('posts/edit/{id}', [PostController::class, 'edit']);
     Route::get('posts/show/{id}', [PostController::class, 'show']);
+    Route::get('posts/search/{data}', [PostController::class, 'liveSearch']);
     Route::put('posts/update/{id}', [PostController::class, 'update']);
     Route::delete('posts/destroy/{id}', [PostController::class, 'destroy']);
 
@@ -39,7 +40,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('videos/show/{id}', [VideoController::class, 'show']);
 
     /* Comments Route */
-    Route::get('show/{id}/comment/', [CommentController::class, 'show']);
     Route::post('comment/store', [CommentController::class, 'store']);
     Route::post('reply/store', [CommentController::class, 'replyStore']);
 });

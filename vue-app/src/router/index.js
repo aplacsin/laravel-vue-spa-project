@@ -1,15 +1,15 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import Login from "../views/auth/Login.vue";
-import Register from "../views/auth/Register.vue";
-import Dashboard from "../views/Dashboard.vue";
-import ListPosts from "../views/components/posts/ListPosts";
-import ShowPost from "../views/components/posts/ShowPost";
+import Login from "../views/auth/Login.vue"
+import Register from "../views/auth/Register.vue"
+import Dashboard from "../views/Dashboard.vue"
+import ListPosts from "../views/components/posts/ListPosts"
+import ShowPost from "../views/components/posts/ShowPost"
 import EditPost from "../views/components/posts/EditPost"
 import ListVideos from "../views/components/videos/ListVideos"
 import ShowVideo from "../views/components/videos/ShowVideo"
-import Forbidden from "../views/Forbidden";
+import Forbidden from "../views/Forbidden"
 
 Vue.use(VueRouter)
 

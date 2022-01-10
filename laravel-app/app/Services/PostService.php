@@ -52,4 +52,9 @@ class PostService
     {
         $this->postRepository->removeById($id);
     }
+
+    public function search(string $title)
+    {
+        return $this->postRepository->searchByTitle($title);
+    }
 }
