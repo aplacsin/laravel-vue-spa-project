@@ -39,7 +39,7 @@ class PostService
         $this->postRepository->save($post);
     }
 
-    public function getPostAll(PostFilter $postFilter): LengthAwarePaginator
+    public function getPosts(PostFilter $postFilter): LengthAwarePaginator
     {
         return $this->postRepository->list($postFilter);
     }
@@ -52,10 +52,5 @@ class PostService
     public function delete(int $id): void
     {
         $this->postRepository->removeById($id);
-    }
-
-    public function search(string $title)
-    {
-        return $this->postRepository->searchByTitle($title);
     }
 }

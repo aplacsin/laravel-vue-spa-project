@@ -7,7 +7,6 @@ use App\Filters\PostFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostListRequest;
 use App\Http\Requests\StorePostRequest;
-use App\Models\Post;
 use App\Models\User;
 use App\Policy\PostPolicy;
 use App\Services\PostService;
@@ -30,7 +29,7 @@ class PostController extends Controller
             $request->get('search')
         );
 
-        $posts = $this->postService->getPostAll($postFilter);
+        $posts = $this->postService->getPosts($postFilter);
 
         return response()->json($posts, 200);
     }
@@ -74,12 +73,5 @@ class PostController extends Controller
         );
 
         $this->postService->update($postDTO, $id);
-    }
-
-    public function liveSearch(string $data): JsonResponse
-    {
-        $post = $this->postService->search($data);
-
-        return response()->json($post, 200);
     }
 }

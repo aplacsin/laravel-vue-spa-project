@@ -31,7 +31,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('posts/', [PostController::class, 'list']);
     Route::get('posts/edit/{id}', [PostController::class, 'edit']);
     Route::get('posts/show/{id}', [PostController::class, 'show']);
-    Route::get('posts/search/{data}', [PostController::class, 'liveSearch']);
     Route::put('posts/update/{id}', [PostController::class, 'update']);
     Route::delete('posts/destroy/{id}', [PostController::class, 'destroy']);
 
