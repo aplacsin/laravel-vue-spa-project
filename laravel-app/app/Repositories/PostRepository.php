@@ -20,6 +20,12 @@ class PostRepository implements PostRepositoryInterface
             ->when($search->getSearch(), function (Builder $query, string $search): Builder {
                 return $query->where('title', 'LIKE', '%'.$search.'%');
             })
+            ->when($search->getStartDate(), function (Builder $query, string $date): Builder {
+                return $query->whereDate('created_at', '>=', $date);
+            })
+            ->when($search->getEndDate(), function (Builder $query, string $date): Builder {
+                return $query->whereDate('created_at','<=', $date);
+            })
             ->paginate(15);
     }
 
@@ -37,6 +43,7 @@ class PostRepository implements PostRepositoryInterface
             ->with('comments')
             ->with('comments.user')
             ->with('comments.replies')
+            ->with('comments.replies.user')
             ->first();
     }
 

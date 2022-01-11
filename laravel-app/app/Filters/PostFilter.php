@@ -6,6 +6,8 @@ class PostFilter
 {
     private int $page;
     private ?string $search;
+    private ?string $startDate;
+    private ?string $endDate;
 
     /**
      * @return int
@@ -39,12 +41,47 @@ class PostFilter
         $this->search = $search;
     }
 
-    public static function make(int $page, ?string $search = null): self
+
+    /**
+     * @return string|null
+     */
+    public function getStartDate(): ?string
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * @param string|null $startDate
+     */
+    public function setStartDate(?string $startDate): void
+    {
+        $this->startDate = $startDate;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getEndDate(): ?string
+    {
+        return $this->endDate;
+    }
+
+    /**
+     * @param string|null $endDate
+     */
+    public function setEndDate(?string $endDate): void
+    {
+        $this->endDate = $endDate;
+    }
+
+    public static function make(int $page, ?string $search = null, ?string $startDate = null, ?string $endDate = null): self
     {
         $dto = new self();
 
         $dto->setPage($page);
         $dto->setSearch($search);
+        $dto->setStartDate($startDate);
+        $dto->setEndDate($endDate);
 
         return $dto;
     }

@@ -1,8 +1,8 @@
 import Api from "./Api";
 
 const PostService = {
-    list(page) {
-        return Api().get('/posts' + page);
+    list(params) {
+        return Api().get('/posts' + params);
     },
 
     show(id) {
@@ -19,10 +19,6 @@ const PostService = {
 
     delete(id) {
         return Api().delete('/posts/destroy/' + id);
-    },
-
-    search(val) {
-        return Api().get('/posts/search/' + val);
     },
 };
 

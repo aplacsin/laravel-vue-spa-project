@@ -7,6 +7,7 @@ use App\Filters\PostFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostListRequest;
 use App\Http\Requests\StorePostRequest;
+use App\Http\Resources\PostResource;
 use App\Models\User;
 use App\Policy\PostPolicy;
 use App\Services\PostService;
@@ -26,7 +27,9 @@ class PostController extends Controller
     {
         $postFilter = PostFilter::make(
             $request->get('page'),
-            $request->get('search')
+            $request->get('search'),
+            $request->get('startDate'),
+            $request->get('endDate'),
         );
 
         $posts = $this->postService->getPosts($postFilter);
@@ -42,7 +45,7 @@ class PostController extends Controller
         $this->authorize(PostPolicy::ACTION_EDIT, User::class);
         $post = $this->postService->getById($id);
 
-        return response()->json($post, 200);
+        return response()->json(new PostResource($post), 200);
     }
 
     /**
@@ -53,7 +56,7 @@ class PostController extends Controller
         $this->authorize(PostPolicy::ACTION_SHOW, User::class);
         $post = $this->postService->getById($id);
 
-        return response()->json($post, 200);
+        return response()->json(new PostResource($post), 200);
     }
 
     /**

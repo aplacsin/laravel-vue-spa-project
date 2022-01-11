@@ -24,18 +24,11 @@ class CommentService
         $comment = new Comment;
         $comment->content = $commentDTO->getContent();
         $comment->user()->associate($commentDTO->getUserId());
+        if ($commentDTO->getParentId() !== null) {
+            $comment->parent_id = $commentDTO->getParentId();
+        }
 
         $this->extracted($commentDTO, $comment);
-    }
-
-    public function reply(CommentDTO $commentDTO): void
-    {
-        $reply = new Comment;
-        $reply->content = $commentDTO->getContent();
-        $reply->user()->associate($commentDTO->getUserId());
-        $reply->parent_id = $commentDTO->getParentId();
-
-        $this->extracted($commentDTO, $reply);
     }
 
     /**

@@ -4,22 +4,92 @@
       <v-container>
         <v-row>
           <v-col
-              cols="12"
-              md="12"
+              cols="4"
+              md="4"
           >
             <v-text-field
                 v-model="keyword"
+                prepend-icon="mdi-table-search"
                 label="Search..."
             ></v-text-field>
           </v-col>
+          <v-col
+              cols="4"
+              lg="4"
+          >
+            <v-menu
+                ref="menu1"
+                v-model="menu1"
+                :close-on-content-click="false"
+                transition="scale-transition"
+                offset-y
+                max-width="290px"
+                min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                    v-model="startDateFormatted"
+                    label="Start Date"
+                    persistent-hint
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                  v-model="startDate"
+                  no-title
+                  @input="menu1 = false"
+              ></v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col
+              cols="4"
+              lg="4"
+          >
+            <v-menu
+                ref="menu2"
+                v-model="menu2"
+                :close-on-content-click="false"
+                transition="scale-transition"
+                offset-y
+                max-width="290px"
+                min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                    v-model="endDateFormatted"
+                    label="End Date"
+                    persistent-hint
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                  v-model="endDate"
+                  no-title
+                  @input="menu2 = false"
+              ></v-date-picker>
+            </v-menu>
+          </v-col>
         </v-row>
+        <div>
+          <v-btn class="comment-btn" depressed @click="clearFilter">
+            Reset
+          </v-btn>
+        </div>
       </v-container>
     </div>
     <v-simple-table>
       <template v-slot:default>
-        <thead>
+        <thead slot="head">
         <tr>
-          <th class="text-center col-9">
+          <th class="text-center col-9"
+              :class="sortedClass('title')"
+              @click="sortBy('title')">
             Title
           </th>
           <th class="text-center">
@@ -30,9 +100,9 @@
           </th>
         </tr>
         </thead>
-        <tbody>
+        <tbody v-if="posts.data && posts.data.length > 0">
         <tr v-for="post in posts.data" :key="post.id">
-          <td>{{ post.title }}</td>
+          <td v-html="highlight(post.title)"></td>
           <td>{{ new Date(post.created_at).toLocaleString('ru-RU') }}</td>
           <td class="td-post-action">
             <router-link :to="{ name: 'ShowPost', params: { id: post.id }}"
@@ -45,8 +115,8 @@
                     @click="deletePost(post.id)"><span class="mdi mdi-delete"></span></button>
           </td>
         </tr>
-        <ConfirmDlg ref="confirm"/>
         </tbody>
+        <tbody class="text-center" v-else>No Posts Found</tbody>
         <div class="text-center">
           <v-pagination v-model="pagination.current" :length="pagination.total" @input="getPosts" circle></v-pagination>
         </div>
@@ -57,30 +127,48 @@
 
 <script>
 import PostService from "@/service/PostService";
-import ConfirmDlg from "@/views/components/dialogs/ConfirmDlg";
 import {debounce} from "lodash";
 
 export default {
-  components: {
-    ConfirmDlg
-  },
   data() {
-    return {
+    return{
       posts: [],
       keyword: null,
       pagination: {
         current: 1,
         total: 0
-      }
+      },
+      sort: {
+        key: '',
+        isAsc: false
+      },
+      startDate: null,
+      endDate: null,
+      menu1: false,
+      menu2: false,
     }
   },
   created() {
     this.getPosts()
   },
+  computed: {
+    startDateFormatted() {
+      return this.formatDate(this.startDate)
+    },
+    endDateFormatted() {
+      return this.formatDate(this.endDate)
+    },
+  },
   watch: {
     keyword: debounce(function () {
       this.getPosts(this.keyword)
     }, 300),
+    startDate() {
+      this.getPosts(this.startDate)
+    },
+    endDate() {
+      this.getPosts(this.endDate)
+    },
   },
   methods: {
     getPosts() {
@@ -89,6 +177,10 @@ export default {
 
       if (this.keyword !== null) {
         params = params.concat(`&search=${this.keyword}`)
+      }
+
+      if (this.startDate && this.endDate !== null) {
+        params = params.concat(`&startDate=${this.startDate}&endDate=${this.endDate}`)
       }
 
       PostService.list(params).then(response => {
@@ -109,6 +201,27 @@ export default {
         });
       }
     },
+    formatDate(date) {
+      if (!date) return null
+
+      const [year, month, day] = date.split('-')
+      return `${month}/${day}/${year}`
+    },
+    highlight(text) {
+      return text.replace(new RegExp(`.*${this.search}.*`, 'ig'), '<span class="highlighted">' + this.search + '</span>')
+    },
+    sortedClass(key) {
+      return this.sort.key === key ? `sorted ${this.sort.isAsc ? 'asc' : 'desc'}` : '';
+    },
+    sortBy(key) {
+      this.sort.isAsc = this.sort.key === key ? !this.sort.isAsc : false;
+      this.sort.key = key;
+    },
+    clearFilter() {
+      this.keyword = ''
+      this.startDate = ''
+      this.endDate = ''
+    }
   }
 }
 </script>
@@ -130,6 +243,24 @@ export default {
 .post-action-delete-btn {
   color: red;
   font-size: 20px;
+}
+
+table {
+  th.sorted {
+    &.asc::after {
+      display: contents;
+      content: '▼';
+    }
+
+    &.desc::after {
+      display: contents;
+      content: '▲';
+    }
+  }
+}
+
+.highlighted {
+  color: red;
 }
 
 </style>

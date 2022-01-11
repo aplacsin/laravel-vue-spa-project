@@ -44,8 +44,11 @@ export default ({
     this.getVideos()
   },
   methods: {
-    getVideos(current) {
-      VideoService.video(current).then(response => {
+    getVideos() {
+      const page = this.pagination.current ?? 1
+      let params = `?page=${page}`
+
+      VideoService.video(params).then(response => {
         this.videos = response.data
         this.pagination.current = response.data.current_page
         this.pagination.total = response.data.last_page

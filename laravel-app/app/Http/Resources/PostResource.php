@@ -2,9 +2,19 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property int $id
+ * @property string $guid
+ * @property string $title
+ * @property string $description
+ * @property string $type
+ * @property Carbon $created_at
+ * @property mixed $comments
+ */
 class PostResource extends JsonResource
 {
     /**
@@ -22,8 +32,7 @@ class PostResource extends JsonResource
             'description' => $this->description,
             'type' => $this->type,
             'created_at' => $this->created_at,
-            'current_page' => $this->current_page,
-            'total' => $this->total
+            'comments' => $this->comments
         ];
     }
 }

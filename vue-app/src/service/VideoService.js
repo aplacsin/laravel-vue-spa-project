@@ -1,8 +1,8 @@
 import Api from "./Api";
 
 const VideoService = {
-    video(page) {
-        return Api().get('/videos?page=' + page);
+    video(params) {
+        return Api().get('/videos' + params);
     },
 
     show(id) {

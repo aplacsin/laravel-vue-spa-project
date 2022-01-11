@@ -40,5 +40,4 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     /* Comments Route */
     Route::post('comment/store', [CommentController::class, 'store']);
-    Route::post('reply/store', [CommentController::class, 'replyStore']);
 });

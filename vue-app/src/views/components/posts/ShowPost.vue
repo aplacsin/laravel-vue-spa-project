@@ -54,7 +54,7 @@ export default {
       post: [],
       message: "",
       errors: [],
-      comments: [],
+      comments: []
     }
   },
   mounted() {
