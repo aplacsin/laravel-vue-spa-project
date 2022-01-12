@@ -6,7 +6,6 @@ use App\DTO\CommentDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCommentRequest;
 use App\Services\CommentService;
-use Illuminate\Http\JsonResponse;
 
 class CommentController extends Controller
 {

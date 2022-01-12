@@ -2,9 +2,19 @@
 
 namespace App\Http\Resources\Video;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property int $id
+ * @property string $guid
+ * @property string $title
+ * @property int $video_id
+ * @property string $type
+ * @property Carbon $created_at
+ * @property mixed $comments
+ */
 class VideoResource extends JsonResource
 {
     /**

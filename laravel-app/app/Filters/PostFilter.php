@@ -8,6 +8,8 @@ class PostFilter
     private ?string $search;
     private ?string $startDate;
     private ?string $endDate;
+    private ?string $sortField;
+    private ?string $sortDirection;
 
     /**
      * @return int
@@ -74,7 +76,39 @@ class PostFilter
         $this->endDate = $endDate;
     }
 
-    public static function make(int $page, ?string $search = null, ?string $startDate = null, ?string $endDate = null): self
+    /**
+     * @return string|null
+     */
+    public function getSortField(): ?string
+    {
+        return $this->sortField;
+    }
+
+    /**
+     * @param string|null $sortField
+     */
+    public function setSortField(?string $sortField): void
+    {
+        $this->sortField = $sortField;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSortDirection(): ?string
+    {
+        return $this->sortDirection;
+    }
+
+    /**
+     * @param string|null $sortDirection
+     */
+    public function setSortDirection(?string $sortDirection): void
+    {
+        $this->sortDirection = $sortDirection;
+    }
+
+    public static function make(int $page, ?string $search = null, ?string $startDate = null, ?string $endDate = null, ?string $sortField = null, ?string $sortDirection = null): self
     {
         $dto = new self();
 
@@ -82,6 +116,8 @@ class PostFilter
         $dto->setSearch($search);
         $dto->setStartDate($startDate);
         $dto->setEndDate($endDate);
+        $dto->setSortField($sortField);
+        $dto->setSortDirection($sortDirection);
 
         return $dto;
     }

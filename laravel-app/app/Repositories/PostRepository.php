@@ -9,24 +9,29 @@ use Illuminate\Database\Eloquent\Builder;
 
 class PostRepository implements PostRepositoryInterface
 {
+    const PER_PAGE = 15;
+
     public function save(Post $post): bool
     {
         return $post->save();
     }
 
-    public function list(PostFilter $search): LengthAwarePaginator
+    public function list(PostFilter $filter): LengthAwarePaginator
     {
         return Post::query()
-            ->when($search->getSearch(), function (Builder $query, string $search): Builder {
+            ->when($filter->getSearch(), function (Builder $query, string $search): Builder {
                 return $query->where('title', 'LIKE', '%'.$search.'%');
             })
-            ->when($search->getStartDate(), function (Builder $query, string $date): Builder {
+            ->when($filter->getStartDate(), function (Builder $query, string $date): Builder {
                 return $query->whereDate('created_at', '>=', $date);
             })
-            ->when($search->getEndDate(), function (Builder $query, string $date): Builder {
+            ->when($filter->getEndDate(), function (Builder $query, string $date): Builder {
                 return $query->whereDate('created_at','<=', $date);
             })
-            ->paginate(15);
+            ->when($filter->getSortField() && $filter->getSortDirection(), function (Builder $query) use ($filter): Builder {
+                return $query->orderBy($filter->getSortField(), $filter->getSortDirection());
+            })
+            ->paginate(self::PER_PAGE);
     }
 
     public function findByGuId($id)

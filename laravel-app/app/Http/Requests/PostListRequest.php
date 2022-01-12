@@ -26,6 +26,8 @@ class PostListRequest extends FormRequest
         return [
             'page' => 'required',
             'search' => 'nullable',
+            'startDate' => 'date',
+            'endDate' => 'date|after_or_equal:startDate',
         ];
     }
 }

@@ -12,6 +12,12 @@ class VideoRepository implements VideoRepositoryInterface
         return $video->save();
     }
 
+    public function list(): LengthAwarePaginator
+    {
+        return Video::query()
+            ->paginate(10);
+    }
+
     public function findByVideoId(int $id)
     {
         return Video::query()
@@ -27,12 +33,6 @@ class VideoRepository implements VideoRepositoryInterface
             ->with('comments.user')
             ->with('comments.replies')
             ->first();
-    }
-
-    public function findAllVideo(): LengthAwarePaginator
-    {
-        return Video::query()
-            ->paginate(10);
     }
 
     public function removeById(int $id)

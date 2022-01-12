@@ -12,6 +12,9 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController
 {
+    /**
+     * @throws ValidationException
+     */
     public function login(LoginUserRequest $request): JsonResponse
     {
         $user = User::query()

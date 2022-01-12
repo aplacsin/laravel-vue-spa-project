@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Video;
 use App\Repositories\VideoRepositoryInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class VideoService
 {
@@ -25,9 +26,9 @@ class VideoService
         return $this->videoRepository->save($video);
     }
 
-    public function getVideoAll()
+    public function getVideo(): LengthAwarePaginator
     {
-        return $this->videoRepository->findAllVideo();
+        return $this->videoRepository->list();
     }
 
     public function getById(int $id)

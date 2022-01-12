@@ -10,7 +10,7 @@ interface PostRepositoryInterface
 {
     public function save(Post $post): bool;
 
-    public function list(PostFilter $search): LengthAwarePaginator;
+    public function list(PostFilter $filter): LengthAwarePaginator;
 
     public function findByGuId(string $id);
 

@@ -7,12 +7,12 @@ use App\Filters\PostFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostListRequest;
 use App\Http\Requests\StorePostRequest;
-use App\Http\Resources\PostResource;
+use App\Http\Resources\Post\PostCollection;
+use App\Http\Resources\Post\PostResource;
 use App\Models\User;
 use App\Policy\PostPolicy;
 use App\Services\PostService;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Http\JsonResponse;
 
 class PostController extends Controller
 {
@@ -23,40 +23,42 @@ class PostController extends Controller
         $this->postService = $postService;
     }
 
-    public function list(PostListRequest $request): JsonResponse
+    public function list(PostListRequest $request): PostCollection
     {
         $postFilter = PostFilter::make(
             $request->get('page'),
             $request->get('search'),
             $request->get('startDate'),
             $request->get('endDate'),
+            $request->get('sortField'),
+            $request->get('sortDirection')
         );
 
         $posts = $this->postService->getPosts($postFilter);
 
-        return response()->json($posts, 200);
+        return new PostCollection($posts);
     }
 
     /**
      * @throws AuthorizationException
      */
-    public function edit(int $id): JsonResponse
+    public function edit(int $id): PostResource
     {
         $this->authorize(PostPolicy::ACTION_EDIT, User::class);
         $post = $this->postService->getById($id);
 
-        return response()->json(new PostResource($post), 200);
+        return new PostResource($post);
     }
 
     /**
      * @throws AuthorizationException
      */
-    public function show(int $id): JsonResponse
+    public function show(int $id): PostResource
     {
         $this->authorize(PostPolicy::ACTION_SHOW, User::class);
         $post = $this->postService->getById($id);
 
-        return response()->json(new PostResource($post), 200);
+        return new PostResource($post);
     }
 
     /**

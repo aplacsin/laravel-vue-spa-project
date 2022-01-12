@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Video\VideoCollection;
+use App\Http\Resources\Video\VideoResource;
 use App\Services\VideoService;
-use Illuminate\Http\JsonResponse;
 
 class VideoController extends Controller
 {
@@ -15,17 +16,17 @@ class VideoController extends Controller
         $this->videoService = $videoService;
     }
 
-    public function list(): JsonResponse
+    public function list(): VideoCollection
     {
-        $videos = $this->videoService->getVideoAll();
+        $videos = $this->videoService->getVideo();
 
-        return response()->json($videos, 200);
+        return new VideoCollection($videos);
     }
 
-    public function show(int $id): JsonResponse
+    public function show(int $id): VideoResource
     {
         $video = $this->videoService->getById($id);
 
-        return response()->json($video, 200);
+        return new VideoResource($video);
     }
 }
