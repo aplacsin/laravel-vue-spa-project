@@ -32,9 +32,7 @@
           <input hidden v-model="video.id"/>
           <input hidden v-model="video.type"/>
           <v-alert v-if="message" dense text type="success">{{ message }}</v-alert>
-          <v-alert dense text type="error" v-if="errors.content">
-            {{ errors.content[0] }}
-          </v-alert>
+          <Errors :errors="errors.content" />
           <v-btn class="comment-btn" depressed @click="storeComment()">
             Add comment
           </v-btn>
@@ -52,15 +50,17 @@
 import FetchComments from '../comments/FetchComments.vue';
 import CommentService from "@/service/CommentService";
 import VideoService from "@/service/VideoService";
+import Errors from "@/views/Errors";
 
 export default {
   components: {
-    FetchComments
+    FetchComments,
+    Errors
   },
   data() {
     return {
       video: [],
-      message: "",
+      message: null,
       errors: [],
       comments: [],
     }
@@ -71,7 +71,7 @@ export default {
   methods: {
     getVideo(id) {
       VideoService.show(id).then(response => {
-        this.video = response.data
+        this.video = response.data.data
       });
     },
     storeComment() {

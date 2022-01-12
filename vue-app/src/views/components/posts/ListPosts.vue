@@ -5,18 +5,16 @@
         <v-row>
           <v-col
               cols="4"
-              md="4"
-          >
+              md="4">
             <v-text-field
                 v-model="keyword"
-                prepend-icon="mdi-table-search"
-                label="Search..."
-            ></v-text-field>
+                append-icon="mdi-table-search"
+                label="Search...">
+            </v-text-field>
           </v-col>
           <v-col
               cols="4"
-              lg="4"
-          >
+              lg="4">
             <v-menu
                 ref="menu1"
                 v-model="menu1"
@@ -24,30 +22,28 @@
                 transition="scale-transition"
                 offset-y
                 max-width="290px"
-                min-width="auto"
-            >
+                min-width="auto">
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                     v-model="startDateFormatted"
                     label="Start Date"
                     persistent-hint
-                    prepend-icon="mdi-calendar"
+                    append-icon="mdi-calendar"
                     readonly
                     v-bind="attrs"
-                    v-on="on"
-                ></v-text-field>
+                    v-on="on">
+                </v-text-field>
               </template>
               <v-date-picker
                   v-model="startDate"
                   no-title
-                  @input="menu1 = false"
-              ></v-date-picker>
+                  @input="menu1 = false">
+              </v-date-picker>
             </v-menu>
           </v-col>
           <v-col
               cols="4"
-              lg="4"
-          >
+              lg="4">
             <v-menu
                 ref="menu2"
                 v-model="menu2"
@@ -55,25 +51,26 @@
                 transition="scale-transition"
                 offset-y
                 max-width="290px"
-                min-width="auto"
-            >
+                min-width="auto">
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                     v-model="endDateFormatted"
                     label="End Date"
                     persistent-hint
-                    prepend-icon="mdi-calendar"
+                    append-icon="mdi-calendar"
                     readonly
+                    :disabled="inputDisabled"
                     v-bind="attrs"
-                    v-on="on"
-                ></v-text-field>
+                    v-on="on">
+                </v-text-field>
               </template>
               <v-date-picker
                   v-model="endDate"
                   no-title
-                  @input="menu2 = false"
-              ></v-date-picker>
+                  @input="menu2 = false">
+              </v-date-picker>
             </v-menu>
+            <Errors :errors="errors.endDate" />
           </v-col>
         </v-row>
         <div>
@@ -87,13 +84,15 @@
       <template v-slot:default>
         <thead slot="head">
         <tr>
-          <th class="text-center col-9"
-              :class="sortedClass('title')"
-              @click="sortBy('title')">
+          <th class="text-center col-9" @click.prevent="sortBy('title')">
             Title
+            <span class="arrow" v-if="sort.direction === 'desc' && sort.field === 'title'">&uarr;</span>
+            <span class="arrow" v-if="sort.direction === 'asc' && sort.field === 'title'">&darr;</span>
           </th>
-          <th class="text-center">
+          <th class="text-center" @click.prevent="sortBy('created_at')">
             Created At
+            <span class="arrow" v-if="sort.direction === 'desc' && sort.field === 'created_at'">&uarr;</span>
+            <span class="arrow" v-if="sort.direction === 'asc' && sort.field === 'created_at'">&darr;</span>
           </th>
           <th class="text-center">
             Actions
@@ -102,7 +101,7 @@
         </thead>
         <tbody v-if="posts.data && posts.data.length > 0">
         <tr v-for="post in posts.data" :key="post.id">
-          <td v-html="highlight(post.title)"></td>
+          <td>{{ post.title }}</td>
           <td>{{ new Date(post.created_at).toLocaleString('ru-RU') }}</td>
           <td class="td-post-action">
             <router-link :to="{ name: 'ShowPost', params: { id: post.id }}"
@@ -127,20 +126,25 @@
 
 <script>
 import PostService from "@/service/PostService";
+import Errors from "@/views/Errors";
 import {debounce} from "lodash";
 
 export default {
+  components: {
+    Errors
+  },
   data() {
-    return{
+    return {
       posts: [],
+      errors: [],
       keyword: null,
       pagination: {
         current: 1,
         total: 0
       },
       sort: {
-        key: '',
-        isAsc: false
+        direction : 'asc',
+        field: null,
       },
       startDate: null,
       endDate: null,
@@ -158,16 +162,19 @@ export default {
     endDateFormatted() {
       return this.formatDate(this.endDate)
     },
+    inputDisabled() {
+      return this.startDate === null;
+    }
   },
   watch: {
     keyword: debounce(function () {
       this.getPosts(this.keyword)
     }, 300),
-    startDate() {
-      this.getPosts(this.startDate)
-    },
     endDate() {
       this.getPosts(this.endDate)
+    },
+    startDate() {
+      this.getPosts(this.startDate)
     },
   },
   methods: {
@@ -179,16 +186,25 @@ export default {
         params = params.concat(`&search=${this.keyword}`)
       }
 
-      if (this.startDate && this.endDate !== null) {
-        params = params.concat(`&startDate=${this.startDate}&endDate=${this.endDate}`)
+      if (this.startDate !== null) {
+        if (this.endDate !== null) {
+          params = params.concat(`&startDate=${this.startDate}&endDate=${this.endDate}`)
+        }
+      }
+
+      if (this.sort.field && this.sort.direction !== null) {
+        params = params.concat(`&sortField=${this.sort.field}&sortDirection=${this.sort.direction}`)
       }
 
       PostService.list(params).then(response => {
         this.posts = response.data
-        this.pagination.current = response.data.current_page
-        this.pagination.total = response.data.last_page
-      }).catch(e => {
-        console.log(e)
+        this.pagination.current = response.data.meta.current_page
+        this.pagination.total = response.data.meta.last_page
+        this.errors.endDate = null
+      }).catch(error => {
+        if (error.response.status === 422) {
+          this.errors = error.response.data.errors;
+        }
       })
     },
     deletePost(id) {
@@ -201,26 +217,24 @@ export default {
         });
       }
     },
+    sortBy(field) {
+      if (this.sort.field === field) {
+        this.sort.direction = this.sort.direction === "asc" ? "desc" : "asc";
+      } else {
+        this.sort.field = field;
+      }
+      this.getPosts()
+    },
     formatDate(date) {
       if (!date) return null
 
       const [year, month, day] = date.split('-')
       return `${month}/${day}/${year}`
     },
-    highlight(text) {
-      return text.replace(new RegExp(`.*${this.search}.*`, 'ig'), '<span class="highlighted">' + this.search + '</span>')
-    },
-    sortedClass(key) {
-      return this.sort.key === key ? `sorted ${this.sort.isAsc ? 'asc' : 'desc'}` : '';
-    },
-    sortBy(key) {
-      this.sort.isAsc = this.sort.key === key ? !this.sort.isAsc : false;
-      this.sort.key = key;
-    },
     clearFilter() {
-      this.keyword = ''
-      this.startDate = ''
-      this.endDate = ''
+      this.keyword = null
+      this.endDate = null
+      this.startDate = null
     }
   }
 }
@@ -245,18 +259,9 @@ export default {
   font-size: 20px;
 }
 
-table {
-  th.sorted {
-    &.asc::after {
-      display: contents;
-      content: '▼';
-    }
-
-    &.desc::after {
-      display: contents;
-      content: '▲';
-    }
-  }
+.arrow {
+  font-size: 20px;
+  display: revert;
 }
 
 .highlighted {

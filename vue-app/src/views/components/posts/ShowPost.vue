@@ -24,9 +24,7 @@
           <input hidden v-model="post.id"/>
           <input hidden v-model="post.type"/>
           <v-alert v-if="message" dense text type="success">{{ message }}</v-alert>
-          <v-alert dense text type="error" v-if="errors.content">
-            {{ errors.content[0] }}
-          </v-alert>
+          <Errors :errors="errors.content" />
           <v-btn class="comment-btn" depressed @click="storeComment()">
             Add comment
           </v-btn>
@@ -44,15 +42,17 @@
 import PostService from "@/service/PostService";
 import FetchComments from '../comments/FetchComments.vue';
 import CommentService from "@/service/CommentService";
+import Errors from "@/views/Errors";
 
 export default {
   components: {
-    FetchComments
+    FetchComments,
+    Errors
   },
   data() {
     return {
       post: [],
-      message: "",
+      message: null,
       errors: [],
       comments: []
     }
@@ -63,7 +63,7 @@ export default {
   methods: {
     getPost(id) {
       PostService.show(id).then(response => {
-        this.post = response.data
+        this.post = response.data.data
       });
     },
     domDecoder(str) {

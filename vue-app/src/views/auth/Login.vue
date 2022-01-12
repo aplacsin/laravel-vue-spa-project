@@ -12,17 +12,12 @@
               <v-form>
                 <v-text-field type="email" label="Email" prepend-icon="mdi-email" v-model="form.email"
                               class="form-control" id="email"></v-text-field>
-                <v-alert dense outlined type="error" v-if="errors.email">
-                  {{ errors.email[0] }}
-                </v-alert>
+                <Errors :errors="errors.email" />
                 <v-text-field type="password" label="Password" prepend-icon="mdi-lock" v-model="form.password"
                               class="form-control" id="password"></v-text-field>
-                <v-alert dense outlined type="error" v-if="errors.password">
-                  {{ errors.password[0] }}
-                </v-alert>
+                <Errors :errors="errors.password" />
               </v-form>
             </v-card-text>
-
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="primary" @click.prevent="login">Login</v-btn>
@@ -36,13 +31,17 @@
 
 <script>
 import AuthUserService from "@/service/UserService";
+import Errors from "@/views/Errors";
 
 export default {
+  components: {
+    Errors
+  },
   data() {
     return {
       form: {
-        email: "",
-        password: "",
+        email: null,
+        password: null,
         device_name: "browser"
       },
       errors: []

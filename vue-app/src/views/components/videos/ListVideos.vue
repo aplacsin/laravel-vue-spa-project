@@ -22,7 +22,7 @@
       </v-card>
     </div>
     <div class="text-center wrapper-paginate">
-      <v-pagination v-model="pagination.current" :length="pagination.total" @input="getVideos" circle></v-pagination>
+      <v-pagination v-model="pagination.current" :length="pagination.total" circle @input="getVideos"></v-pagination>
     </div>
   </div>
 </template>
@@ -33,7 +33,7 @@ import VideoService from "@/service/VideoService";
 export default ({
   data() {
     return {
-      videos: {},
+      videos: [],
       pagination: {
         current: 1,
         total: 0
@@ -50,8 +50,8 @@ export default ({
 
       VideoService.video(params).then(response => {
         this.videos = response.data
-        this.pagination.current = response.data.current_page
-        this.pagination.total = response.data.last_page
+        this.pagination.current = response.data.meta.current_page
+        this.pagination.total = response.data.meta.last_page
       }).catch(e => {
         console.log(e)
       })

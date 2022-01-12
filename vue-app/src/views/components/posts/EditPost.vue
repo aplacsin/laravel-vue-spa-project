@@ -27,8 +27,8 @@ import PostService from "@/service/PostService";
 export default {
   data() {
     return {
-      post: {},
-      message: ""
+      post: [],
+      message: null
     }
   },
   mounted() {
@@ -37,7 +37,7 @@ export default {
   methods: {
     getEditPost(id) {
       PostService.edit(id).then(response => {
-        this.post = response.data
+        this.post = response.data.data
       });
     },
     updatePost(id) {

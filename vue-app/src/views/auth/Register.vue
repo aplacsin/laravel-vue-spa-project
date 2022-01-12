@@ -12,25 +12,17 @@
               <v-form>
                 <v-text-field type="name" label="Name" prepend-icon="mdi-account" v-model="form.name"
                               class="form-control" id="name"></v-text-field>
-                <v-alert dense outlined type="error" v-if="errors.name">
-                  {{ errors.name[0] }}
-                </v-alert>
+                <Errors :errors="errors.name" />
                 <v-text-field type="email" label="Email Address" prepend-icon="mdi-email" v-model="form.email"
                               class="form-control" id="email"></v-text-field>
-                <v-alert dense outlined type="error" v-if="errors.email">
-                  {{ errors.email[0] }}
-                </v-alert>
+                <Errors :errors="errors.email" />
                 <v-text-field type="password" label="Password" prepend-icon="mdi-lock" v-model="form.password"
                               class="form-control" id="password"></v-text-field>
-                <v-alert dense outlined type="error" v-if="errors.password">
-                  {{ errors.password[0] }}
-                </v-alert>
+                <Errors :errors="errors.password" />
                 <v-text-field type="password" label="Confirm Password" prepend-icon="mdi-check"
                               v-model="form.password_confirmation" class="form-control"
                               id="password_confirmation"></v-text-field>
-                <v-alert dense outlined type="error" v-if="errors.password_confirmation">
-                  {{ errors.password_confirmation[0] }}
-                </v-alert>
+                <Errors :errors="errors.password_confirmation" />
               </v-form>
             </v-card-text>
             <v-card-actions>
@@ -46,15 +38,19 @@
 
 <script>
 import AuthUserService from "@/service/UserService";
+import Errors from "@/views/Errors";
 
 export default {
+  components: {
+    Errors
+  },
   data() {
     return {
       form: {
-        name: "",
-        email: "",
-        password: "",
-        password_confirmation: ""
+        name: null,
+        email: null,
+        password: null,
+        password_confirmation: null
       },
       errors: []
     };
