@@ -8,7 +8,7 @@
               md="4">
             <v-text-field
                 v-model="keyword"
-                append-icon="mdi-table-search"
+                prepend-icon="mdi-table-search"
                 label="Search...">
             </v-text-field>
           </v-col>
@@ -28,7 +28,7 @@
                     v-model="startDateFormatted"
                     label="Start Date"
                     persistent-hint
-                    append-icon="mdi-calendar"
+                    prepend-icon="mdi-calendar"
                     readonly
                     v-bind="attrs"
                     v-on="on">
@@ -36,6 +36,7 @@
               </template>
               <v-date-picker
                   v-model="startDate"
+                  :max="endDate"
                   no-title
                   @input="menu1 = false">
               </v-date-picker>
@@ -57,7 +58,7 @@
                     v-model="endDateFormatted"
                     label="End Date"
                     persistent-hint
-                    append-icon="mdi-calendar"
+                    prepend-icon="mdi-calendar"
                     readonly
                     :disabled="inputDisabled"
                     v-bind="attrs"
@@ -66,14 +67,40 @@
               </template>
               <v-date-picker
                   v-model="endDate"
+                  :min='startDate'
                   no-title
                   @input="menu2 = false">
               </v-date-picker>
             </v-menu>
             <Errors :errors="errors.endDate" />
           </v-col>
+          <v-col
+              cols="4"
+              lg="4">
+            <v-file-input
+                v-model="importFile"
+                type="file"
+                ref="importFile"
+                label="File input"
+                id="input-file-import"
+                name="fileImport"
+                @change="onFileChange"
+                outlined
+                dense
+            ></v-file-input>
+            <v-btn class="import-btn" depressed @click="proceedImport">
+              Import
+            </v-btn>
+<!--            <v-progress-linear :value="uploadPercentage"></v-progress-linear>-->
+            <Errors :errors="errors.importFile" />
+          </v-col>
         </v-row>
         <div>
+          <div>
+            <v-btn class="export-btn" depressed @click="getExport">
+              Export
+            </v-btn>
+          </div>
           <v-btn class="comment-btn" depressed @click="clearFilter">
             Reset
           </v-btn>
@@ -84,23 +111,27 @@
       <template v-slot:default>
         <thead slot="head">
         <tr>
-          <th class="text-center col-9" @click.prevent="sortBy('title')">
+          <th><v-checkbox v-model="selectPage" /></th>
+          <th data-field="title" class="text-center col-9" @click.prevent="sortBy('title')">
             Title
             <span class="arrow" v-if="sort.direction === 'desc' && sort.field === 'title'">&uarr;</span>
             <span class="arrow" v-if="sort.direction === 'asc' && sort.field === 'title'">&darr;</span>
           </th>
-          <th class="text-center" @click.prevent="sortBy('created_at')">
+          <th data-field="created_at" class="text-center" @click.prevent="sortBy('created_at')">
             Created At
             <span class="arrow" v-if="sort.direction === 'desc' && sort.field === 'created_at'">&uarr;</span>
             <span class="arrow" v-if="sort.direction === 'asc' && sort.field === 'created_at'">&darr;</span>
           </th>
-          <th class="text-center">
+          <th data-field="action" class="text-center">
             Actions
           </th>
         </tr>
         </thead>
         <tbody v-if="posts.data && posts.data.length > 0">
-        <tr v-for="post in posts.data" :key="post.id">
+        <tr v-for="post in posts.data" :key="post.id" :class="isChecked(post.id) ? 'table-primary' : ''">
+          <td>
+            <v-checkbox :value="post.id" v-model="checked" />
+          </td>
           <td>{{ post.title }}</td>
           <td>{{ new Date(post.created_at).toLocaleString('ru-RU') }}</td>
           <td class="td-post-action">
@@ -116,18 +147,18 @@
         </tr>
         </tbody>
         <tbody class="text-center" v-else>No Posts Found</tbody>
-        <div class="text-center">
-          <v-pagination v-model="pagination.current" :length="pagination.total" @input="getPosts" circle></v-pagination>
-        </div>
       </template>
     </v-simple-table>
+    <div class="text-center">
+      <v-pagination v-model="pagination.current" :total-visible="8" :length="pagination.total" @input="onPageChange" circle></v-pagination>
+    </div>
   </div>
 </template>
 
 <script>
-import PostService from "@/service/PostService";
-import Errors from "@/views/Errors";
-import {debounce} from "lodash";
+import {debounce} from 'lodash'
+import Errors from '../../../components/Errors'
+import PostService from '../../../service/PostService'
 
 export default {
   components: {
@@ -137,19 +168,24 @@ export default {
     return {
       posts: [],
       errors: [],
-      keyword: null,
+      keyword: this.$route.query.search ?? null,
       pagination: {
-        current: 1,
-        total: 0
+        current: this.$route.query.page ?? 1,
+        total: 0,
       },
       sort: {
-        direction : 'asc',
+        direction: 'asc',
         field: null,
       },
-      startDate: null,
-      endDate: null,
+      startDate: this.$route.query.startDate ?? null,
+      endDate: this.$route.query.endDate ?? null,
       menu1: false,
       menu2: false,
+      checked: [],
+      selectPage: false,
+      selectAll: false,
+      importFile: null,
+      uploadPercentage: 0
     }
   },
   created() {
@@ -163,23 +199,39 @@ export default {
       return this.formatDate(this.endDate)
     },
     inputDisabled() {
-      return this.startDate === null;
+      return this.startDate === null
     }
   },
   watch: {
     keyword: debounce(function () {
+      this.pagination.current = 1
       this.getPosts(this.keyword)
     }, 300),
-    endDate() {
-      this.getPosts(this.endDate)
-    },
-    startDate() {
+    startDate: debounce(function () {
       this.getPosts(this.startDate)
+    }, 300),
+    endDate: debounce(function () {
+      this.pagination.current = 1
+      this.getPosts(this.endDate)
+    }, 300),
+    selectPage: function (value) {
+      this.checked = [];
+      if (value) {
+        this.posts.data.forEach(post => {
+          this.checked.push(post.id);
+        });
+      } else {
+        this.checked = [];
+        this.selectAll = false;
+      }
     },
+    onUploadProgress: function( progressEvent ) {
+      this.uploadPercentage = parseInt( Math.round( ( progressEvent.loaded / progressEvent.total ) * 100 ) );
+    }.bind(this)
   },
   methods: {
     getPosts() {
-      const page = this.pagination.current ?? 1
+      let page = this.pagination.current ?? 1
       let params = `?page=${page}`
 
       if (this.keyword !== null) {
@@ -200,28 +252,66 @@ export default {
         this.posts = response.data
         this.pagination.current = response.data.meta.current_page
         this.pagination.total = response.data.meta.last_page
+        this.$router.push(params)
         this.errors.endDate = null
       }).catch(error => {
         if (error.response.status === 422) {
-          this.errors = error.response.data.errors;
+          this.errors = error.response.data.errors
         }
       })
+    },
+    getExport() {
+      let checkedPost = this.checked
+      let params = `?id=${checkedPost}`
+
+      PostService.export(params).then(response => {
+        const fileUrl = window.URL.createObjectURL(response.data)
+        const fileLink = document.createElement('a')
+
+        fileLink.href = fileUrl
+        fileLink.setAttribute('download', 'export.csv')
+        document.body.appendChild(fileLink)
+        fileLink.click()
+        document.body.removeChild(fileLink)
+      }).catch(error => {
+        this.errors = error.response.data.errors
+      })
+    },
+    onFileChange(file) {
+      this.importFile = file
+    },
+    proceedImport() {
+      let formData = new FormData()
+      formData.append('importFile', this.importFile)
+
+      PostService.import(formData).then(response => {
+        if (response.status === 200) {
+          //
+        }
+      }).catch(error => {
+        if (error.response.status === 422) {
+          this.errors = error.response.data.errors
+        }
+      })
+    },
+    isChecked(post_id) {
+      return this.checked.includes(post_id)
+    },
+    onPageChange() {
+      this.getPosts()
     },
     deletePost(id) {
       if (confirm('Deleted post?')) {
         PostService.delete(id).then(() => {
-          /*const i = this.posts.data.map(data => data.id).indexOf(id)
-          this.posts.data.splice(i, 1)*/
           this.getPosts()
-          console.log('Delete Success')
         });
       }
     },
     sortBy(field) {
       if (this.sort.field === field) {
-        this.sort.direction = this.sort.direction === "asc" ? "desc" : "asc";
+        this.sort.direction = this.sort.direction === "asc" ? "desc" : "asc"
       } else {
-        this.sort.field = field;
+        this.sort.field = field
       }
       this.getPosts()
     },
@@ -243,7 +333,7 @@ export default {
 <style scoped lang="scss">
 
 .td-post-action {
-  display: table-cell;
+  display: revert;
   justify-content: center;
   align-items: center;
 }
@@ -264,8 +354,19 @@ export default {
   display: revert;
 }
 
-.highlighted {
-  color: red;
+.comment-btn {
+  margin-top: 5px;
+}
+
+.import-btn {
+  margin-bottom: 10px;
+}
+
+.v-file-input {
+  .v-input__control {
+    width: 200px;
+  }
+
 }
 
 </style>

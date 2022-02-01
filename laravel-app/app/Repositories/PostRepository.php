@@ -2,14 +2,14 @@
 
 namespace App\Repositories;
 
-use App\Filters\PostFilter;
 use App\Models\Post;
+use App\Services\Filters\PostFilter;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 
 class PostRepository implements PostRepositoryInterface
 {
-    const PER_PAGE = 15;
+    const PER_PAGE = 14;
 
     public function save(Post $post): bool
     {
@@ -47,8 +47,6 @@ class PostRepository implements PostRepositoryInterface
             ->where('id', $id)
             ->with('comments')
             ->with('comments.user')
-            ->with('comments.replies')
-            ->with('comments.replies.user')
             ->first();
     }
 

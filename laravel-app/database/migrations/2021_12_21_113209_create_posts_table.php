@@ -18,7 +18,6 @@ class CreatePostsTable extends Migration
             $table->string('guid')->unique();
             $table->string('title');
             $table->longText('description');
-            $table->string('type')->default('post');
             $table->timestamps();
         });
     }

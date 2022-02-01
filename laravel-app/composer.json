@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.4|^8.0",
+        "ext-json": "*",
         "ext-simplexml": "*",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.4",
@@ -13,9 +14,9 @@
         "laravel/sanctum": "^2.13",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.4",
+        "maatwebsite/excel": "^3.1",
         "spatie/laravel-permission": "^5.4",
-        "vimeo/laravel": "^5.6",
-      "ext-json": "*"
+        "vimeo/laravel": "^5.6"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

@@ -3,9 +3,9 @@
 namespace App\Services;
 
 use App\DTO\PostDTO;
-use App\Filters\PostFilter;
 use App\Models\Post;
 use App\Repositories\PostRepositoryInterface;
+use App\Services\Filters\PostFilter;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class PostService
@@ -17,7 +17,7 @@ class PostService
         $this->postRepository = $postRepository;
     }
 
-    public function create($item): bool
+    public function create($item): void
     {
         $namespaces = $item->getNamespaces(true);
         $yandex = $item->children($namespaces['yandex']);
@@ -27,7 +27,7 @@ class PostService
         $post->description = html_entity_decode((string)$yandex->{'full-text'});
         $post->guid = $item->guid;
 
-        return $this->postRepository->save($post);
+        $this->postRepository->save($post);
     }
 
     public function update(PostDTO $postDTO, int $id): void

@@ -7,6 +7,8 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class VideoRepository implements VideoRepositoryInterface
 {
+    const PER_PAGE = 10;
+
     public function save(Video $video): bool
     {
         return $video->save();
@@ -15,7 +17,7 @@ class VideoRepository implements VideoRepositoryInterface
     public function list(): LengthAwarePaginator
     {
         return Video::query()
-            ->paginate(10);
+            ->paginate(self::PER_PAGE);
     }
 
     public function findByVideoId(int $id)
@@ -31,7 +33,6 @@ class VideoRepository implements VideoRepositoryInterface
             ->where('id', $id)
             ->with('comments')
             ->with('comments.user')
-            ->with('comments.replies')
             ->first();
     }
 

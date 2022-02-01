@@ -1,18 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\Post;
 
 use App\DTO\PostDTO;
-use App\Filters\PostFilter;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\EditPostRequest;
 use App\Http\Requests\PostListRequest;
-use App\Http\Requests\StorePostRequest;
 use App\Http\Resources\Post\PostCollection;
 use App\Http\Resources\Post\PostResource;
-use App\Models\User;
-use App\Policy\PostPolicy;
+use App\Services\Filters\PostFilter;
 use App\Services\PostService;
-use Illuminate\Auth\Access\AuthorizationException;
+
 
 class PostController extends Controller
 {
@@ -26,12 +24,12 @@ class PostController extends Controller
     public function list(PostListRequest $request): PostCollection
     {
         $postFilter = PostFilter::make(
-            $request->get('page'),
-            $request->get('search'),
-            $request->get('startDate'),
-            $request->get('endDate'),
-            $request->get('sortField'),
-            $request->get('sortDirection')
+            $request->input('page'),
+            $request->input('search'),
+            $request->input('startDate'),
+            $request->input('endDate'),
+            $request->input('sortField'),
+            $request->input('sortDirection')
         );
 
         $posts = $this->postService->getPosts($postFilter);
@@ -39,38 +37,26 @@ class PostController extends Controller
         return new PostCollection($posts);
     }
 
-    /**
-     * @throws AuthorizationException
-     */
     public function edit(int $id): PostResource
     {
-        $this->authorize(PostPolicy::ACTION_EDIT, User::class);
         $post = $this->postService->getById($id);
 
         return new PostResource($post);
     }
 
-    /**
-     * @throws AuthorizationException
-     */
     public function show(int $id): PostResource
     {
-        $this->authorize(PostPolicy::ACTION_SHOW, User::class);
         $post = $this->postService->getById($id);
 
         return new PostResource($post);
     }
 
-    /**
-     * @throws AuthorizationException
-     */
     public function destroy(int $id): void
     {
-        $this->authorize(PostPolicy::ACTION_DELETE, User::class);
         $this->postService->delete($id);
     }
 
-    public function update(StorePostRequest $request, int $id): void
+    public function update(EditPostRequest $request, int $id): void
     {
         $postDTO = PostDTO::make(
             $request->input('title'),

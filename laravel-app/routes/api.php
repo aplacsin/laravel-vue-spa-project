@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\API\CommentController;
-use App\Http\Controllers\API\PostController;
-use App\Http\Controllers\API\VideoController;
+use App\Http\Controllers\API\Auth\AuthController;
+use App\Http\Controllers\API\Comment\CommentController;
+use App\Http\Controllers\API\Post\PostExportController;
+use App\Http\Controllers\API\Post\PostImportController;
+use App\Http\Controllers\API\Post\PostController;
+use App\Http\Controllers\API\Video\VideoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,10 +31,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 Route::group(['middleware' => 'auth:sanctum'], function () {
     /* Posts Route */
     Route::get('posts/', [PostController::class, 'list']);
-    Route::get('posts/edit/{id}', [PostController::class, 'edit']);
-    Route::get('posts/show/{id}', [PostController::class, 'show']);
+    Route::get('posts/edit/{id}', [PostController::class, 'edit'])->middleware('can:edit posts');
+    Route::get('posts/show/{id}', [PostController::class, 'show'])->middleware('can:show posts');
     Route::put('posts/update/{id}', [PostController::class, 'update']);
-    Route::delete('posts/destroy/{id}', [PostController::class, 'destroy']);
+    Route::delete('posts/destroy/{id}', [PostController::class, 'destroy'])->middleware('can:delete posts');
 
     /* Video Route */
     Route::get('videos/', [VideoController::class, 'list']);
@@ -40,4 +42,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     /* Comments Route */
     Route::post('comment/store', [CommentController::class, 'store']);
+
+    /* Export Import Route */
+    Route::get('posts/export/', [PostExportController::class, 'postExport']);
+    Route::get('posts/export-status', [PostExportController::class, 'status']);
+
+    Route::post('posts/import', [PostImportController::class, 'import']);
+    Route::get('posts/import-status', [PostImportController::class, 'status']);
 });

@@ -1,15 +1,15 @@
 <template>
   <div>
-    <router-link :to="{ name: 'ListPosts' }">
-      <v-btn depressed color="primary" class="link-btn back-btn">
-        Back
-      </v-btn>
-    </router-link>
+    <v-btn @click="hasHistory()
+    ? $router.go(-1)
+    : $router.push('/')" depressed color="primary" class="link-btn back-btn">
+      Back
+    </v-btn>
     <v-card v-if="post">
       <v-responsive>
         <v-card-text>
           <b>{{ post.title }}</b><br><br>
-          {{ domDecoder(post.description) }}
+          <div v-html="post.description"></div>
         </v-card-text>
       </v-responsive>
       <v-divider></v-divider>
@@ -21,8 +21,7 @@
             <v-textarea clearable clear-icon="mdi-close-circle" label="Your comment"
                         v-model="comments.content"></v-textarea>
           </v-container>
-          <input hidden v-model="post.id"/>
-          <input hidden v-model="post.type"/>
+          <input hidden v-model="post.id" />
           <v-alert v-if="message" dense text type="success">{{ message }}</v-alert>
           <Errors :errors="errors.content" />
           <v-btn class="comment-btn" depressed @click="storeComment()">
@@ -32,17 +31,17 @@
         <br><br>
         <v-divider></v-divider>
         <div class="comment-title-text">Display comment</div>
-        <FetchComments :comments="post.comments"/>
+        <FetchComments :comments="post.comments" />
       </div>
     </v-card>
   </div>
 </template>
 
 <script>
-import PostService from "@/service/PostService";
 import FetchComments from '../comments/FetchComments.vue';
-import CommentService from "@/service/CommentService";
-import Errors from "@/views/Errors";
+import Errors from "../../../components/Errors";
+import PostService from "../../../service/PostService";
+import CommentService from "../../../service/CommentService";
 
 export default {
   components: {
@@ -66,15 +65,10 @@ export default {
         this.post = response.data.data
       });
     },
-    domDecoder(str) {
-      const parser = new DOMParser()
-      const dom = parser.parseFromString('<!doctype html><body>' + str, 'text/html')
-      return dom.body.textContent
-    },
     storeComment() {
       const data = {
         id: this.post.id,
-        type: this.post.type,
+        type: 'post',
         content: this.comments.content,
       };
       CommentService.store(data).then(response => {
@@ -83,11 +77,14 @@ export default {
         this.comments.content = ''
         this.getPost(this.$route.params.id)
       }).catch(e => {
-        console.log(e);
+        console.log(e)
         if (e.response.status === 422) {
           this.errors = e.response.data.errors
         }
       });
+    },
+    hasHistory() {
+      return window.history.length > 2
     }
   }
 }

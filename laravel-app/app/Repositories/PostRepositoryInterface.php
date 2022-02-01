@@ -2,8 +2,8 @@
 
 namespace App\Repositories;
 
-use App\Filters\PostFilter;
 use App\Models\Post;
+use App\Services\Filters\PostFilter;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface PostRepositoryInterface

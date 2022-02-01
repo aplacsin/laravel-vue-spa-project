@@ -17,7 +17,6 @@ class CreateVideosTable extends Migration
             $table->id();
             $table->string('video_id')->unique();
             $table->string('title');
-            $table->string('type')->default('video');
             $table->timestamps();
         });
     }

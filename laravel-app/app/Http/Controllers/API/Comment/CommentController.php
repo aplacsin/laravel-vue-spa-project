@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\Comment;
 
 use App\DTO\CommentDTO;
 use App\Http\Controllers\Controller;
@@ -23,7 +23,7 @@ class CommentController extends Controller
             $request->input('id'),
             $request->input('content'),
             $request->input('type'),
-            $request->get('comment_id')
+            $request->input('comment_id')
         );
 
         $this->commentService->create($commentDTO);
