@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\ProcessPost;
 use App\Services\Imports\PostImportService;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
@@ -37,6 +38,10 @@ class PostImportJob implements ShouldQueue
     public function handle(PostImportService $postImportService)
     {
         foreach ($this->data as $post) {
+            $processPost = new ProcessPost();
+            $processPost->current = $post;
+            $processPost->save();
+
             $postData = array_combine($this->header, $post);
             $postImportService->syncPost($postData);
         }

@@ -27,6 +27,14 @@ const PostService = {
 
     import(data) {
         return Api().post('/posts/import', data, { headers: { 'content-type': 'multipart/form-data' } })
+    },
+
+    status(id) {
+        return Api().get('/process-status/' + id)
+    },
+
+    complete(data) {
+        return Api().post('/completed/' + data)
     }
 }
 

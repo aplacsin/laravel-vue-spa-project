@@ -4,22 +4,26 @@ namespace App\Services\Imports;
 
 use App\Jobs\PostImportJob;
 use App\Models\Post;
+use App\Models\ProcessPost;
 use App\Repositories\PostRepositoryInterface;
+use App\Repositories\ProcessPostRepositoryInterface;
 use Throwable;
 
 class PostImportService
 {
     private PostRepositoryInterface $postRepository;
+    private ProcessPostRepositoryInterface $processPostRepository;
 
-    public function __construct(PostRepositoryInterface $postRepository)
+    public function __construct(PostRepositoryInterface $postRepository, ProcessPostRepositoryInterface $processPostRepository)
     {
         $this->postRepository = $postRepository;
+        $this->processPostRepository = $processPostRepository;
     }
 
     /**
      * @throws Throwable
      */
-    public function fileImport($file): void
+    public function importFile($file): void
     {
         if(!$file) {
             return;
@@ -57,6 +61,11 @@ class PostImportService
      */
     public function chunkData($data, $header)
     {
+        $countPost = count($data);
+        $processPost = new ProcessPost();
+        $processPost->total = $countPost;
+        $processPost->save();
+
         $chunks = array_chunk($data, 2000);
 
         foreach ($chunks as $chunk) {
@@ -82,5 +91,18 @@ class PostImportService
         $post->guid = $item['guid'];
 
         return $this->postRepository->save($post);
+    }
+
+    public function status(int $id)
+    {
+        return $this->processPostRepository->findById($id);
+    }
+
+    public function complete(bool $status): bool
+    {
+        $complete = $this->processPostRepository->findById(1);
+        $complete->processed = $status;
+
+        return $this->processPostRepository->save($complete);
     }
 }

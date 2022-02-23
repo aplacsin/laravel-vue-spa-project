@@ -6,6 +6,8 @@ use App\Repositories\CommentRepository;
 use App\Repositories\CommentRepositoryInterface;
 use App\Repositories\PostRepository;
 use App\Repositories\PostRepositoryInterface;
+use App\Repositories\ProcessPostRepository;
+use App\Repositories\ProcessPostRepositoryInterface;
 use App\Repositories\VideoRepository;
 use App\Repositories\VideoRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
@@ -32,6 +34,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             CommentRepositoryInterface::class,
             CommentRepository::class
+        );
+
+        $this->app->bind(
+            ProcessPostRepositoryInterface::class,
+            ProcessPostRepository::class
         );
     }
 

@@ -91,7 +91,10 @@
             <v-btn class="import-btn" depressed @click="proceedImport">
               Import
             </v-btn>
-<!--            <v-progress-linear :value="uploadPercentage"></v-progress-linear>-->
+            <div v-show="progressBar.visible">
+              <v-progress-linear :value="progressBar.progress"></v-progress-linear>
+              <div class="text-right mt-1">{{ this.progressBar.current }} / {{ this.progressBar.total }}</div>
+            </div>
             <Errors :errors="errors.importFile" />
           </v-col>
         </v-row>
@@ -133,7 +136,7 @@
             <v-checkbox :value="post.id" v-model="checked" />
           </td>
           <td>{{ post.title }}</td>
-          <td>{{ new Date(post.created_at).toLocaleString('ru-RU') }}</td>
+          <td>{{ post.created_at }}</td>
           <td class="td-post-action">
             <router-link :to="{ name: 'ShowPost', params: { id: post.id }}"
                          class="button-action flex-column post-action-btn"><span
@@ -165,6 +168,8 @@ export default {
     Errors
   },
   data() {
+    this.processBar = debounce(this.processBar, 2000);
+
     return {
       posts: [],
       errors: [],
@@ -185,7 +190,12 @@ export default {
       selectPage: false,
       selectAll: false,
       importFile: null,
-      uploadPercentage: 0
+      progressBar: {
+        progress: 0,
+        total: 0,
+        current: 0,
+        visible: false
+      },
     }
   },
   created() {
@@ -225,9 +235,9 @@ export default {
         this.selectAll = false;
       }
     },
-    onUploadProgress: function( progressEvent ) {
-      this.uploadPercentage = parseInt( Math.round( ( progressEvent.loaded / progressEvent.total ) * 100 ) );
-    }.bind(this)
+    /*processBar: debounce( function () {
+      this.processBar()
+    }, 2000)*/
   },
   methods: {
     getPosts() {
@@ -286,7 +296,7 @@ export default {
 
       PostService.import(formData).then(response => {
         if (response.status === 200) {
-          //
+          this.processBar();
         }
       }).catch(error => {
         if (error.response.status === 422) {
@@ -296,6 +306,28 @@ export default {
     },
     isChecked(post_id) {
       return this.checked.includes(post_id)
+    },
+    processBar() {
+      PostService.status(1).then(response => {
+
+        if (response.data.data.processed) {
+          this.progressBar.current = this.progressBar.total
+          this.progressBar.progress = 100
+          this.progressBar.visible = false
+          return
+        }
+
+        this.progressBar.visible = true
+        this.progressBar.total = response.data.data.total
+        this.progressBar.current = response.data.data.current
+        this.progressBar.progress = Math.ceil(this.progressBar.current / this.progressBar.total * 100)
+
+        if (this.progressBar.total === this.progressBar.current) {
+          PostService.complete(true)
+        }
+
+        this.processBar()
+      })
     },
     onPageChange() {
       this.getPosts()

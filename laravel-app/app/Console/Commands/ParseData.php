@@ -51,7 +51,7 @@ class ParseData extends Command
 
         $this->videoSyncService->sync($videos);
         $this->postSyncService->sync($url);
-        echo 'Success';
+        echo "Success\n";
         return 0;
     }
 }

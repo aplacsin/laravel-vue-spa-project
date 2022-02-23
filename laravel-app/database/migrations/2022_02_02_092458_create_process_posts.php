@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ProcessPostTable extends Migration
+class CreateProcessPosts extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class ProcessPostTable extends Migration
      */
     public function up()
     {
-        Schema::create('process_post', function (Blueprint $table) {
+        Schema::create('process_posts', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('total');
-            $table->integer('processed_count');
-            $table->boolean('processed');
-            $table->string('file_name');
+            $table->integer('current')->default(0);
+            $table->boolean('processed')->default(false);
+            $table->string('file_name')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -29,6 +30,6 @@ class ProcessPostTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('process_post');
+        Schema::dropIfExists('process_posts');
     }
 }

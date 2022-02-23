@@ -48,5 +48,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('posts/export-status', [PostExportController::class, 'status']);
 
     Route::post('posts/import', [PostImportController::class, 'import']);
-    Route::get('posts/import-status', [PostImportController::class, 'status']);
+    Route::get('process-status/{id}', [PostImportController::class, 'status']);
+    Route::post('completed/{status}', [PostImportController::class, 'completed']);
 });
