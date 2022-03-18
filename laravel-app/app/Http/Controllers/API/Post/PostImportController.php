@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ImportFileRequest;
 use App\Http\Resources\Post\PostProcessResource;
 use App\Services\Imports\PostImportService;
-use Illuminate\Http\Request;
 use Throwable;
 
 class PostImportController extends Controller

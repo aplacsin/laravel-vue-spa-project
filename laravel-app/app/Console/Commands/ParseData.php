@@ -17,7 +17,7 @@ class ParseData extends Command
      *
      * @var string
      */
-    protected $signature = 'parse:hourly';
+    protected $signature = 'parse:data';
 
     /**
      * The console command description.
@@ -51,6 +51,7 @@ class ParseData extends Command
 
         $this->videoSyncService->sync($videos);
         $this->postSyncService->sync($url);
+
         echo "Success\n";
         return 0;
     }

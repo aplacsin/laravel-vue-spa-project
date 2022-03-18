@@ -2,7 +2,7 @@ import axios from "axios";
 import router from "@/router";
 
 const BaseApi = axios.create({
-    baseURL: "http://localhost/api",
+    baseURL: "http://dev.laravel.test/api",
     headers: {
         Accept: "application/json",
         "Content-Type": "application/json"
