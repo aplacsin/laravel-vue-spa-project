@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Sync;
 
 use App\Repositories\VideoRepositoryInterface;
+use App\Services\VideoService;
 
 class VideoSyncService
 {

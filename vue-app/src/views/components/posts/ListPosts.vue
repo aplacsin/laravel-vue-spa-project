@@ -3,80 +3,106 @@
     <div>
       <v-container>
         <v-row>
-          <v-col
-              cols="4"
-              md="4">
-            <v-text-field
-                v-model="keyword"
-                prepend-icon="mdi-table-search"
-                label="Search...">
-            </v-text-field>
-          </v-col>
-          <v-col
-              cols="4"
-              lg="4">
-            <v-menu
-                ref="menu1"
-                v-model="menu1"
-                :close-on-content-click="false"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="auto">
-              <template v-slot:activator="{ on, attrs }">
+          <div>
+            <v-btn class="comment-btn" depressed v-b-toggle.collapse-2>Filter</v-btn>
+            <b-collapse id="collapse-2">
+              <v-col
+                  cols="12"
+                  md="12"
+                  lg="12"
+                  sm="12"
+                  xs="12">
                 <v-text-field
-                    v-model="startDateFormatted"
-                    label="Start Date"
-                    persistent-hint
-                    prepend-icon="mdi-calendar"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on">
+                    v-model="keyword"
+                    prepend-icon="mdi-table-search"
+                    label="Search...">
                 </v-text-field>
-              </template>
-              <v-date-picker
-                  v-model="startDate"
-                  :max="endDate"
-                  no-title
-                  @input="menu1 = false">
-              </v-date-picker>
-            </v-menu>
-          </v-col>
+              </v-col>
+              <v-col
+                  cols="12"
+                  md="12"
+                  lg="12"
+                  sm="12"
+                  xs="12">
+                <v-menu
+                    ref="menu1"
+                    v-model="menu1"
+                    :close-on-content-click="false"
+                    transition="scale-transition"
+                    offset-y
+                    max-width="290px"
+                    min-width="auto">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                        v-model="startDateFormatted"
+                        label="Start Date"
+                        persistent-hint
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on">
+                    </v-text-field>
+                  </template>
+                  <v-date-picker
+                      v-model="startDate"
+                      :max="endDate"
+                      no-title
+                      @input="menu1 = false">
+                  </v-date-picker>
+                </v-menu>
+              </v-col>
+              <v-col
+                  cols="12"
+                  md="12"
+                  lg="12"
+                  sm="12"
+                  xs="12">
+                <v-menu
+                    ref="menu2"
+                    v-model="menu2"
+                    :close-on-content-click="false"
+                    transition="scale-transition"
+                    offset-y
+                    max-width="290px"
+                    min-width="auto">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                        v-model="endDateFormatted"
+                        label="End Date"
+                        persistent-hint
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        :disabled="inputDisabled"
+                        v-bind="attrs"
+                        v-on="on">
+                    </v-text-field>
+                  </template>
+                  <v-date-picker
+                      v-model="endDate"
+                      :min='startDate'
+                      no-title
+                      @input="menu2 = false">
+                  </v-date-picker>
+                </v-menu>
+                <Errors :errors="errors.endDate"/>
+              </v-col>
+              <v-col cols="12">
+                <v-btn class="comment-btn" depressed @click="clearFilter">
+                  Reset
+                </v-btn>
+              </v-col>
+            </b-collapse>
+          </div>
+        </v-row>
+      </v-container>
+      <v-container>
+        <v-row>
           <v-col
-              cols="4"
-              lg="4">
-            <v-menu
-                ref="menu2"
-                v-model="menu2"
-                :close-on-content-click="false"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="auto">
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                    v-model="endDateFormatted"
-                    label="End Date"
-                    persistent-hint
-                    prepend-icon="mdi-calendar"
-                    readonly
-                    :disabled="inputDisabled"
-                    v-bind="attrs"
-                    v-on="on">
-                </v-text-field>
-              </template>
-              <v-date-picker
-                  v-model="endDate"
-                  :min='startDate'
-                  no-title
-                  @input="menu2 = false">
-              </v-date-picker>
-            </v-menu>
-            <Errors :errors="errors.endDate" />
-          </v-col>
-          <v-col
-              cols="4"
-              lg="4">
+              cols="12"
+              md="4"
+              lg="6"
+              sm="12"
+              xs="12">
             <v-file-input
                 v-model="importFile"
                 type="file"
@@ -88,14 +114,14 @@
                 outlined
                 dense
             ></v-file-input>
-            <v-btn class="import-btn" depressed @click="proceedImport">
+            <v-btn class="import-btn" depressed @click="processImport">
               Import
             </v-btn>
             <div v-show="progressBar.visible">
               <v-progress-linear :value="progressBar.progress"></v-progress-linear>
               <div class="text-right mt-1">{{ this.progressBar.current }} / {{ this.progressBar.total }}</div>
             </div>
-            <Errors :errors="errors.importFile" />
+            <Errors :errors="errors.importFile"/>
           </v-col>
         </v-row>
         <div>
@@ -104,9 +130,6 @@
               Export
             </v-btn>
           </div>
-          <v-btn class="comment-btn" depressed @click="clearFilter">
-            Reset
-          </v-btn>
         </div>
       </v-container>
     </div>
@@ -114,7 +137,9 @@
       <template v-slot:default>
         <thead slot="head">
         <tr>
-          <th><v-checkbox v-model="selectPage" /></th>
+          <th>
+            <v-checkbox v-model="selectPage"/>
+          </th>
           <th data-field="title" class="text-center col-9" @click.prevent="sortBy('title')">
             Title
             <span class="arrow" v-if="sort.direction === 'desc' && sort.field === 'title'">&uarr;</span>
@@ -133,7 +158,7 @@
         <tbody v-if="posts.data && posts.data.length > 0">
         <tr v-for="post in posts.data" :key="post.id" :class="isChecked(post.id) ? 'table-primary' : ''">
           <td>
-            <v-checkbox :value="post.id" v-model="checked" />
+            <v-checkbox :value="post.id" v-model="checked"/>
           </td>
           <td>{{ post.title }}</td>
           <td>{{ post.created_at }}</td>
@@ -153,7 +178,8 @@
       </template>
     </v-simple-table>
     <div class="text-center">
-      <v-pagination v-model="pagination.current" :total-visible="8" :length="pagination.total" @input="onPageChange" circle></v-pagination>
+      <v-pagination v-model="pagination.current" :total-visible="8" :length="pagination.total" @input="onPageChange"
+                    circle></v-pagination>
     </div>
   </div>
 </template>
@@ -235,9 +261,6 @@ export default {
         this.selectAll = false;
       }
     },
-    /*processBar: debounce( function () {
-      this.processBar()
-    }, 2000)*/
   },
   methods: {
     getPosts() {
@@ -290,7 +313,7 @@ export default {
     onFileChange(file) {
       this.importFile = file
     },
-    proceedImport() {
+    processImport() {
       let formData = new FormData()
       formData.append('importFile', this.importFile)
 
@@ -398,7 +421,6 @@ export default {
   .v-input__control {
     width: 200px;
   }
-
 }
 
 </style>

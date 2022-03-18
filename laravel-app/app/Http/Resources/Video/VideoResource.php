@@ -29,7 +29,6 @@ class VideoResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'video_id' => $this->video_id,
-            'type' => $this->type,
             'created_at' => $this->created_at,
             'comments' => $this->comments,
         ];

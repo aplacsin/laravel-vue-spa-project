@@ -11,7 +11,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property string $guid
  * @property string $title
  * @property string $description
- * @property string $type
  * @property Carbon $created_at
  * @property mixed $comments
  */
@@ -30,7 +29,6 @@ class PostResource extends JsonResource
             'guid' => $this->guid,
             'title' => $this->title,
             'description' => $this->description,
-            'type' => $this->type,
             'created_at' => $this->created_at,
             'comments' => $this->comments,
         ];

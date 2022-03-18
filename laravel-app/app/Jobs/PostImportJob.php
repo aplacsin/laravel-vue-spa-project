@@ -37,10 +37,11 @@ class PostImportJob implements ShouldQueue
      */
     public function handle(PostImportService $postImportService)
     {
+        $processPost = new ProcessPost();
+
         foreach ($this->data as $post) {
-            $processPost = new ProcessPost();
-            $processPost->current = $post;
-            $processPost->save();
+            /*$processPost->current = count($post);
+            $processPost->save();*/
 
             $postData = array_combine($this->header, $post);
             $postImportService->syncPost($postData);

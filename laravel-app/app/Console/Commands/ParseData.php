@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Services\PostSyncService;
-use App\Services\VideoSyncService;
+use App\Services\Sync\PostSyncService;
+use App\Services\Sync\VideoSyncService;
 use Illuminate\Console\Command;
 use Vimeo\Laravel\VimeoManager;
 

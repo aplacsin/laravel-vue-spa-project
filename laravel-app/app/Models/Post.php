@@ -28,13 +28,23 @@ class Post extends Model
         return $this->morphMany(Comment::class, 'commentable')->whereNull('parent_id');
     }
 
-    public function setCreatedAtAttribute(string $value)
+    public function setCreatedAtAttribute(string $date)
     {
-        $this->attributes['created_at'] = (new Carbon($value))->format('Y-m-d H:i:s');
+        $this->attributes['created_at'] = (new Carbon($date))->format('Y-m-d H:i:s');
     }
 
-    public function setUpdatedAtAttribute(string $value)
+    public function getCreatedAtAttribute(string $date): string
     {
-        $this->attributes['updated_at'] = (new Carbon($value))->format('Y-m-d H:i:s');
+        return Carbon::parse($date)->format('d/m/Y');
+    }
+
+    public function setUpdatedAtAttribute(string $date)
+    {
+        $this->attributes['updated_at'] = (new Carbon($date))->format('Y-m-d H:i:s');
+    }
+
+    public function getUpdatedAtAttribute(string $date): string
+    {
+        return Carbon::parse($date)->format('d/m/Y');
     }
 }

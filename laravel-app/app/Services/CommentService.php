@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTO\CommentDTO;
+use App\Enums\CommentType;
 use App\Models\Comment;
 use App\Repositories\CommentRepositoryInterface;
 
@@ -24,11 +25,11 @@ class CommentService
         $comment = new Comment;
         $comment->content = $commentDTO->getContent();
         $comment->user()->associate($commentDTO->getUserId());
-        if ($commentDTO->getParentId() !== null) {
+        if ($commentDTO->getParentId()) {
             $comment->parent_id = $commentDTO->getParentId();
         }
 
-        $this->extracted($commentDTO, $comment);
+        $this->typeComment($commentDTO, $comment);
     }
 
     /**
@@ -36,16 +37,16 @@ class CommentService
      * @param Comment $comment
      * @return void
      */
-    public function extracted(CommentDTO $commentDTO, Comment $comment): void
+    public function typeComment(CommentDTO $commentDTO, Comment $comment): void
     {
         $type = $commentDTO->getType();
 
-        if ($type == 'post') {
+        if ($type === CommentType::post()->value) {
             $post = $this->postService->getById($commentDTO->getId());
             $this->commentRepository->save($comment, $post);
         }
 
-        if ($type == 'video') {
+        if ($type === CommentType::video()->value) {
             $video = $this->videoService->getById($commentDTO->getId());
             $this->commentRepository->save($comment, $video);
         }

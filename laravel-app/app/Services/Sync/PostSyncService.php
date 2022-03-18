@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Sync;
 
 use App\Repositories\PostRepositoryInterface;
+use App\Services\PostService;
 
 class PostSyncService
 {
