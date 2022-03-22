@@ -46,8 +46,8 @@ class ParseData extends Command
      */
     public function handle(): int
     {
-        $url = env("URL_PARSE_SITE");
-        $videos = $this->vimeo->request(env("VIMEO_CHANNEL_URL"), ['per_page' => 50]);
+        $url = config('parser.url');
+        $videos = $this->vimeo->request(config('vimeo.url'), ['per_page' => 50]);
 
         $this->videoSyncService->sync($videos);
         $this->postSyncService->sync($url);

@@ -2,11 +2,13 @@
 
 namespace App\Services\Imports;
 
+use App\Enums\DiskType;
 use App\Jobs\PostImportJob;
 use App\Models\Post;
 use App\Models\ProcessPost;
 use App\Repositories\PostRepositoryInterface;
 use App\Repositories\ProcessPostRepositoryInterface;
+use Illuminate\Support\Facades\Storage;
 use Throwable;
 
 class PostImportService
@@ -28,8 +30,8 @@ class PostImportService
         if(!$file) {
             return;
         }
+        Storage::disk(DiskType::public()->value)->putFileAs('imports', $file, 'imports.csv');
 
-        $file->storeAs('public/imports', 'imports.csv');
         $this->parseFile();
     }
 

@@ -19,6 +19,8 @@ declare(strict_types=1);
 
 return [
 
+    'url' => env('VIMEO_CHANNEL_URL'),
+
     /*
     |--------------------------------------------------------------------------
     | Default Connection Name

@@ -31,6 +31,7 @@ class PostRepository implements PostRepositoryInterface
             ->when($filter->getSortField() && $filter->getSortDirection(), function (Builder $query) use ($filter): Builder {
                 return $query->orderBy($filter->getSortField(), $filter->getSortDirection());
             })
+            ->orderBy('created_at', 'DESC')
             ->paginate(self::PER_PAGE);
     }
 

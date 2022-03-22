@@ -100,7 +100,7 @@
           <v-col
               cols="12"
               md="4"
-              lg="6"
+              lg="4"
               sm="12"
               xs="12">
             <v-file-input
@@ -201,7 +201,7 @@ export default {
       errors: [],
       keyword: this.$route.query.search ?? null,
       pagination: {
-        current: this.$route.query.page ?? 1,
+        current: JSON.parse(this.$route.query.page || '1'),
         total: 0,
       },
       sort: {

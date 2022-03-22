@@ -24,5 +24,4 @@ class PostPolicy
     {
         return $user->can('delete posts');
     }
-
 }
