@@ -36,7 +36,7 @@ class VideoRepository implements VideoRepositoryInterface
             ->first();
     }
 
-    public function removeById(int $id)
+    public function removeById(int $id): void
     {
         Video::query()
             ->findOrFail($id)

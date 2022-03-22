@@ -36,9 +36,9 @@ class PostExportJob implements ShouldQueue
     public function handle()
     {
         foreach ($this->data as $post) {
-            $row['guid']  = $post->guid;
-            $row['title']    = $post->title;
-            $row['description']  = $post->description;
+            $row['guid'] = $post->guid;
+            $row['title'] = $post->title;
+            $row['description'] = $post->description;
 
             fputcsv($this->file, array($row['guid'], $row['title'], $row['description']));
         }

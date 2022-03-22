@@ -2,8 +2,8 @@
 
 namespace App\Repositories;
 
+use App\Filters\PostFilter;
 use App\Models\Post;
-use App\Services\Filters\PostFilter;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -20,13 +20,13 @@ class PostRepository implements PostRepositoryInterface
     {
         return Post::query()
             ->when($filter->getSearch(), function (Builder $query, string $search): Builder {
-                return $query->where('title', 'LIKE', '%'.$search.'%');
+                return $query->where('title', 'LIKE', '%' . $search . '%');
             })
             ->when($filter->getStartDate(), function (Builder $query, string $date): Builder {
                 return $query->whereDate('created_at', '>=', $date);
             })
             ->when($filter->getEndDate(), function (Builder $query, string $date): Builder {
-                return $query->whereDate('created_at','<=', $date);
+                return $query->whereDate('created_at', '<=', $date);
             })
             ->when($filter->getSortField() && $filter->getSortDirection(), function (Builder $query) use ($filter): Builder {
                 return $query->orderBy($filter->getSortField(), $filter->getSortDirection());
@@ -35,10 +35,10 @@ class PostRepository implements PostRepositoryInterface
             ->paginate(self::PER_PAGE);
     }
 
-    public function findByGuId($id)
+    public function findByGuId(string $guid)
     {
         return Post::query()
-            ->where('guid', $id)
+            ->where('guid', $guid)
             ->first();
     }
 

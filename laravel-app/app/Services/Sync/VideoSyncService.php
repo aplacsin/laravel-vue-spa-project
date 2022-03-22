@@ -16,14 +16,14 @@ class VideoSyncService
         $this->videoService = $videoService;
     }
 
-    public function sync($videos): void
+    public function sync(array $videos): void
     {
         foreach ($videos['body']['data'] as $video) {
             $this->videoSync($video);
         }
     }
 
-    public function videoSync($video): void
+    public function videoSync(array $video): void
     {
         $videoId = explode('/', $video['uri']);
         $modelVideo = $this->videoRepository->findByVideoId($videoId[2]);

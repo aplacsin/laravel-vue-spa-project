@@ -15,7 +15,7 @@ class VideoService
         $this->videoRepository = $videoRepository;
     }
 
-    public function create($item): bool
+    public function create(array $item): bool
     {
         $videoId = explode('/', $item['uri']);
 

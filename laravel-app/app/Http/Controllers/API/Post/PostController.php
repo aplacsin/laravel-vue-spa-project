@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\API\Post;
 
 use App\DTO\PostDTO;
+use App\Filters\PostFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EditPostRequest;
 use App\Http\Requests\PostListRequest;
 use App\Http\Resources\Post\PostCollection;
 use App\Http\Resources\Post\PostResource;
-use App\Services\Filters\PostFilter;
 use App\Services\PostService;
-
 
 class PostController extends Controller
 {

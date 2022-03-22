@@ -27,7 +27,7 @@ class PostImportService
      */
     public function importFile($file): void
     {
-        if(!$file) {
+        if (!$file) {
             return;
         }
         Storage::disk(DiskType::public()->value)->putFileAs('imports', $file, 'imports.csv');
@@ -43,7 +43,7 @@ class PostImportService
         $header = [];
         $data = [];
 
-        if(($handle = fopen(storage_path('app/public/imports/imports.csv'), 'r')) !== FALSE) {
+        if (($handle = fopen(storage_path('app/public/imports/imports.csv'), 'r')) !== FALSE) {
             while (($row = fgetcsv($handle, 1000)) !== FALSE) {
                 if (!$header) {
                     $header = $row;
@@ -61,7 +61,7 @@ class PostImportService
     /**
      * @throws Throwable
      */
-    public function chunkData($data, $header)
+    public function chunkData(array $data, array $header)
     {
         $countPost = count($data);
         $processPost = new ProcessPost();
@@ -76,7 +76,7 @@ class PostImportService
         }
     }
 
-    public function syncPost($post): void
+    public function syncPost(array $post): void
     {
         $modelPost = $this->postRepository->findByGuId($post['guid']);
 
@@ -85,7 +85,7 @@ class PostImportService
         }
     }
 
-    public function import($item): bool
+    public function import(array $item): bool
     {
         $post = new Post();
         $post->title = $item['title'];

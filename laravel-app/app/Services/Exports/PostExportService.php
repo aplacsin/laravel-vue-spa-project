@@ -27,14 +27,14 @@ class PostExportService
     {
         $header = array('guid', 'title', 'description');
 
-        $callback = function() use($posts, $header) {
+        $callback = function () use ($posts, $header) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $header);
 
             foreach ($posts as $post) {
-                $row['guid']  = $post->guid;
-                $row['title']    = $post->title;
-                $row['description']  = $post->description;
+                $row['guid'] = $post->guid;
+                $row['title'] = $post->title;
+                $row['description'] = $post->description;
 
                 fputcsv($file, array($row['guid'], $row['title'], $row['description']));
             }
@@ -50,11 +50,11 @@ class PostExportService
     public function export($callback): StreamedResponse
     {
         $headers = array(
-            "Content-type"        => "text/csv",
+            "Content-type" => "text/csv",
             "Content-Disposition" => "attachment; filename=export.csv",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
         );
 
         return response()->stream($callback, 200, $headers);

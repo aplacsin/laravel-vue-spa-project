@@ -2,8 +2,8 @@
 
 namespace App\Repositories;
 
+use App\Filters\PostFilter;
 use App\Models\Post;
-use App\Services\Filters\PostFilter;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface PostRepositoryInterface
@@ -12,7 +12,7 @@ interface PostRepositoryInterface
 
     public function list(PostFilter $filter): LengthAwarePaginator;
 
-    public function findByGuId(string $id);
+    public function findByGuId(string $guid);
 
     public function findById(int $id);
 

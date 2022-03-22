@@ -3,9 +3,9 @@
 namespace App\Services;
 
 use App\DTO\PostDTO;
+use App\Filters\PostFilter;
 use App\Models\Post;
 use App\Repositories\PostRepositoryInterface;
-use App\Services\Filters\PostFilter;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class PostService

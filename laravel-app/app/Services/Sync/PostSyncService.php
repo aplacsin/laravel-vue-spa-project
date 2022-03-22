@@ -16,7 +16,7 @@ class PostSyncService
         $this->postService = $postService;
     }
 
-    public function sync($url): void
+    public function sync(string $url): void
     {
         $context = stream_context_create(array(
             'http' => array(

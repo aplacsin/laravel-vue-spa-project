@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Filters;
+namespace App\Filters;
 
 class PostFilter
 {
