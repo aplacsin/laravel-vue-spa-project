@@ -30,20 +30,23 @@ class PostImportService
         if (!$file) {
             return;
         }
+
         Storage::disk(DiskType::public()->value)->putFileAs('imports', $file, 'imports.csv');
 
-        $this->parseFile();
+        $this->parseFile($file);
     }
 
     /**
      * @throws Throwable
      */
-    public function parseFile()
+    public function parseFile($file)
     {
         $header = [];
         $data = [];
+        $path = storage_path('app/public/imports/imports.csv');
+        $fileName = $file->getClientOriginalName();
 
-        if (($handle = fopen(storage_path('app/public/imports/imports.csv'), 'r')) !== FALSE) {
+        if (($handle = fopen($path, 'r')) !== FALSE) {
             while (($row = fgetcsv($handle, 1000)) !== FALSE) {
                 if (!$header) {
                     $header = $row;
@@ -52,20 +55,21 @@ class PostImportService
                 }
             }
             fclose($handle);
-            unlink(storage_path('app/public/imports/imports.csv'));
+            unlink($path);
         }
 
-        $this->chunkData($data, $header);
+        $this->chunkData($data, $header, $fileName);
     }
 
     /**
      * @throws Throwable
      */
-    public function chunkData(array $data, array $header)
+    public function chunkData(array $data, array $header, string $fileName)
     {
-        $countPost = count($data);
+        $totalPost = count($data);
         $processPost = new ProcessPost();
-        $processPost->total = $countPost;
+        $processPost->total = $totalPost;
+        $processPost->file_name = $fileName;
         $processPost->save();
 
         $chunks = array_chunk($data, 2000);

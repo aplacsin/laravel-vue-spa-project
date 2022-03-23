@@ -21,9 +21,7 @@
             <v-textarea clearable clear-icon="mdi-close-circle" label="Your comment"
                         v-model="comments.content"></v-textarea>
           </v-container>
-          <input hidden v-model="post.id" />
-          <v-alert v-if="message" dense text type="success">{{ message }}</v-alert>
-          <Errors :errors="errors.content" />
+          <input hidden v-model="post.id"/>
           <v-btn class="comment-btn" depressed @click="storeComment()">
             Add comment
           </v-btn>
@@ -31,7 +29,7 @@
         <br><br>
         <v-divider></v-divider>
         <div class="comment-title-text">Display comment</div>
-        <FetchComments :comments="post.comments" />
+        <FetchComments :comments="post.comments"/>
       </div>
     </v-card>
   </div>
@@ -39,14 +37,12 @@
 
 <script>
 import FetchComments from '../comments/FetchComments.vue';
-import Errors from "../../../components/Errors";
 import PostService from "../../../service/PostService";
 import CommentService from "../../../service/CommentService";
 
 export default {
   components: {
-    FetchComments,
-    Errors
+    FetchComments
   },
   data() {
     return {
@@ -73,13 +69,41 @@ export default {
       };
       CommentService.store(data).then(response => {
         console.log(response.data)
-        this.message = 'The comment was stored successfully!'
         this.comments.content = ''
         this.getPost(this.$route.params.id)
+        this.message = 'The comment was stored success!'
+        this.$toast.success(this.message, {
+          position: "top-right",
+          timeout: 5000,
+          closeOnClick: true,
+          pauseOnFocusLoss: true,
+          pauseOnHover: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          showCloseButtonOnHover: false,
+          hideProgressBar: false,
+          closeButton: "button",
+          icon: true,
+          rtl: false
+        });
       }).catch(e => {
         console.log(e)
         if (e.response.status === 422) {
           this.errors = e.response.data.errors
+          this.$toast.error(this.errors.content[0], {
+            position: "top-right",
+            timeout: 5000,
+            closeOnClick: true,
+            pauseOnFocusLoss: true,
+            pauseOnHover: true,
+            draggable: true,
+            draggablePercent: 0.6,
+            showCloseButtonOnHover: false,
+            hideProgressBar: false,
+            closeButton: "button",
+            icon: true,
+            rtl: false
+          });
         }
       });
     },

@@ -15,7 +15,6 @@
             required
         ></v-text-field>
         <vue2-tinymce-editor v-model="post.description" :options="options"></vue2-tinymce-editor>
-        <v-alert v-if="message" dense text type="success" transition="slide-y-transition">{{ message }}</v-alert>
       </v-container>
     </template>
     <v-btn depressed @click="updatePost(post.id)">
@@ -26,7 +25,7 @@
 
 <script>
 import PostService from "../../../service/PostService"
-import { Vue2TinymceEditor } from "vue2-tinymce-editor"
+import {Vue2TinymceEditor} from "vue2-tinymce-editor"
 
 export default {
   components: {
@@ -61,14 +60,40 @@ export default {
       PostService.update(id, data)
           .then(response => {
             console.log(response.data);
-            this.message = 'The post was updated successfully!'
-            setTimeout(function(scope){
-              scope.message = ''
-            }, 2000, this)
-          })
-          .catch(e => {
-            console.log(e)
+            this.message = 'The post was updated success!'
+            this.$toast.success(this.message, {
+              position: "top-right",
+              timeout: 5000,
+              closeOnClick: true,
+              pauseOnFocusLoss: true,
+              pauseOnHover: true,
+              draggable: true,
+              draggablePercent: 0.6,
+              showCloseButtonOnHover: false,
+              hideProgressBar: false,
+              closeButton: "button",
+              icon: true,
+              rtl: false
+            });
+          }).catch(error => {
+        if (error.response.status === 422) {
+          this.errors = error.response.data.errors
+          this.$toast.error(this.errors.title[0] ?? this.errors.description[0], {
+            position: "top-right",
+            timeout: 5000,
+            closeOnClick: true,
+            pauseOnFocusLoss: true,
+            pauseOnHover: true,
+            draggable: true,
+            draggablePercent: 0.6,
+            showCloseButtonOnHover: false,
+            hideProgressBar: false,
+            closeButton: "button",
+            icon: true,
+            rtl: false
           });
+        }
+      })
     },
     hasHistory() {
       return window.history.length > 2

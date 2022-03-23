@@ -84,7 +84,6 @@
                       @input="menu2 = false">
                   </v-date-picker>
                 </v-menu>
-                <Errors :errors="errors.endDate"/>
               </v-col>
               <v-col cols="12">
                 <v-btn class="comment-btn" depressed @click="clearFilter">
@@ -117,11 +116,8 @@
             <v-btn class="import-btn" depressed @click="processImport">
               Import
             </v-btn>
-            <div v-show="progressBar.visible">
-              <v-progress-linear :value="progressBar.progress"></v-progress-linear>
-              <div class="text-right mt-1">{{ this.progressBar.current }} / {{ this.progressBar.total }}</div>
-            </div>
-            <Errors :errors="errors.importFile"/>
+            <ProgressBar :visible="progressBar.visible" :total="progressBar.total" :current="progressBar.current"
+                         :progress="progressBar.progress"></ProgressBar>
           </v-col>
         </v-row>
         <div>
@@ -138,7 +134,7 @@
         <thead slot="head">
         <tr>
           <th>
-            <v-checkbox v-model="selectPage"/>
+            <v-checkbox v-model="selectAll"/>
           </th>
           <th data-field="title" class="text-center col-9" @click.prevent="sortBy('title')">
             Title
@@ -186,12 +182,12 @@
 
 <script>
 import {debounce} from 'lodash'
-import Errors from '../../../components/Errors'
 import PostService from '../../../service/PostService'
+import ProgressBar from "@/components/ProgressBar";
 
 export default {
   components: {
-    Errors
+    ProgressBar
   },
   data() {
     this.processBar = debounce(this.processBar, 2000);
@@ -213,7 +209,6 @@ export default {
       menu1: false,
       menu2: false,
       checked: [],
-      selectPage: false,
       selectAll: false,
       importFile: null,
       progressBar: {
@@ -250,14 +245,13 @@ export default {
       this.pagination.current = 1
       this.getPosts(this.endDate)
     }, 300),
-    selectPage: function (value) {
+    selectAll: function (value) {
       this.checked = [];
       if (value) {
         this.posts.data.forEach(post => {
           this.checked.push(post.id);
         });
       } else {
-        this.checked = [];
         this.selectAll = false;
       }
     },
@@ -290,6 +284,20 @@ export default {
       }).catch(error => {
         if (error.response.status === 422) {
           this.errors = error.response.data.errors
+          this.$toast.error(this.errors.endDate[0], {
+            position: "top-right",
+            timeout: 5000,
+            closeOnClick: true,
+            pauseOnFocusLoss: true,
+            pauseOnHover: true,
+            draggable: true,
+            draggablePercent: 0.6,
+            showCloseButtonOnHover: false,
+            hideProgressBar: false,
+            closeButton: "button",
+            icon: true,
+            rtl: false
+          });
         }
       })
     },
@@ -308,6 +316,9 @@ export default {
         document.body.removeChild(fileLink)
       }).catch(error => {
         this.errors = error.response.data.errors
+        setTimeout(function(scope){
+          scope.errors = ''
+        }, 5000, this)
       })
     },
     onFileChange(file) {
@@ -324,6 +335,20 @@ export default {
       }).catch(error => {
         if (error.response.status === 422) {
           this.errors = error.response.data.errors
+          this.$toast.error(this.errors.importFile[0], {
+            position: "top-right",
+            timeout: 5000,
+            closeOnClick: true,
+            pauseOnFocusLoss: true,
+            pauseOnHover: true,
+            draggable: true,
+            draggablePercent: 0.6,
+            showCloseButtonOnHover: false,
+            hideProgressBar: false,
+            closeButton: "button",
+            icon: true,
+            rtl: false
+          });
         }
       })
     },
@@ -358,6 +383,21 @@ export default {
     deletePost(id) {
       if (confirm('Deleted post?')) {
         PostService.delete(id).then(() => {
+          this.message = 'Success deleted!'
+          this.$toast.success(this.message, {
+            position: "top-right",
+            timeout: 5000,
+            closeOnClick: true,
+            pauseOnFocusLoss: true,
+            pauseOnHover: true,
+            draggable: true,
+            draggablePercent: 0.6,
+            showCloseButtonOnHover: false,
+            hideProgressBar: false,
+            closeButton: "button",
+            icon: true,
+            rtl: false
+          });
           this.getPosts()
         });
       }

@@ -18,6 +18,7 @@
     "vue": "^2.6.14",
     "vue-axios": "^3.4.0",
     "vue-router": "^3.2.0",
+    "vue-toastification": "^1.7.14",
     "vue2-tinymce-editor": "0.0.1",
     "vuetify": "^2.4.0",
     "vuex": "^3.4.0",
