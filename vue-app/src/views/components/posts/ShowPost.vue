@@ -68,7 +68,7 @@ export default {
         content: this.comments.content,
       };
       CommentService.store(data).then(response => {
-        console.log(response.data)
+        response.data
         this.comments.content = ''
         this.getPost(this.$route.params.id)
         this.message = 'The comment was stored success!'
@@ -86,10 +86,9 @@ export default {
           icon: true,
           rtl: false
         });
-      }).catch(e => {
-        console.log(e)
-        if (e.response.status === 422) {
-          this.errors = e.response.data.errors
+      }).catch(error => {
+        if (error.response.status === 422) {
+          this.errors = error.response.data.errors
           this.$toast.error(this.errors.content[0], {
             position: "top-right",
             timeout: 5000,

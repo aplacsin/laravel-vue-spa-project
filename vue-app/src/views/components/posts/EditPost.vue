@@ -59,7 +59,7 @@ export default {
       };
       PostService.update(id, data)
           .then(response => {
-            console.log(response.data);
+            response.data
             this.message = 'The post was updated success!'
             this.$toast.success(this.message, {
               position: "top-right",

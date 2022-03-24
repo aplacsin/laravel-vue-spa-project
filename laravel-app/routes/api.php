@@ -44,10 +44,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('comment/store', [CommentController::class, 'store']);
 
     /* Export Import Route */
-    Route::get('posts/export/', [PostExportController::class, 'postExport']);
-    Route::get('posts/export-status', [PostExportController::class, 'status']);
+    Route::get('posts/export/', [PostExportController::class, 'postExport'])->middleware('can:export posts');
+    Route::get('posts/export-status', [PostExportController::class, 'status'])->middleware('can:export posts');
 
-    Route::post('posts/import', [PostImportController::class, 'import']);
-    Route::get('process-status/{id}', [PostImportController::class, 'status']);
-    Route::post('completed/{status}', [PostImportController::class, 'completed']);
+    Route::post('posts/import', [PostImportController::class, 'import'])->middleware('can:import posts');
+    Route::get('process-status/{id}', [PostImportController::class, 'status'])->middleware('can:import posts');
+    Route::post('completed/{status}', [PostImportController::class, 'completed'])->middleware('can:import posts');
 });

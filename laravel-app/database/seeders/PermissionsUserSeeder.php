@@ -22,6 +22,8 @@ class PermissionsUserSeeder extends Seeder
         Permission::create(['name' => 'show posts']);
         Permission::create(['name' => 'edit posts']);
         Permission::create(['name' => 'delete posts']);
+        Permission::create(['name' => 'import posts']);
+        Permission::create(['name' => 'export posts']);
 
         $role1 = Role::create(['name' => 'editor']);
         $role1->givePermissionTo('show posts');

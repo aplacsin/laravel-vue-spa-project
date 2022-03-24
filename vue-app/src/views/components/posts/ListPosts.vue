@@ -1,10 +1,49 @@
 <template>
   <div>
     <div>
-      <v-container>
+      <!--      <FilterPost
+                :keyword="keyword"
+                :startDateFormatted="startDateFormatted"
+                :startDate="startDate"
+                :endDate="endDate"
+                :endDateFormatted="endDateFormatted"
+                :clearFilter="clearFilter"
+                :inputDisabled="inputDisabled"></FilterPost>-->
+      <v-container class="wrapper-btn">
+        <v-row>
+          <v-col
+              cols="12"
+              md="12"
+              lg="12"
+              sm="12"
+              xs="12"
+              class="d-flex">
+            <v-btn class="filter-btn" depressed v-b-toggle.collapse-2>
+              <span class="mdi mdi-filter"></span>
+            </v-btn>
+            <ImportDialog :onFileChange="this.onFileChange" :processImport="this.processImport"></ImportDialog>
+            <v-btn class="export-btn" depressed @click="getExport">
+              <span class="mdi mdi-export"></span>
+            </v-btn>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col
+              cols="12"
+              md="2"
+              lg="2"
+              sm="2"
+              xs="2">
+            <ProgressBar
+                :visible="progressBar.visible"
+                :total="progressBar.total"
+                :current="progressBar.current"
+                :progress="progressBar.progress">
+            </ProgressBar>
+          </v-col>
+        </v-row>
         <v-row>
           <div>
-            <v-btn class="comment-btn" depressed v-b-toggle.collapse-2>Filter</v-btn>
             <b-collapse id="collapse-2">
               <v-col
                   cols="12"
@@ -94,40 +133,6 @@
           </div>
         </v-row>
       </v-container>
-      <v-container>
-        <v-row>
-          <v-col
-              cols="12"
-              md="4"
-              lg="4"
-              sm="12"
-              xs="12">
-            <v-file-input
-                v-model="importFile"
-                type="file"
-                ref="importFile"
-                label="File input"
-                id="input-file-import"
-                name="fileImport"
-                @change="onFileChange"
-                outlined
-                dense
-            ></v-file-input>
-            <v-btn class="import-btn" depressed @click="processImport">
-              Import
-            </v-btn>
-            <ProgressBar :visible="progressBar.visible" :total="progressBar.total" :current="progressBar.current"
-                         :progress="progressBar.progress"></ProgressBar>
-          </v-col>
-        </v-row>
-        <div>
-          <div>
-            <v-btn class="export-btn" depressed @click="getExport">
-              Export
-            </v-btn>
-          </div>
-        </div>
-      </v-container>
     </div>
     <v-simple-table>
       <template v-slot:default>
@@ -138,13 +143,17 @@
           </th>
           <th data-field="title" class="text-center col-9" @click.prevent="sortBy('title')">
             Title
-            <span class="arrow" v-if="sort.direction === 'desc' && sort.field === 'title'">&uarr;</span>
-            <span class="arrow" v-if="sort.direction === 'asc' && sort.field === 'title'">&darr;</span>
+            <span class="arrow" v-if="sort.direction === 'desc' && sort.field === 'title'"><span
+                class="mdi mdi-arrow-up"></span></span>
+            <span class="arrow" v-if="sort.direction === 'asc' && sort.field === 'title'"><span
+                class="mdi mdi-arrow-down"></span></span>
           </th>
           <th data-field="created_at" class="text-center" @click.prevent="sortBy('created_at')">
             Created At
-            <span class="arrow" v-if="sort.direction === 'desc' && sort.field === 'created_at'">&uarr;</span>
-            <span class="arrow" v-if="sort.direction === 'asc' && sort.field === 'created_at'">&darr;</span>
+            <span class="arrow" v-if="sort.direction === 'desc' && sort.field === 'created_at'"><span
+                class="mdi mdi-arrow-up"></span></span>
+            <span class="arrow" v-if="sort.direction === 'asc' && sort.field === 'created_at'"><span
+                class="mdi mdi-arrow-down"></span></span>
           </th>
           <th data-field="action" class="text-center">
             Actions
@@ -174,8 +183,8 @@
       </template>
     </v-simple-table>
     <div class="text-center">
-      <v-pagination v-model="pagination.current" :total-visible="8" :length="pagination.total" @input="onPageChange"
-                    circle></v-pagination>
+      <v-pagination v-model="pagination.current" :total-visible="8" :length="pagination.total"
+                    @input="onPageChange"></v-pagination>
     </div>
   </div>
 </template>
@@ -184,9 +193,13 @@
 import {debounce} from 'lodash'
 import PostService from '../../../service/PostService'
 import ProgressBar from "@/components/ProgressBar";
+import ImportDialog from "@/views/components/posts/import/ImportDialog";
+/*import FilterPost from "@/views/components/posts/filters/FilterPost";*/
 
 export default {
   components: {
+    ImportDialog,
+    /*FilterPost,*/
     ProgressBar
   },
   data() {
@@ -196,18 +209,14 @@ export default {
       posts: [],
       errors: [],
       keyword: this.$route.query.search ?? null,
-      pagination: {
-        current: JSON.parse(this.$route.query.page || '1'),
-        total: 0,
-      },
-      sort: {
-        direction: 'asc',
-        field: null,
-      },
       startDate: this.$route.query.startDate ?? null,
       endDate: this.$route.query.endDate ?? null,
       menu1: false,
       menu2: false,
+      sort: {
+        direction: 'asc',
+        field: null,
+      },
       checked: [],
       selectAll: false,
       importFile: null,
@@ -216,6 +225,10 @@ export default {
         total: 0,
         current: 0,
         visible: false
+      },
+      pagination: {
+        current: JSON.parse(this.$route.query.page || '1'),
+        total: 0,
       },
     }
   },
@@ -280,7 +293,6 @@ export default {
         this.pagination.current = response.data.meta.current_page
         this.pagination.total = response.data.meta.last_page
         this.$router.push(params)
-        this.errors.endDate = null
       }).catch(error => {
         if (error.response.status === 422) {
           this.errors = error.response.data.errors
@@ -316,7 +328,7 @@ export default {
         document.body.removeChild(fileLink)
       }).catch(error => {
         this.errors = error.response.data.errors
-        setTimeout(function(scope){
+        setTimeout(function (scope) {
           scope.errors = ''
         }, 5000, this)
       })
@@ -453,14 +465,41 @@ export default {
   margin-top: 5px;
 }
 
-.import-btn {
-  margin-bottom: 10px;
+.export-btn {
+  height: 36px !important;
+  min-width: 0 !important;
+  padding: 0 16px !important;
+  width: 36px !important;
+
+  .mdi-export {
+    font-size: 20px;
+    transform: rotate(-90deg);
+  }
 }
 
-.v-file-input {
-  .v-input__control {
-    width: 200px;
+.filter-btn {
+  margin-right: 5px !important;
+  height: 36px !important;
+  min-width: 0 !important;
+  padding: 0 16px !important;
+  width: 36px !important;
+
+  .mdi-filter {
+    font-size: 20px;
   }
+}
+
+.mdi-arrow-up {
+  font-size: 13px;
+}
+
+.mdi-arrow-down {
+  font-size: 13px;
+}
+
+.wrapper-btn {
+  margin-right: 0;
+  margin-left: 0;
 }
 
 </style>
