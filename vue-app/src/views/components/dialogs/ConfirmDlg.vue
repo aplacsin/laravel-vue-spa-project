@@ -1,43 +1,37 @@
 <template>
-  <v-dialog
-      v-model="dialog"
-      :max-width="options.width"
-      :style="{ zIndex: options.zIndex }"
-      @keydown.esc="cancel"
-  >
-    <v-card>
-      <v-toolbar dark :color="options.color" dense flat>
-        <v-toolbar-title class="text-body-2 font-weight-bold grey--text">
+  <v-row justify="center">
+    <v-dialog
+        v-model="dialog"
+        persistent
+        :max-width="options.width">
+      <v-card>
+        <v-card-title class="text-h5 justify-center">
           {{ title }}
-        </v-toolbar-title>
-      </v-toolbar>
-      <v-card-text
-          v-show="!!message"
-          class="pa-4 black--text"
-          v-html="message"
-      ></v-card-text>
-      <v-card-actions class="pt-3">
-        <v-spacer></v-spacer>
-        <v-btn
-            v-if="!options.noConfirm"
-            color="grey"
-            text
-            class="body-2 font-weight-bold"
-            @click.native="cancel"
-        >Cancel
-        </v-btn
-        >
-        <v-btn
-            color="primary"
-            class="body-2 font-weight-bold"
-            outlined
-            @click.native="agree"
-        >OK
-        </v-btn
-        >
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+        </v-card-title>
+        <v-card-text
+            v-show="!!message"
+            class="pa-4"
+            v-html="message">
+        </v-card-text>
+        <v-card-actions class="dialog-btn-wrapper">
+          <v-spacer></v-spacer>
+          <v-btn
+              v-if="!options.noConfirm"
+              color="red darken-1"
+              text
+              @click.native="cancel">
+            Cancel
+          </v-btn>
+          <v-btn
+              color="green darken-1"
+              text
+              @click.native="agree">
+            OK
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-row>
 </template>
 
 <script>
@@ -46,14 +40,10 @@ export default {
   data() {
     return {
       dialog: false,
-      resolve: null,
-      reject: null,
       message: null,
       title: null,
       options: {
-        color: "grey lighten-3",
-        width: 400,
-        zIndex: 200,
+        width: 300,
         noConfirm: false,
       },
     };
@@ -80,3 +70,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+
+.dialog-btn-wrapper {
+  display: flex;
+}
+
+</style>

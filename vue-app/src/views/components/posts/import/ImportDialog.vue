@@ -14,7 +14,7 @@
         <v-card-text>
           Upload csv file!
         </v-card-text>
-        <v-card-actions>
+        <v-card-actions class="import-btn-wrapper">
           <v-spacer></v-spacer>
           <v-file-input
               v-model="importFile"
@@ -76,7 +76,7 @@ export default {
   }
 }
 
-.v-card__actions {
+.import-btn-wrapper {
   display: grid;
 }
 

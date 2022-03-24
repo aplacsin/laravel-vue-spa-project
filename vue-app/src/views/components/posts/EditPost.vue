@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import PostService from "../../../service/PostService";
+import PostService from "@/service/PostService";
 import {Vue2TinymceEditor} from "vue2-tinymce-editor";
 
 export default {

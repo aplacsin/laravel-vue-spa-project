@@ -111,7 +111,6 @@ export default {
     method: { type: Function },
     current: []
   },
-
   data() {
     return {
       menu1: false,

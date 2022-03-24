@@ -41,7 +41,7 @@ export default ({
     }
   },
   created() {
-    this.getVideos()
+    this.getVideos();
   },
   methods: {
     getVideos() {

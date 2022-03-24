@@ -37,8 +37,8 @@
 
 <script>
 import FetchComments from '../comments/FetchComments.vue';
-import PostService from "../../../service/PostService";
-import CommentService from "../../../service/CommentService";
+import PostService from "@/service/PostService";
+import CommentService from "@/service/CommentService";
 
 export default {
   components: {

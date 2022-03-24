@@ -175,7 +175,7 @@
                          class="button-action flex-column post-action-btn"><span
                 class="mdi mdi-pencil"></span></router-link>
             <button class="button-action flex-column post-action-delete-btn"
-                    @click="deletePost(post.id)"><span class="mdi mdi-delete"></span></button>
+                    @click="delPost(post.id)"><span class="mdi mdi-delete"></span></button>
           </td>
         </tr>
         </tbody>
@@ -186,18 +186,21 @@
       <v-pagination v-model="pagination.current" :total-visible="8" :length="pagination.total"
                     @input="onPageChange"></v-pagination>
     </div>
+    <ConfirmDlg ref="confirm"></ConfirmDlg>
   </div>
 </template>
 
 <script>
 import {debounce} from 'lodash';
-import PostService from '../../../service/PostService';
+import PostService from '@/service/PostService';
 import ProgressBar from "@/components/ProgressBar";
 import ImportDialog from "@/views/components/posts/import/ImportDialog";
+import ConfirmDlg from "@/views/components/dialogs/ConfirmDlg";
 /*import FilterPost from "@/views/components/posts/filters/FilterPost";*/
 
 export default {
   components: {
+    ConfirmDlg,
     ImportDialog,
     /*FilterPost,*/
     ProgressBar
@@ -392,27 +395,35 @@ export default {
     onPageChange() {
       this.getPosts();
     },
-    deletePost(id) {
-      if (confirm('Deleted post?')) {
-        PostService.delete(id).then(() => {
-          this.message = 'Success deleted!';
-          this.$toast.success(this.message, {
-            position: "top-right",
-            timeout: 5000,
-            closeOnClick: true,
-            pauseOnFocusLoss: true,
-            pauseOnHover: true,
-            draggable: true,
-            draggablePercent: 0.6,
-            showCloseButtonOnHover: false,
-            hideProgressBar: false,
-            closeButton: "button",
-            icon: true,
-            rtl: false
-          });
-          this.getPosts();
-        });
+    async delPost(id) {
+      if (
+          await this.$refs.confirm.open(
+              "Confirm",
+              "Are you sure you want to delete this post?"
+          )
+      ) {
+        this.deletePost(id);
       }
+    },
+    deletePost(id) {
+      PostService.delete(id).then(() => {
+        this.message = 'Success deleted!';
+        this.$toast.success(this.message, {
+          position: "top-right",
+          timeout: 5000,
+          closeOnClick: true,
+          pauseOnFocusLoss: true,
+          pauseOnHover: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          showCloseButtonOnHover: false,
+          hideProgressBar: false,
+          closeButton: "button",
+          icon: true,
+          rtl: false
+        });
+        this.getPosts();
+      });
     },
     sortBy(field) {
       if (this.sort.field === field) {

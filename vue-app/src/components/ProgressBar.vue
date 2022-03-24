@@ -9,10 +9,10 @@
 
 export default {
   props: {
-    visible: [],
-    current: [],
-    total: [],
-    progress: [],
+    visible: [] ?? false,
+    current: [] ?? 0,
+    total: [] ?? 0,
+    progress: [] ?? 0,
   }
 }
 
