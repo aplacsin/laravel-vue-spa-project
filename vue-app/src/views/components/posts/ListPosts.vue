@@ -44,7 +44,7 @@
         </v-row>
         <v-row>
           <div>
-            <b-collapse id="collapse-2">
+            <b-collapse id="collapse-2" class="collapse-menu">
               <v-col
                   cols="12"
                   md="12"
@@ -500,6 +500,11 @@ export default {
 .wrapper-btn {
   margin-right: 0;
   margin-left: 0;
+}
+
+.collapse-menu {
+  overflow: hidden;
+  transition: width 600ms ease-out, height 600ms ease-out;
 }
 
 </style>

@@ -12,7 +12,7 @@
           Import
         </v-card-title>
         <v-card-text>
-          Download csv file!
+          Upload csv file!
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
