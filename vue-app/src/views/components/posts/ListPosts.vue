@@ -190,8 +190,8 @@
 </template>
 
 <script>
-import {debounce} from 'lodash'
-import PostService from '../../../service/PostService'
+import {debounce} from 'lodash';
+import PostService from '../../../service/PostService';
 import ProgressBar from "@/components/ProgressBar";
 import ImportDialog from "@/views/components/posts/import/ImportDialog";
 /*import FilterPost from "@/views/components/posts/filters/FilterPost";*/
@@ -233,30 +233,30 @@ export default {
     }
   },
   created() {
-    this.getPosts()
+    this.getPosts();
   },
   computed: {
     startDateFormatted() {
-      return this.formatDate(this.startDate)
+      return this.formatDate(this.startDate);
     },
     endDateFormatted() {
-      return this.formatDate(this.endDate)
+      return this.formatDate(this.endDate);
     },
     inputDisabled() {
-      return this.startDate === null
+      return this.startDate === null;
     }
   },
   watch: {
     keyword: debounce(function () {
-      this.pagination.current = 1
-      this.getPosts(this.keyword)
+      this.pagination.current = 1;
+      this.getPosts(this.keyword);
     }, 300),
     startDate: debounce(function () {
-      this.getPosts(this.startDate)
+      this.getPosts(this.startDate);
     }, 300),
     endDate: debounce(function () {
-      this.pagination.current = 1
-      this.getPosts(this.endDate)
+      this.pagination.current = 1;
+      this.getPosts(this.endDate);
     }, 300),
     selectAll: function (value) {
       this.checked = [];
@@ -271,31 +271,31 @@ export default {
   },
   methods: {
     getPosts() {
-      let page = this.pagination.current ?? 1
-      let params = `?page=${page}`
+      let page = this.pagination.current ?? 1;
+      let params = `?page=${page}`;
 
       if (this.keyword !== null) {
-        params = params.concat(`&search=${this.keyword}`)
+        params = params.concat(`&search=${this.keyword}`);
       }
 
       if (this.startDate !== null) {
         if (this.endDate !== null) {
-          params = params.concat(`&startDate=${this.startDate}&endDate=${this.endDate}`)
+          params = params.concat(`&startDate=${this.startDate}&endDate=${this.endDate}`);
         }
       }
 
       if (this.sort.field && this.sort.direction !== null) {
-        params = params.concat(`&sortField=${this.sort.field}&sortDirection=${this.sort.direction}`)
+        params = params.concat(`&sortField=${this.sort.field}&sortDirection=${this.sort.direction}`);
       }
 
       PostService.list(params).then(response => {
-        this.posts = response.data
-        this.pagination.current = response.data.meta.current_page
-        this.pagination.total = response.data.meta.last_page
-        this.$router.push(params)
+        this.posts = response.data;
+        this.pagination.current = response.data.meta.current_page;
+        this.pagination.total = response.data.meta.last_page;
+        this.$router.push(params);
       }).catch(error => {
         if (error.response.status === 422) {
-          this.errors = error.response.data.errors
+          this.errors = error.response.data.errors;
           this.$toast.error(this.errors.endDate[0], {
             position: "top-right",
             timeout: 5000,
@@ -314,31 +314,31 @@ export default {
       })
     },
     getExport() {
-      let checkedPost = this.checked
-      let params = `?id=${checkedPost}`
+      let checkedPost = this.checked;
+      let params = `?id=${checkedPost}`;
 
       PostService.export(params).then(response => {
-        const fileUrl = window.URL.createObjectURL(response.data)
-        const fileLink = document.createElement('a')
+        const fileUrl = window.URL.createObjectURL(response.data);
+        const fileLink = document.createElement('a');
 
-        fileLink.href = fileUrl
-        fileLink.setAttribute('download', 'export.csv')
-        document.body.appendChild(fileLink)
-        fileLink.click()
-        document.body.removeChild(fileLink)
+        fileLink.href = fileUrl;
+        fileLink.setAttribute('download', 'export.csv');
+        document.body.appendChild(fileLink);
+        fileLink.click();
+        document.body.removeChild(fileLink);
       }).catch(error => {
-        this.errors = error.response.data.errors
+        this.errors = error.response.data.errors;
         setTimeout(function (scope) {
-          scope.errors = ''
+          scope.errors = '';
         }, 5000, this)
       })
     },
     onFileChange(file) {
-      this.importFile = file
+      this.importFile = file;
     },
     processImport() {
-      let formData = new FormData()
-      formData.append('importFile', this.importFile)
+      let formData = new FormData();
+      formData.append('importFile', this.importFile);
 
       PostService.import(formData).then(response => {
         if (response.status === 200) {
@@ -346,7 +346,7 @@ export default {
         }
       }).catch(error => {
         if (error.response.status === 422) {
-          this.errors = error.response.data.errors
+          this.errors = error.response.data.errors;
           this.$toast.error(this.errors.importFile[0], {
             position: "top-right",
             timeout: 5000,
@@ -365,37 +365,37 @@ export default {
       })
     },
     isChecked(post_id) {
-      return this.checked.includes(post_id)
+      return this.checked.includes(post_id);
     },
     processBar() {
       PostService.status(1).then(response => {
 
         if (response.data.data.processed) {
-          this.progressBar.current = this.progressBar.total
-          this.progressBar.progress = 100
-          this.progressBar.visible = false
-          return
+          this.progressBar.current = this.progressBar.total;
+          this.progressBar.progress = 100;
+          this.progressBar.visible = false;
+          return;
         }
 
-        this.progressBar.visible = true
-        this.progressBar.total = response.data.data.total
-        this.progressBar.current = response.data.data.current
-        this.progressBar.progress = Math.ceil(this.progressBar.current / this.progressBar.total * 100)
+        this.progressBar.visible = true;
+        this.progressBar.total = response.data.data.total;
+        this.progressBar.current = response.data.data.current;
+        this.progressBar.progress = Math.ceil(this.progressBar.current / this.progressBar.total * 100);
 
         if (this.progressBar.total === this.progressBar.current) {
-          PostService.complete(true)
+          PostService.complete(true);
         }
 
-        this.processBar()
+        this.processBar();
       })
     },
     onPageChange() {
-      this.getPosts()
+      this.getPosts();
     },
     deletePost(id) {
       if (confirm('Deleted post?')) {
         PostService.delete(id).then(() => {
-          this.message = 'Success deleted!'
+          this.message = 'Success deleted!';
           this.$toast.success(this.message, {
             position: "top-right",
             timeout: 5000,
@@ -410,28 +410,28 @@ export default {
             icon: true,
             rtl: false
           });
-          this.getPosts()
+          this.getPosts();
         });
       }
     },
     sortBy(field) {
       if (this.sort.field === field) {
-        this.sort.direction = this.sort.direction === "asc" ? "desc" : "asc"
+        this.sort.direction = this.sort.direction === "asc" ? "desc" : "asc";
       } else {
-        this.sort.field = field
+        this.sort.field = field;
       }
-      this.getPosts()
+      this.getPosts();
     },
     formatDate(date) {
-      if (!date) return null
+      if (!date) return null;
 
-      const [year, month, day] = date.split('-')
-      return `${month}/${day}/${year}`
+      const [year, month, day] = date.split('-');
+      return `${month}/${day}/${year}`;
     },
     clearFilter() {
-      this.keyword = null
-      this.endDate = null
-      this.startDate = null
+      this.keyword = null;
+      this.endDate = null;
+      this.startDate = null;
     }
   }
 }

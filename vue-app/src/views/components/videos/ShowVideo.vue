@@ -46,10 +46,10 @@
 </template>
 
 <script>
-import FetchComments from '../comments/FetchComments.vue'
-import Errors from '../../../components/Errors'
-import VideoService from '../../../service/VideoService'
-import CommentService from '../../../service/CommentService'
+import FetchComments from '../comments/FetchComments.vue';
+import Errors from '../../../components/Errors';
+import VideoService from '../../../service/VideoService';
+import CommentService from '../../../service/CommentService';
 
 export default {
   components: {
@@ -65,12 +65,12 @@ export default {
     }
   },
   mounted() {
-    this.getVideo(this.$route.params.id)
+    this.getVideo(this.$route.params.id);
   },
   methods: {
     getVideo(id) {
       VideoService.show(id).then(response => {
-        this.video = response.data.data
+        this.video = response.data.data;
       });
     },
     storeComment() {
@@ -80,14 +80,14 @@ export default {
         content: this.comments.content,
       };
       CommentService.store(data).then(response => {
-        console.log(response.data)
-        this.message = 'The comment was stored successfully!'
-        this.comments.content = ''
-        this.getVideo(this.$route.params.id)
+        console.log(response.data);
+        this.message = 'The comment was stored successfully!';
+        this.comments.content = '';
+        this.getVideo(this.$route.params.id);
       }).catch(e => {
-        console.log(e)
+        console.log(e);
         if (e.response.status === 422) {
-          this.errors = e.response.data.errors
+          this.errors = e.response.data.errors;
         }
       });
     }

@@ -53,12 +53,12 @@ export default {
     }
   },
   mounted() {
-    this.getPost(this.$route.params.id)
+    this.getPost(this.$route.params.id);
   },
   methods: {
     getPost(id) {
       PostService.show(id).then(response => {
-        this.post = response.data.data
+        this.post = response.data.data;
       });
     },
     storeComment() {
@@ -68,10 +68,10 @@ export default {
         content: this.comments.content,
       };
       CommentService.store(data).then(response => {
-        response.data
-        this.comments.content = ''
-        this.getPost(this.$route.params.id)
-        this.message = 'The comment was stored success!'
+        response.data;
+        this.comments.content = '';
+        this.getPost(this.$route.params.id);
+        this.message = 'The comment was stored success!';
         this.$toast.success(this.message, {
           position: "top-right",
           timeout: 5000,
@@ -88,7 +88,7 @@ export default {
         });
       }).catch(error => {
         if (error.response.status === 422) {
-          this.errors = error.response.data.errors
+          this.errors = error.response.data.errors;
           this.$toast.error(this.errors.content[0], {
             position: "top-right",
             timeout: 5000,
@@ -107,7 +107,7 @@ export default {
       });
     },
     hasHistory() {
-      return window.history.length > 2
+      return window.history.length > 2;
     }
   }
 }

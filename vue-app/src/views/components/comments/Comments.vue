@@ -44,12 +44,12 @@ export default {
     }
   },
   mounted() {
-    this.getComments(this.$route.params.id)
+    this.getComments(this.$route.params.id);
   },
   methods: {
     getComments(id) {
       CommentService.show(id).then(response => {
-        this.comments = response.data
+        this.comments = response.data;
       });
     },
     storeComment() {
@@ -59,14 +59,13 @@ export default {
         content: this.comments.content,
       };
       CommentService.store(data).then(response => {
-        console.log(response.data)
-        this.message = 'The comment was stored successfully!'
-        this.comments.content = ''
-        this.getComments(this.$route.params.id)
-      }).catch(e => {
-        console.log(e);
-        if (e.response.status === 422) {
-          this.errors = e.response.data.errors
+        response.data;
+        this.message = 'The comment was stored successfully!';
+        this.comments.content = '';
+        this.getComments(this.$route.params.id);
+      }).catch(error => {
+        if (error.response.status === 422) {
+          this.errors = error.response.data.errors;
         }
       });
     }

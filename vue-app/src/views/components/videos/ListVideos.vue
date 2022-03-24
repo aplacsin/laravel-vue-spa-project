@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import VideoService from '../../../service/VideoService'
+import VideoService from '../../../service/VideoService';
 
 export default ({
   data() {
@@ -45,15 +45,15 @@ export default ({
   },
   methods: {
     getVideos() {
-      const page = this.pagination.current ?? 1
-      let params = `?page=${page}`
+      const page = this.pagination.current ?? 1;
+      let params = `?page=${page}`;
 
       VideoService.video(params).then(response => {
-        this.videos = response.data
-        this.pagination.current = response.data.meta.current_page
-        this.pagination.total = response.data.meta.last_page
+        this.videos = response.data;
+        this.pagination.current = response.data.meta.current_page;
+        this.pagination.total = response.data.meta.last_page;
       }).catch(e => {
-        console.log(e)
+        console.log(e);
       })
     },
   }

@@ -123,39 +123,39 @@ export default {
   },
   watch: {
     keyword: debounce(function () {
-      this.current = 1
-      this.method(this.keyword)
+      this.current = 1;
+      this.method(this.keyword);
     }, 300),
     startDate: debounce(function () {
-      this.method(this.startDate)
+      this.method(this.startDate);
     }, 300),
     endDate: debounce(function () {
-      this.current = 1
-      this.method(this.endDate)
+      this.current = 1;
+      this.method(this.endDate);
     }, 300),
   },
   computed: {
     startDateFormatted() {
-      return this.formatDate(this.startDate)
+      return this.formatDate(this.startDate);
     },
     endDateFormatted() {
-      return this.formatDate(this.endDate)
+      return this.formatDate(this.endDate);
     },
     inputDisabled() {
-      return this.startDate === null
+      return this.startDate === null;
     }
   },
   methods: {
     formatDate(date) {
-      if (!date) return null
+      if (!date) return null;
 
-      const [year, month, day] = date.split('-')
-      return `${month}/${day}/${year}`
+      const [year, month, day] = date.split('-');
+      return `${month}/${day}/${year}`;
     },
     clearFilter() {
-      this.keyword = null
-      this.endDate = null
-      this.startDate = null
+      this.keyword = null;
+      this.endDate = null;
+      this.startDate = null;
     }
   }
 }

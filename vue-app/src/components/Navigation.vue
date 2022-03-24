@@ -124,14 +124,14 @@ export default {
     computed: {
         mini: {
             get() {
-                return (this.$vuetify.breakpoint.smAndDown) || this.toggleMini
+                return (this.$vuetify.breakpoint.smAndDown) || this.toggleMini;
             },
             set() {
                 //this.toggleMini = value;
             },
         },
         buttonText() {
-            return !this.$vuetify.theme.dark ? 'Go Dark' : 'Go Light'
+            return !this.$vuetify.theme.dark ? 'Go Dark' : 'Go Light';
         }
     },
     mounted() {

@@ -24,8 +24,8 @@
 </template>
 
 <script>
-import PostService from "../../../service/PostService"
-import {Vue2TinymceEditor} from "vue2-tinymce-editor"
+import PostService from "../../../service/PostService";
+import {Vue2TinymceEditor} from "vue2-tinymce-editor";
 
 export default {
   components: {
@@ -44,12 +44,12 @@ export default {
     }
   },
   mounted() {
-    this.getEditPost(this.$route.params.id)
+    this.getEditPost(this.$route.params.id);
   },
   methods: {
     getEditPost(id) {
       PostService.edit(id).then(response => {
-        this.post = response.data.data
+        this.post = response.data.data;
       });
     },
     updatePost(id) {
@@ -59,8 +59,8 @@ export default {
       };
       PostService.update(id, data)
           .then(response => {
-            response.data
-            this.message = 'The post was updated success!'
+            response.data;
+            this.message = 'The post was updated success!';
             this.$toast.success(this.message, {
               position: "top-right",
               timeout: 5000,
@@ -77,7 +77,7 @@ export default {
             });
           }).catch(error => {
         if (error.response.status === 422) {
-          this.errors = error.response.data.errors
+          this.errors = error.response.data.errors;
           this.$toast.error(this.errors.title[0] ?? this.errors.description[0], {
             position: "top-right",
             timeout: 5000,
@@ -96,7 +96,7 @@ export default {
       })
     },
     hasHistory() {
-      return window.history.length > 2
+      return window.history.length > 2;
     }
   }
 }
