@@ -22,11 +22,11 @@ const PostService = {
     },
 
     export(params) {
-        return Api().get('/posts/export' + params, {responseType: 'blob'});
+        return Api().get('/export' + params, {responseType: 'blob'});
     },
 
     import(data) {
-        return Api().post('/posts/import', data, { headers: { 'content-type': 'multipart/form-data' } });
+        return Api().post('/import', data, { headers: { 'content-type': 'multipart/form-data' } });
     },
 
     status(id) {

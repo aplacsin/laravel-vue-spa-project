@@ -1,6 +1,9 @@
 <template>
   <div>
     <div>
+      <ConfirmDlg ref="confirm"></ConfirmDlg>
+    </div>
+    <div>
       <!--      <FilterPost
                 :keyword="keyword"
                 :startDateFormatted="startDateFormatted"
@@ -9,7 +12,7 @@
                 :endDateFormatted="endDateFormatted"
                 :clearFilter="clearFilter"
                 :inputDisabled="inputDisabled"></FilterPost>-->
-      <v-container class="wrapper-btn">
+      <v-container class="container-btn">
         <v-row>
           <v-col
               cols="12"
@@ -42,27 +45,24 @@
             </ProgressBar>
           </v-col>
         </v-row>
-        <v-row>
-          <div>
+      </v-container>
+      <v-container>
+        <v-row class="justify-center">
+          <div class="filter-field-wrapper">
             <b-collapse id="collapse-2" class="collapse-menu">
               <v-col
                   cols="12"
                   md="12"
                   lg="12"
                   sm="12"
-                  xs="12">
+                  xs="12"
+                  class="d-flex">
                 <v-text-field
                     v-model="keyword"
                     prepend-icon="mdi-table-search"
-                    label="Search...">
+                    label="Search..."
+                    class="filter-search-field">
                 </v-text-field>
-              </v-col>
-              <v-col
-                  cols="12"
-                  md="12"
-                  lg="12"
-                  sm="12"
-                  xs="12">
                 <v-menu
                     ref="menu1"
                     v-model="menu1"
@@ -79,7 +79,8 @@
                         prepend-icon="mdi-calendar"
                         readonly
                         v-bind="attrs"
-                        v-on="on">
+                        v-on="on"
+                        class="filter-date-field">
                     </v-text-field>
                   </template>
                   <v-date-picker
@@ -89,13 +90,6 @@
                       @input="menu1 = false">
                   </v-date-picker>
                 </v-menu>
-              </v-col>
-              <v-col
-                  cols="12"
-                  md="12"
-                  lg="12"
-                  sm="12"
-                  xs="12">
                 <v-menu
                     ref="menu2"
                     v-model="menu2"
@@ -186,7 +180,6 @@
       <v-pagination v-model="pagination.current" :total-visible="8" :length="pagination.total"
                     @input="onPageChange"></v-pagination>
     </div>
-    <ConfirmDlg ref="confirm"></ConfirmDlg>
   </div>
 </template>
 
@@ -210,7 +203,6 @@ export default {
 
     return {
       posts: [],
-      errors: [],
       keyword: this.$route.query.search ?? null,
       startDate: this.$route.query.startDate ?? null,
       endDate: this.$route.query.endDate ?? null,
@@ -274,7 +266,7 @@ export default {
   },
   methods: {
     getPosts() {
-      let page = this.pagination.current ?? 1;
+      const page = this.pagination.current ?? 1;
       let params = `?page=${page}`;
 
       if (this.keyword !== null) {
@@ -299,20 +291,7 @@ export default {
       }).catch(error => {
         if (error.response.status === 422) {
           this.errors = error.response.data.errors;
-          this.$toast.error(this.errors.endDate[0], {
-            position: "top-right",
-            timeout: 5000,
-            closeOnClick: true,
-            pauseOnFocusLoss: true,
-            pauseOnHover: true,
-            draggable: true,
-            draggablePercent: 0.6,
-            showCloseButtonOnHover: false,
-            hideProgressBar: false,
-            closeButton: "button",
-            icon: true,
-            rtl: false
-          });
+          this.$toast.error(this.errors);
         }
       })
     },
@@ -350,20 +329,7 @@ export default {
       }).catch(error => {
         if (error.response.status === 422) {
           this.errors = error.response.data.errors;
-          this.$toast.error(this.errors.importFile[0], {
-            position: "top-right",
-            timeout: 5000,
-            closeOnClick: true,
-            pauseOnFocusLoss: true,
-            pauseOnHover: true,
-            draggable: true,
-            draggablePercent: 0.6,
-            showCloseButtonOnHover: false,
-            hideProgressBar: false,
-            closeButton: "button",
-            icon: true,
-            rtl: false
-          });
+          this.$toast.error(this.errors.importFile[0]);
         }
       })
     },
@@ -408,20 +374,7 @@ export default {
     deletePost(id) {
       PostService.delete(id).then(() => {
         this.message = 'Success deleted!';
-        this.$toast.success(this.message, {
-          position: "top-right",
-          timeout: 5000,
-          closeOnClick: true,
-          pauseOnFocusLoss: true,
-          pauseOnHover: true,
-          draggable: true,
-          draggablePercent: 0.6,
-          showCloseButtonOnHover: false,
-          hideProgressBar: false,
-          closeButton: "button",
-          icon: true,
-          rtl: false
-        });
+        this.$toast.success(this.message);
         this.getPosts();
       });
     },
@@ -508,7 +461,8 @@ export default {
   font-size: 13px;
 }
 
-.wrapper-btn {
+.container-btn {
+  margin-top: 10px;
   margin-right: 0;
   margin-left: 0;
 }
@@ -516,6 +470,22 @@ export default {
 .collapse-menu {
   overflow: hidden;
   transition: width 600ms ease-out, height 600ms ease-out;
+}
+
+.filter-search-field {
+  margin-right: 20px;
+}
+
+.filter-date-field {
+  margin-right: 20px;
+}
+
+.container {
+  padding: 0;
+}
+
+.filter-field-wrapper {
+  margin-bottom: 10px;
 }
 
 </style>

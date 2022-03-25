@@ -22,22 +22,23 @@
       </v-card>
     </div>
     <div class="text-center wrapper-paginate">
-      <v-pagination v-model="pagination.current" :length="pagination.total" circle @input="getVideos"></v-pagination>
+      <v-pagination v-model="pagination.current" :length="pagination.total" :total-visible="8"
+                    @input="onPageChange"></v-pagination>
     </div>
   </div>
 </template>
 
 <script>
-import VideoService from '../../../service/VideoService';
+import VideoService from '@/service/VideoService';
 
 export default ({
   data() {
     return {
       videos: [],
       pagination: {
-        current: 1,
-        total: 0
-      }
+        current: JSON.parse(this.$route.query.page || '1'),
+        total: 0,
+      },
     }
   },
   created() {
@@ -52,9 +53,16 @@ export default ({
         this.videos = response.data;
         this.pagination.current = response.data.meta.current_page;
         this.pagination.total = response.data.meta.last_page;
-      }).catch(e => {
-        console.log(e);
-      })
+        this.$router.push(params);
+      }).catch(error => {
+        if (error.response.status === 422) {
+          this.errors = error.response.data.errors;
+          this.$toast.error(this.errors);
+        }
+      });
+    },
+    onPageChange() {
+      this.getVideos();
     },
   }
 })

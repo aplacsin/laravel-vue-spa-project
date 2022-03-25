@@ -29,9 +29,7 @@
                         v-model="comments.content">
             </v-textarea>
           </v-container>
-          <input hidden v-model="video.id" />
-          <v-alert v-if="message" dense text type="success">{{ message }}</v-alert>
-          <Errors :errors="errors.content" />
+          <input hidden v-model="video.id"/>
           <v-btn class="comment-btn" depressed @click="storeComment()">
             Add comment
           </v-btn>
@@ -39,7 +37,7 @@
         <br><br>
         <v-divider></v-divider>
         <div class="comment-title-text">Display comment</div>
-        <FetchComments :comments="video.comments" />
+        <FetchComments :comments="video.comments"/>
       </div>
     </v-card>
   </div>
@@ -47,14 +45,12 @@
 
 <script>
 import FetchComments from '../comments/FetchComments.vue';
-import Errors from '../../../components/Errors';
-import VideoService from '../../../service/VideoService';
-import CommentService from '../../../service/CommentService';
+import VideoService from '@/service/VideoService';
+import CommentService from '@/service/CommentService';
 
 export default {
   components: {
-    FetchComments,
-    Errors
+    FetchComments
   },
   data() {
     return {
@@ -80,14 +76,15 @@ export default {
         content: this.comments.content,
       };
       CommentService.store(data).then(response => {
-        console.log(response.data);
-        this.message = 'The comment was stored successfully!';
+        response.data;
         this.comments.content = '';
+        this.message = 'The comment was stored successfully!';
+        this.$toast.success(this.message);
         this.getVideo(this.$route.params.id);
-      }).catch(e => {
-        console.log(e);
-        if (e.response.status === 422) {
-          this.errors = e.response.data.errors;
+      }).catch(error => {
+        if (error.response.status === 422) {
+          this.errors = error.response.data.errors;
+          this.$toast.error(this.errors.content[0]);
         }
       });
     }
