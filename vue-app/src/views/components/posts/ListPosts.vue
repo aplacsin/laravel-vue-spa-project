@@ -373,7 +373,7 @@ export default {
     },
     deletePost(id) {
       PostService.delete(id).then(() => {
-        this.message = 'Success deleted!';
+        this.message = 'The post was deleted success!';
         this.$toast.success(this.message);
         this.getPosts();
       });

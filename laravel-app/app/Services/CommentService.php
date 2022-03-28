@@ -6,6 +6,7 @@ use App\DTO\CommentDTO;
 use App\Enums\CommentType;
 use App\Models\Comment;
 use App\Repositories\CommentRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
 
 class CommentService
 {
@@ -50,5 +51,11 @@ class CommentService
             $video = $this->videoService->getById($commentDTO->getId());
             $this->commentRepository->save($comment, $video);
         }
+    }
+
+    public function delete(int $id): void
+    {
+        $userId = Auth::id();
+        $this->commentRepository->removeById($id, $userId);
     }
 }

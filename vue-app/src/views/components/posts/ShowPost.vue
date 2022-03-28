@@ -13,42 +13,24 @@
         </v-card-text>
       </v-responsive>
       <v-divider></v-divider>
-      <div class="create-comment">
-        <div class="comment-title-text">Leave a comment</div>
-        <v-divider></v-divider>
-        <template>
-          <v-container fluid>
-            <v-textarea clearable clear-icon="mdi-close-circle" label="Your comment"
-                        v-model="comments.content"></v-textarea>
-          </v-container>
-          <input hidden v-model="post.id"/>
-          <v-btn class="comment-btn" depressed @click="storeComment()">
-            Add comment
-          </v-btn>
-        </template>
-        <br><br>
-        <v-divider></v-divider>
-        <div class="comment-title-text">Display comment</div>
-        <FetchComments :comments="post.comments"/>
-      </div>
+      <Comments :id="post.id" :type="type" :comments="post.comments" :content="comments.content" :getComment="getPost"/>
     </v-card>
   </div>
 </template>
 
 <script>
-import FetchComments from '../comments/FetchComments.vue';
 import PostService from "@/service/PostService";
-import CommentService from "@/service/CommentService";
+import Comments from "@/views/components/comments/Comments";
 
 export default {
   components: {
-    FetchComments
+    Comments
   },
   data() {
     return {
       post: [],
-      message: null,
-      comments: []
+      comments: [],
+      type: 'post',
     }
   },
   mounted() {
@@ -60,25 +42,6 @@ export default {
         this.post = response.data.data;
       });
     },
-    storeComment() {
-      const data = {
-        id: this.post.id,
-        type: 'post',
-        content: this.comments.content,
-      };
-      CommentService.store(data).then(response => {
-        response.data;
-        this.comments.content = '';
-        this.getPost(this.$route.params.id);
-        this.message = 'The comment was stored success!';
-        this.$toast.success(this.message);
-      }).catch(error => {
-        if (error.response.status === 422) {
-          this.errors = error.response.data.errors;
-          this.$toast.error(this.errors.content[0]);
-        }
-      });
-    },
     hasHistory() {
       return window.history.length > 2;
     }
@@ -87,6 +50,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
 .link-btn {
   text-decoration: none;
   color: inherit;
@@ -96,16 +60,4 @@ export default {
   margin-bottom: 10px;
 }
 
-.comment-title-text {
-  font-size: 25px;
-  margin-left: 10px;
-}
-
-.comment-btn {
-  margin-left: 10px;
-}
-
-.comment-btn v-btn {
-  margin-bottom: 10px;
-}
 </style>

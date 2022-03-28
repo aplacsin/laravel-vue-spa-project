@@ -12,17 +12,17 @@
               <v-form>
                 <v-text-field type="name" label="Name" prepend-icon="mdi-account" v-model="form.name"
                               class="form-control" id="name"></v-text-field>
-                <Errors :errors="errors.name" />
+                <Errors :errors="errors.name"/>
                 <v-text-field type="email" label="Email Address" prepend-icon="mdi-email" v-model="form.email"
                               class="form-control" id="email"></v-text-field>
-                <Errors :errors="errors.email" />
+                <Errors :errors="errors.email"/>
                 <v-text-field type="password" label="Password" prepend-icon="mdi-lock" v-model="form.password"
                               class="form-control" id="password"></v-text-field>
-                <Errors :errors="errors.password" />
+                <Errors :errors="errors.password"/>
                 <v-text-field type="password" label="Confirm Password" prepend-icon="mdi-check"
                               v-model="form.password_confirmation" class="form-control"
                               id="password_confirmation"></v-text-field>
-                <Errors :errors="errors.password_confirmation" />
+                <Errors :errors="errors.password_confirmation"/>
               </v-form>
             </v-card-text>
             <v-card-actions>

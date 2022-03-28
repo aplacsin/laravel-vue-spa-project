@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import User from "../service/UserService";
+import User from "@/service/UserService";
 
 export default {
   data() {
@@ -140,11 +140,7 @@ export default {
       this.isLoggedIn = true;
     });
     this.isLoggedIn = !!localStorage.getItem("token");
-    if (this.isLoggedIn) {
-      User.auth().then(response => {
-        this.user = response.data;
-      });
-    }
+    this.user = JSON.parse(localStorage.getItem('userData'))
     const theme = localStorage.getItem("dark");
     if (theme) {
       this.$vuetify.theme.dark = theme === "true";
@@ -154,6 +150,7 @@ export default {
     logout() {
       User.logout().then(() => {
         localStorage.removeItem("token");
+        localStorage.removeItem('userData');
         this.isLoggedIn = false;
         this.$router.push({
           name: "Login"

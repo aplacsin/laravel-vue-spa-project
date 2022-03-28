@@ -5,14 +5,12 @@
     <template>
       <v-container fluid>
         <v-textarea clearable clear-icon="mdi-close-circle" label="Your comment"
-                    v-model="comments.content"></v-textarea>
+                    v-model="content"
+                    @blur="updateVal($event.target.value)"
+                    @keyup.enter="updateVal($event.target.value)">
+        </v-textarea>
       </v-container>
       <input hidden v-model="id"/>
-      <input hidden v-model="type"/>
-      <v-alert v-if="message" dense text type="success">{{ message }}</v-alert>
-      <v-alert dense text type="error" v-if="errors.content">
-        {{ errors.content[0] }}
-      </v-alert>
       <v-btn class="comment-btn" depressed @click="storeComment()">
         Add comment
       </v-btn>
@@ -20,13 +18,13 @@
     <br><br>
     <v-divider></v-divider>
     <div class="comment-title-text">Display comment</div>
-    <FetchComments :comments="comments"/>
+    <FetchComments :comments="comments" :getComment="getComment"/>
   </div>
 </template>
 
 <script>
-import FetchComments from '../comments/FetchComments.vue';
-import CommentService from "../../../service/CommentService";
+import CommentService from "@/service/CommentService";
+import FetchComments from "@/views/components/comments/FetchComments";
 
 export default {
   components: {
@@ -34,46 +32,47 @@ export default {
   },
   props: {
     id: [],
-    type: []
+    type: [] ?? '',
+    getComment: {
+      type: Function
+    },
+    comments: [],
   },
   data() {
     return {
-      comments: [],
-      message: "",
-      errors: [],
+      content: [],
     }
   },
-  mounted() {
-    this.getComments(this.$route.params.id);
-  },
   methods: {
-    getComments(id) {
-      CommentService.show(id).then(response => {
-        this.comments = response.data;
-      });
+    updateVal(newVal) {
+      this.edit = false;
+      this.$emit('update:content', newVal);
     },
     storeComment() {
       const data = {
         id: this.id,
         type: this.type,
-        content: this.comments.content,
+        content: this.content,
       };
       CommentService.store(data).then(response => {
         response.data;
-        this.message = 'The comment was stored successfully!';
-        this.comments.content = '';
-        this.getComments(this.$route.params.id);
+        this.content = '';
+        this.getComment(this.$route.params.id);
+        this.message = 'The comment was stored success!';
+        this.$toast.success(this.message);
       }).catch(error => {
         if (error.response.status === 422) {
           this.errors = error.response.data.errors;
+          this.$toast.error(this.errors.content[0]);
         }
       });
-    }
+    },
   }
 }
 </script>
 
 <style scoped lang="scss">
+
 .comment-title-text {
   font-size: 25px;
   margin-left: 10px;
@@ -86,4 +85,5 @@ export default {
 .comment-btn v-btn {
   margin-bottom: 10px;
 }
+
 </style>

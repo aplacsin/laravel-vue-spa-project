@@ -28,4 +28,9 @@ class CommentController extends Controller
 
         $this->commentService->create($commentDTO);
     }
+
+    public function destroy(int $id): void
+    {
+        $this->commentService->delete($id);
+    }
 }

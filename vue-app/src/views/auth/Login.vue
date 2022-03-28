@@ -12,10 +12,10 @@
               <v-form>
                 <v-text-field type="email" label="Email" prepend-icon="mdi-email" v-model="form.email"
                               class="form-control" id="email"></v-text-field>
-                <Errors :errors="errors.email" />
+                <Errors :errors="errors.email"/>
                 <v-text-field type="password" label="Password" prepend-icon="mdi-lock" v-model="form.password"
                               class="form-control" id="password"></v-text-field>
-                <Errors :errors="errors.password" />
+                <Errors :errors="errors.password"/>
               </v-form>
             </v-card-text>
             <v-card-actions>
@@ -34,6 +34,7 @@
 
 import Errors from "../../components/Errors";
 import AuthUserService from "../../service/UserService";
+import User from "@/service/UserService";
 
 export default {
   components: {
@@ -55,6 +56,10 @@ export default {
           .then(response => {
             this.$root.$emit("login", true);
             localStorage.setItem("token", response.data.token);
+            User.auth().then(response => {
+              const user = response.data
+              localStorage.setItem('userData', JSON.stringify(user));
+            });
             this.$router.push({
               name: "Dashboard"
             });
