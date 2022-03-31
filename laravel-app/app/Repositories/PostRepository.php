@@ -45,10 +45,7 @@ class PostRepository implements PostRepositoryInterface
     public function findById(int $id)
     {
         return Post::query()
-            ->where('id', $id)
-            ->with('comments')
-            ->with('comments.user')
-            ->first();
+            ->findOrFail($id);
     }
 
     public function removeById(int $id): void

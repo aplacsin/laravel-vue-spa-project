@@ -25,7 +25,9 @@ class Post extends Model
 
     public function comments(): MorphMany
     {
-        return $this->morphMany(Comment::class, 'commentable')->whereNull('parent_id');
+        return $this->morphMany(Comment::class, 'commentable')->whereNull('parent_id')
+            ->with('user')
+            ->with('replies.user');
     }
 
     public function setCreatedAtAttribute(string $date)

@@ -1,34 +1,50 @@
 <template>
-  <div class="reply-comment" v-if=" comments && comments.length > 0">
+  <div class="reply-comment" v-if="comments && comments.length > 0">
     <div>
       <ConfirmDlg ref="confirm"/>
     </div>
-    <div class="user-comment" v-for="comment in comments" :key="comment.id">
-      <v-divider></v-divider>
-      <div class="user-name-comment">
-        <div><b>{{ comment.user.name }}</b> - {{ comment.created_at }}</div>
-      </div>
-      <div class="wrapper-content">
-        <div> {{ comment.content }}</div>
-      </div>
-      <div class="d-flex">
-        <div class="reply">
-          <v-btn class="comment-btn" depressed>
-            Reply
-          </v-btn>
+    <div v-for="comment in comments" :key="comment.id">
+      <div class="user-comment">
+        <v-divider></v-divider>
+        <div class="user-name-comment">
+          <div><b>{{ comment.user.name }}</b> - {{ comment.created_at }}</div>
         </div>
-        <div>
+        <div class="wrapper-content">
+          <div> {{ comment.content }}</div>
         </div>
-        <div v-if="user">
-          <v-btn v-if="user.id === comment.user_id"
-                 class="comment-btn"
-                 color="red darken-1"
-                 text
-                 @click="delComment(comment.id)">
-            Delete
-          </v-btn>
+        <div class="d-flex">
+          <div class="reply">
+            <v-btn class="comment-btn" text @click="isShow = !isShow">
+              Reply
+            </v-btn>
+          </div>
+          <div>
+          </div>
+          <div v-if="user.id === comment.user_id">
+            <EditComment :comments="comment.id" :getComment="getComment"/>
+          </div>
+          <div v-if="user">
+            <v-btn v-if="user.id === comment.user_id"
+                   class="comment-btn"
+                   color="red darken-1"
+                   text
+                   @click="delComment(comment.id)">
+              Delete
+            </v-btn>
+          </div>
         </div>
       </div>
+      <div v-show="isShow">
+        <v-container fluid>
+          <v-textarea clearable clear-icon="mdi-close-circle" label="Your comment" v-model="content">
+          </v-textarea>
+        </v-container>
+        <v-btn class="comment-btn" depressed @click="storeReplyComment(comment.id, content)">
+          Send
+        </v-btn>
+      </div>
+      <ReplyComments :comment="comment" :getComment="getComment" :deleteComment="delComment"
+                     :storeComment="storeReplyComment"/>
     </div>
   </div>
   <div v-else>
@@ -42,9 +58,13 @@
 
 import CommentService from "@/service/CommentService";
 import ConfirmDlg from "@/views/components/dialogs/ConfirmDlg";
+import EditComment from "@/views/components/comments/EditComment";
+import ReplyComments from "@/views/components/comments/ReplyComments";
 
 export default {
   components: {
+    ReplyComments,
+    EditComment,
     ConfirmDlg
   },
   props: {
@@ -52,11 +72,14 @@ export default {
     getComment: {
       type: Function
     },
+    id: [],
+    type: [] ?? '',
   },
   data() {
     return {
       user: [],
-      isLoggedIn: true
+      isShow: false,
+      content: [],
     }
   },
   mounted() {
@@ -85,7 +108,27 @@ export default {
           this.$toast.error(this.errors);
         }
       });
-    }
+    },
+    storeReplyComment(parentId, content) {
+      const data = {
+        id: this.id,
+        type: this.type,
+        content: content,
+        parentId: parentId ?? null
+      };
+      CommentService.store(data).then(response => {
+        response.data;
+        this.content = '';
+        this.getComment(this.$route.params.id);
+        this.message = 'The comment was stored success!';
+        this.$toast.success(this.message);
+      }).catch(error => {
+        if (error.response.status === 422) {
+          this.errors = error.response.data.errors;
+          this.$toast.error(this.errors.content[0]);
+        }
+      });
+    },
   }
 }
 </script>
@@ -93,11 +136,15 @@ export default {
 <style scoped lang="scss">
 
 .user-name-comment {
+  margin-top: 5px;
   margin-left: 15px;
+  margin-right: 15px;
 }
 
 .wrapper-content {
+  margin-top: 10px;
   margin-left: 15px;
+  margin-right: 15px;
   white-space: -moz-pre-wrap !important;
   white-space: -o-pre-wrap;
   white-space: pre-wrap;
@@ -106,6 +153,8 @@ export default {
 }
 
 .comment-btn {
+  font-size: 12px;
+  margin-top: 15px;
   margin-bottom: 5px;
   margin-left: 15px;
 }

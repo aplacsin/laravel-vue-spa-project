@@ -43,6 +43,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     /* Comments Route */
     Route::post('comment/store', [CommentController::class, 'store']);
     Route::delete('comment/{id}', [CommentController::class, 'destroy']);
+    Route::get('comment/edit/{id}', [CommentController::class, 'edit']);
+    Route::put('comment/update/{id}', [CommentController::class, 'update']);
 
     /* Export Route */
     Route::get('export/', [PostExportController::class, 'postExport'])->middleware('can:export posts');

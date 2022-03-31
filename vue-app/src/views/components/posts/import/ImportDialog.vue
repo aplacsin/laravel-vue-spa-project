@@ -55,7 +55,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 
 .import-btn {
   margin-right: 5px !important;

@@ -34,12 +34,13 @@ export default {
   data() {
     return {
       post: [],
-      message: null,
       options: {
-        menubar: false,
+        menubar: true,
         plugins: 'autolink charmap code codesample directionality emoticons',
-        toolbar1: 'fontselect | fontsizeselect | formatselect | bold italic underline strikethrough forecolor backcolor',
-        toolbar2: 'alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | link table removeformat code',
+        toolbar1: 'formatselect fontsizeselect | bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat',
+        content_css: [
+          '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+        ],
       }
     }
   },
@@ -57,17 +58,16 @@ export default {
         title: this.post.title,
         description: this.post.description
       };
-      PostService.update(id, data)
-          .then(response => {
-            response.data;
-            this.message = 'The post was updated success!';
-            this.$toast.success(this.message);
-          }).catch(error => {
+      PostService.update(id, data).then(response => {
+        response.data;
+        this.message = 'The post was updated success!';
+        this.$toast.success(this.message);
+      }).catch(error => {
         if (error.response.status === 422) {
           this.errors = error.response.data.errors;
           this.$toast.error(this.errors.title[0] ?? this.errors.description[0]);
         }
-      })
+      });
     },
     hasHistory() {
       return window.history.length > 2;

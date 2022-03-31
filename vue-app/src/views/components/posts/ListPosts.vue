@@ -24,7 +24,7 @@
             <v-btn class="filter-btn" depressed v-b-toggle.collapse-2>
               <span class="mdi mdi-filter"></span>
             </v-btn>
-            <ImportDialog :onFileChange="this.onFileChange" :processImport="this.processImport"></ImportDialog>
+            <ImportDialog :onFileChange="this.onFileChange" :processImport="this.processImport"/>
             <v-btn class="export-btn" depressed @click="getExport">
               <span class="mdi mdi-export"></span>
             </v-btn>

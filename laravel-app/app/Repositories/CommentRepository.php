@@ -24,4 +24,15 @@ class CommentRepository implements CommentRepositoryInterface
             $comment->delete();
         }
     }
+
+    public function findById(int $id)
+    {
+        return Comment::query()
+            ->findOrFail($id);
+    }
+
+    public function update($comment): bool
+    {
+        return $comment->save();
+    }
 }

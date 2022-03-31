@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTO\CommentDTO;
+use App\DTO\CommentUpdateDTO;
 use App\Enums\CommentType;
 use App\Models\Comment;
 use App\Repositories\CommentRepositoryInterface;
@@ -57,5 +58,18 @@ class CommentService
     {
         $userId = Auth::id();
         $this->commentRepository->removeById($id, $userId);
+    }
+
+    public function update(CommentUpdateDTO $commentDTO, int $id): void
+    {
+        $comment = $this->commentRepository->findById($id);
+        $comment->content = $commentDTO->getContent();
+
+        $this->commentRepository->update($comment);
+    }
+
+    public function getById(int $id)
+    {
+        return $this->commentRepository->findById($id);
     }
 }

@@ -10,15 +10,14 @@
                     @keyup.enter="updateVal($event.target.value)">
         </v-textarea>
       </v-container>
-      <input hidden v-model="id"/>
-      <v-btn class="comment-btn" depressed @click="storeComment()">
-        Add comment
+      <v-btn class="comment-btn" depressed @click="storeComment(parentId)">
+        Send
       </v-btn>
     </template>
     <br><br>
     <v-divider></v-divider>
     <div class="comment-title-text">Display comment</div>
-    <FetchComments :comments="comments" :getComment="getComment"/>
+    <FetchComments :comments="comments" :getComment="getComment" :id="id" :type="type" :storeComment="storeComment"/>
   </div>
 </template>
 
@@ -41,6 +40,7 @@ export default {
   data() {
     return {
       content: [],
+      parentId: null
     }
   },
   methods: {
@@ -48,11 +48,12 @@ export default {
       this.edit = false;
       this.$emit('update:content', newVal);
     },
-    storeComment() {
+    storeComment(parentId) {
       const data = {
         id: this.id,
         type: this.type,
         content: this.content,
+        parentId: parentId ?? null
       };
       CommentService.store(data).then(response => {
         response.data;
