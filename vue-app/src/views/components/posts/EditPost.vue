@@ -1,40 +1,75 @@
 <template>
-  <div v-if="post">
-    <v-btn @click="hasHistory()
-          ? $router.go(-1)
-          : $router.push('/')"
-           depressed color="primary" class="link-btn back-btn">
-      Back
-    </v-btn>
-    <template>
-      <v-container fluid>
-        <v-text-field
-            v-model="post.title"
-            :counter="150"
-            label="Title"
-            required
-        ></v-text-field>
-        <vue2-tinymce-editor v-model="post.description" :options="options"></vue2-tinymce-editor>
-      </v-container>
-    </template>
-    <v-btn depressed @click="updatePost(post.id)">
-      Save
-    </v-btn>
+  <div class="wrapper-edit-content">
+    <v-dialog :retain-focus="false"
+              v-model="dialog"
+              max-width="700">
+      <template v-slot:activator="{ on, attrs }">
+        <button v-bind="attrs" v-on="on"
+                class="button-action flex-column post-action-btn"
+                @click="getEditPost(posts)"
+                @click.stop="dialog = true">
+          <span class="mdi mdi-pencil"></span>
+        </button>
+      </template>
+      <v-card>
+        <v-card-title class="text-h5 justify-center">
+          Edit Post
+        </v-card-title>
+        <div class="wrapper-content">
+          <v-col>
+            <v-text-field v-model="post.title"
+                          :counter="150"
+                          label="Title"
+                          required
+            ></v-text-field>
+          </v-col>
+          <editor v-model="post.description"
+                  api-key="k3hpsqyq7bdu9tzvo6bsl0c8zig9qhpzxwntl6lllolbl1is"
+                  :init="options">
+          </editor>
+        </div>
+        <v-card-actions class="btn-wrapper">
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-1" text @click.stop="dialog = false">
+            Cancel
+          </v-btn>
+          <v-btn text
+                 @click="updatePost(post.id)"
+                 @click.stop="dialog = false">
+            Save
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import PostService from "@/service/PostService";
-import {Vue2TinymceEditor} from "vue2-tinymce-editor";
+import Editor from "@tinymce/tinymce-vue";
 
 export default {
   components: {
-    Vue2TinymceEditor
+    editor: Editor,
+  },
+  props: {
+    posts: [],
+    getPost: {
+      type: Function
+    },
+    readonly: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
   },
   data() {
     return {
+      dialog: false,
+      editor: false,
       post: [],
       options: {
+        height: 500,
         menubar: true,
         plugins: 'autolink charmap code codesample directionality emoticons',
         toolbar1: 'formatselect fontsizeselect | bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat',
@@ -43,9 +78,6 @@ export default {
         ],
       }
     }
-  },
-  mounted() {
-    this.getEditPost(this.$route.params.id);
   },
   methods: {
     getEditPost(id) {
@@ -62,16 +94,33 @@ export default {
         response.data;
         this.message = 'The post was updated success!';
         this.$toast.success(this.message);
+        this.getPost();
       }).catch(error => {
         if (error.response.status === 422) {
           this.errors = error.response.data.errors;
           this.$toast.error(this.errors.title[0] ?? this.errors.description[0]);
         }
       });
-    },
-    hasHistory() {
-      return window.history.length > 2;
     }
   }
 }
 </script>
+
+<style scoped lang="scss">
+
+.post-action-btn {
+  text-decoration: none;
+  color: inherit;
+  font-size: 20px;
+}
+
+.wrapper-content {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.wrapper-edit-content {
+  display: initial;
+}
+
+</style>

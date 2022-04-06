@@ -1,15 +1,13 @@
 <template>
   <div>
-    <v-btn
-        class="comment-btn"
-        @click.stop="dialog = true"
-        @click="getEditComment(comments)"
-        text>
+    <v-btn class="comment-btn"
+           @click.exact="dialog = true"
+           @click="getEditComment(comments)"
+           text>
       Edit
     </v-btn>
-    <v-dialog
-        v-model="dialog"
-        max-width="500">
+    <v-dialog v-model="dialog"
+              max-width="500">
       <v-card>
         <v-card-title class="text-h5 justify-center">
           Edit Comment
@@ -22,10 +20,9 @@
           <v-btn color="red darken-1" text @click.stop="dialog = false">
             Cancel
           </v-btn>
-          <v-btn
-              text
-              @click.stop="dialog = false"
-              @click="EditComment(comments)">
+          <v-btn text
+                 @click="editComment(comments)"
+                 @click.stop="dialog = false">
             Save
           </v-btn>
         </v-card-actions>
@@ -47,8 +44,6 @@ export default {
   data() {
     return {
       comment: [],
-      user: [],
-      isLoggedIn: true,
       dialog: false,
     }
   },
@@ -58,7 +53,7 @@ export default {
         this.comment = response.data.data;
       });
     },
-    EditComment(id) {
+    editComment(id) {
       const data = {
         content: this.comment.content
       };

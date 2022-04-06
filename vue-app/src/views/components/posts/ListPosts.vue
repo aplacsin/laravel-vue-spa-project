@@ -4,44 +4,26 @@
       <ConfirmDlg ref="confirm"></ConfirmDlg>
     </div>
     <div>
-      <!--      <FilterPost
-                :keyword="keyword"
-                :startDateFormatted="startDateFormatted"
-                :startDate="startDate"
-                :endDate="endDate"
-                :endDateFormatted="endDateFormatted"
-                :clearFilter="clearFilter"
-                :inputDisabled="inputDisabled"></FilterPost>-->
       <v-container class="container-btn">
         <v-row>
-          <v-col
-              cols="12"
-              md="12"
-              lg="12"
-              sm="12"
-              xs="12"
-              class="d-flex">
+          <v-col cols="12" md="12" lg="12" sm="12" xs="12" class="d-flex">
             <v-btn class="filter-btn" depressed v-b-toggle.collapse-2>
               <span class="mdi mdi-filter"></span>
             </v-btn>
-            <ImportDialog :onFileChange="this.onFileChange" :processImport="this.processImport"/>
+            <ImportDialog :onFileChange="this.onFileChange"
+                          :processImport="this.processImport">
+            </ImportDialog>
             <v-btn class="export-btn" depressed @click="getExport">
               <span class="mdi mdi-export"></span>
             </v-btn>
           </v-col>
         </v-row>
         <v-row>
-          <v-col
-              cols="12"
-              md="2"
-              lg="2"
-              sm="2"
-              xs="2">
-            <ProgressBar
-                :visible="progressBar.visible"
-                :total="progressBar.total"
-                :current="progressBar.current"
-                :progress="progressBar.progress">
+          <v-col cols="12" md="2" lg="2" sm="2" xs="2">
+            <ProgressBar :visible="progressBar.visible"
+                         :total="progressBar.total"
+                         :current="progressBar.current"
+                         :progress="progressBar.progress">
             </ProgressBar>
           </v-col>
         </v-row>
@@ -50,71 +32,58 @@
         <v-row class="justify-center">
           <div class="filter-field-wrapper">
             <b-collapse id="collapse-2" class="collapse-menu">
-              <v-col
-                  cols="12"
-                  md="12"
-                  lg="12"
-                  sm="12"
-                  xs="12"
-                  class="d-flex">
-                <v-text-field
-                    v-model="keyword"
-                    prepend-icon="mdi-table-search"
-                    label="Search..."
-                    class="filter-search-field">
+              <v-col cols="12" md="12" lg="12" sm="12" xs="12" class="d-flex">
+                <v-text-field class="filter-search-field"
+                              v-model="keyword"
+                              prepend-icon="mdi-table-search"
+                              label="Search...">
                 </v-text-field>
-                <v-menu
-                    ref="menu1"
-                    v-model="menu1"
-                    :close-on-content-click="false"
-                    transition="scale-transition"
-                    offset-y
-                    max-width="290px"
-                    min-width="auto">
+                <v-menu ref="menu1"
+                        v-model="menu1"
+                        :close-on-content-click="false"
+                        transition="scale-transition"
+                        offset-y
+                        max-width="290px"
+                        min-width="auto">
                   <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                        v-model="startDateFormatted"
-                        label="Start Date"
-                        persistent-hint
-                        prepend-icon="mdi-calendar"
-                        readonly
-                        v-bind="attrs"
-                        v-on="on"
-                        class="filter-date-field">
+                    <v-text-field v-model="startDateFormatted"
+                                  label="Start Date"
+                                  persistent-hint
+                                  prepend-icon="mdi-calendar"
+                                  readonly
+                                  v-bind="attrs"
+                                  v-on="on"
+                                  class="filter-date-field">
                     </v-text-field>
                   </template>
-                  <v-date-picker
-                      v-model="startDate"
-                      :max="endDate"
-                      no-title
-                      @input="menu1 = false">
+                  <v-date-picker v-model="startDate"
+                                 :max="endDate"
+                                 no-title
+                                 @input="menu1 = false">
                   </v-date-picker>
                 </v-menu>
-                <v-menu
-                    ref="menu2"
-                    v-model="menu2"
-                    :close-on-content-click="false"
-                    transition="scale-transition"
-                    offset-y
-                    max-width="290px"
-                    min-width="auto">
+                <v-menu ref="menu2"
+                        v-model="menu2"
+                        :close-on-content-click="false"
+                        transition="scale-transition"
+                        offset-y
+                        max-width="290px"
+                        min-width="auto">
                   <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                        v-model="endDateFormatted"
-                        label="End Date"
-                        persistent-hint
-                        prepend-icon="mdi-calendar"
-                        readonly
-                        :disabled="inputDisabled"
-                        v-bind="attrs"
-                        v-on="on">
+                    <v-text-field v-model="endDateFormatted"
+                                  label="End Date"
+                                  persistent-hint
+                                  prepend-icon="mdi-calendar"
+                                  readonly
+                                  :disabled="inputDisabled"
+                                  v-bind="attrs"
+                                  v-on="on">
                     </v-text-field>
                   </template>
-                  <v-date-picker
-                      v-model="endDate"
-                      :min='startDate'
-                      no-title
-                      @input="menu2 = false">
+                  <v-date-picker v-model="endDate"
+                                 :min='startDate'
+                                 no-title
+                                 @input="menu2 = false">
                   </v-date-picker>
                 </v-menu>
               </v-col>
@@ -160,25 +129,32 @@
             <v-checkbox :value="post.id" v-model="checked"/>
           </td>
           <td>{{ post.title }}</td>
-          <td>{{ post.created_at }}</td>
+          <td class="td-post-data">{{ post.created_at }}</td>
           <td class="td-post-action">
             <router-link :to="{ name: 'ShowPost', params: { id: post.id }}"
-                         class="button-action flex-column post-action-btn"><span
-                class="mdi mdi-eye"></span></router-link>
-            <router-link :to="{ name: 'EditPost', params: { id: post.id }}"
-                         class="button-action flex-column post-action-btn"><span
-                class="mdi mdi-pencil"></span></router-link>
-            <button class="button-action flex-column post-action-delete-btn"
-                    @click="delPost(post.id)"><span class="mdi mdi-delete"></span></button>
+                         class="button-action flex-column post-action-btn">
+              <span class="mdi mdi-eye"></span>
+            </router-link>
+            <EditPost :posts="post.id" :getPost="getPosts"/>
+            <button class="button-action flex-column post-action-delete-btn" @click="delPost(post.id)">
+              <span class="mdi mdi-delete"></span>
+            </button>
           </td>
         </tr>
         </tbody>
-        <tbody class="text-center" v-else>No Posts Found</tbody>
+        <tbody class="found-text-post" v-else>
+        <tr>
+          <th colspan="4">No Posts Found</th>
+        </tr>
+        </tbody>
       </template>
     </v-simple-table>
     <div class="text-center">
-      <v-pagination v-model="pagination.current" :total-visible="8" :length="pagination.total"
-                    @input="onPageChange"></v-pagination>
+      <v-pagination v-model="pagination.current"
+                    :total-visible="8"
+                    :length="pagination.total"
+                    @input="onPageChange">
+      </v-pagination>
     </div>
   </div>
 </template>
@@ -189,13 +165,13 @@ import PostService from '@/service/PostService';
 import ProgressBar from "@/components/ProgressBar";
 import ImportDialog from "@/views/components/posts/import/ImportDialog";
 import ConfirmDlg from "@/views/components/dialogs/ConfirmDlg";
-/*import FilterPost from "@/views/components/posts/filters/FilterPost";*/
+import EditPost from "@/views/components/posts/EditPost";
 
 export default {
   components: {
+    EditPost,
     ConfirmDlg,
     ImportDialog,
-    /*FilterPost,*/
     ProgressBar
   },
   data() {
@@ -293,7 +269,7 @@ export default {
           this.errors = error.response.data.errors;
           this.$toast.error(this.errors);
         }
-      })
+      });
     },
     getExport() {
       let checkedPost = this.checked;
@@ -312,8 +288,8 @@ export default {
         this.errors = error.response.data.errors;
         setTimeout(function (scope) {
           scope.errors = '';
-        }, 5000, this)
-      })
+        }, 5000, this);
+      });
     },
     onFileChange(file) {
       this.importFile = file;
@@ -331,14 +307,13 @@ export default {
           this.errors = error.response.data.errors;
           this.$toast.error(this.errors.importFile[0]);
         }
-      })
+      });
     },
     isChecked(post_id) {
       return this.checked.includes(post_id);
     },
     processBar() {
       PostService.status(1).then(response => {
-
         if (response.data.data.processed) {
           this.progressBar.current = this.progressBar.total;
           this.progressBar.progress = 100;
@@ -404,9 +379,12 @@ export default {
 <style scoped lang="scss">
 
 .td-post-action {
-  display: revert;
-  justify-content: center;
-  align-items: center;
+  text-align: center;
+  min-width: 100px;
+}
+
+.td-post-data {
+  text-align: center;
 }
 
 .post-action-btn {
@@ -486,6 +464,11 @@ export default {
 
 .filter-field-wrapper {
   margin-bottom: 10px;
+}
+
+.found-text-post th {
+  text-align: center !important;
+  font-size: 20px !important;
 }
 
 </style>

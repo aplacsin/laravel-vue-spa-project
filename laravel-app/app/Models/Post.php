@@ -30,19 +30,9 @@ class Post extends Model
             ->with('replies.user');
     }
 
-    public function setCreatedAtAttribute(string $date)
-    {
-        $this->attributes['created_at'] = (new Carbon($date))->format('Y-m-d H:i:s');
-    }
-
     public function getCreatedAtAttribute(string $date): string
     {
         return Carbon::parse($date)->format('d/m/Y');
-    }
-
-    public function setUpdatedAtAttribute(string $date)
-    {
-        $this->attributes['updated_at'] = (new Carbon($date))->format('Y-m-d H:i:s');
     }
 
     public function getUpdatedAtAttribute(string $date): string

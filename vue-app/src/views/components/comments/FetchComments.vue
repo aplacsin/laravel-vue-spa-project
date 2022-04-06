@@ -4,33 +4,40 @@
       <ConfirmDlg ref="confirm"/>
     </div>
     <div v-for="comment in comments" :key="comment.id">
-      <div class="user-comment">
-        <v-divider></v-divider>
-        <div class="user-name-comment">
-          <div><b>{{ comment.user.name }}</b> - {{ comment.created_at }}</div>
+      <v-divider></v-divider>
+      <div class="wrapper-comment">
+        <div class="wrapper-comment-avatar">
+          <div class="user-avatar">
+            <img :src="image" alt="download.jpeg"/>
+          </div>
         </div>
         <div class="wrapper-content">
-          <div> {{ comment.content }}</div>
-        </div>
-        <div class="d-flex">
-          <div class="reply">
-            <v-btn class="comment-btn" text @click="isShow = !isShow">
-              Reply
-            </v-btn>
+          <div class="user-name-comment">
+            <div><b>{{ comment.user.name }}</b> - {{ comment.created_at }}</div>
           </div>
-          <div>
+          <div class="comment-content">
+            <div> {{ comment.content }}</div>
           </div>
-          <div v-if="user.id === comment.user_id">
-            <EditComment :comments="comment.id" :getComment="getComment"/>
-          </div>
-          <div v-if="user">
-            <v-btn v-if="user.id === comment.user_id"
-                   class="comment-btn"
-                   color="red darken-1"
-                   text
-                   @click="delComment(comment.id)">
-              Delete
-            </v-btn>
+          <div class="d-flex">
+            <div class="reply">
+              <v-btn class="comment-btn" text @click="isShow = !isShow">
+                Reply
+              </v-btn>
+            </div>
+            <div>
+            </div>
+            <div v-if="user.id === comment.user_id">
+              <EditComment :comments="comment.id" :getComment="getComment"/>
+            </div>
+            <div v-if="user">
+              <v-btn v-if="user.id === comment.user_id"
+                     class="comment-btn"
+                     color="red darken-1"
+                     text
+                     @click="delComment(comment.id)">
+                Delete
+              </v-btn>
+            </div>
           </div>
         </div>
       </div>
@@ -43,8 +50,11 @@
           Send
         </v-btn>
       </div>
-      <ReplyComments :comment="comment" :getComment="getComment" :deleteComment="delComment"
-                     :storeComment="storeReplyComment"/>
+      <ReplyComments :comment="comment"
+                     :getComment="getComment"
+                     :deleteComment="delComment"
+                     :storeComment="storeReplyComment">
+      </ReplyComments>
     </div>
   </div>
   <div v-else>
@@ -55,7 +65,6 @@
 </template>
 
 <script>
-
 import CommentService from "@/service/CommentService";
 import ConfirmDlg from "@/views/components/dialogs/ConfirmDlg";
 import EditComment from "@/views/components/comments/EditComment";
@@ -80,6 +89,7 @@ export default {
       user: [],
       isShow: false,
       content: [],
+      image: '/img/download.jpeg'
     }
   },
   mounted() {
@@ -135,13 +145,33 @@ export default {
 
 <style scoped lang="scss">
 
+.wrapper-comment {
+  display: flex;
+}
+
+.wrapper-comment-avatar {
+  max-width: 80px;
+  max-height: 80px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.user-avatar img {
+  width: 80px;
+  height: 80px;
+
+  .user-avatar img {
+    width: 100%;
+  }
+}
+
 .user-name-comment {
   margin-top: 5px;
   margin-left: 15px;
   margin-right: 15px;
 }
 
-.wrapper-content {
+.comment-content {
   margin-top: 10px;
   margin-left: 15px;
   margin-right: 15px;

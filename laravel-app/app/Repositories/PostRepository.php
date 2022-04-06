@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class PostRepository implements PostRepositoryInterface
 {
-    const PER_PAGE = 14;
+    const PER_PAGE = 15;
 
     public function save(Post $post): bool
     {
@@ -31,7 +31,7 @@ class PostRepository implements PostRepositoryInterface
             ->when($filter->getSortField() && $filter->getSortDirection(), function (Builder $query) use ($filter): Builder {
                 return $query->orderBy($filter->getSortField(), $filter->getSortDirection());
             })
-            ->orderBy('created_at', 'DESC')
+            ->orderBy('id', 'DESC')
             ->paginate(self::PER_PAGE);
     }
 

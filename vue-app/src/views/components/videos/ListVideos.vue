@@ -1,8 +1,7 @@
 <template>
   <div>
-    <div class="row row-cols-1 row-cols-md-3 g-4 wrapper-video">
-      <v-card class="d-flex flex-column card-video" max-width="250" v-for="video in videos.data"
-              :key="video.id">
+    <div class="row row-cols-1 row-cols-md-3 g-4 wrapper-video" v-if="videos.data && videos.data.length > 0">
+      <v-card class="d-flex flex-column card-video" max-width="250" v-for="video in videos.data" :key="video.id">
         <iframe
             :src="`https://player.vimeo.com/video/${video.video_id}?h=791afcfe42&amp;title=0&amp;byline=0&amp;portrait=0&amp;speed=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=234456`"
             max-width="100%" frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
@@ -21,9 +20,13 @@
         </v-card-actions>
       </v-card>
     </div>
+    <div class="text-center" v-else>No Videos Found</div>
     <div class="text-center wrapper-paginate">
-      <v-pagination v-model="pagination.current" :length="pagination.total" :total-visible="8"
-                    @input="onPageChange"></v-pagination>
+      <v-pagination v-model="pagination.current"
+                    :length="pagination.total"
+                    :total-visible="8"
+                    @input="onPageChange">
+      </v-pagination>
     </div>
   </div>
 </template>
