@@ -20,8 +20,13 @@
         </v-card-text>
       </v-responsive>
       <v-divider></v-divider>
-      <Comments :id="video.id" :type="type" :comments="video.comments" :content="comments.content"
-                :getComment="getVideo"/>
+      <Comments
+          :id="video.id"
+          :type="type"
+          :comments="video.comments"
+          :content="comments.content"
+          :getComment="getVideo"
+      />
     </v-card>
   </div>
 </template>

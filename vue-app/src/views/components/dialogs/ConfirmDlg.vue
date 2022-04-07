@@ -1,30 +1,33 @@
 <template>
   <v-dialog
-      v-model="dialog"
       persistent
-      :max-width="options.width">
+      v-model="dialog"
+      :max-width="options.width"
+  >
     <v-card>
       <v-card-title class="text-h5 justify-center">
         {{ title }}
       </v-card-title>
       <v-card-text
-          v-show="!!message"
           class="pa-4"
-          v-html="message">
-      </v-card-text>
+          v-show="!!message"
+          v-html="message"
+      ></v-card-text>
       <v-card-actions class="dialog-btn-wrapper">
         <v-spacer></v-spacer>
         <v-btn
-            v-if="!options.noConfirm"
             color="red darken-1"
             text
-            @click.native="cancel">
+            v-if="!options.noConfirm"
+            @click.native="cancel"
+        >
           Cancel
         </v-btn>
         <v-btn
             color="green darken-1"
             text
-            @click.native="agree">
+            @click.native="agree"
+        >
           OK
         </v-btn>
       </v-card-actions>

@@ -17,14 +17,14 @@
           </v-list-item>
           <v-list-item link v-if="!isLoggedIn">
             <v-list-item-title>
-              <router-link style="text-decoration: none; color: inherit;" tag="button" to="/login">
+              <router-link class="navbar-link" tag="button" to="/login">
                 Login
               </router-link>
             </v-list-item-title>
           </v-list-item>
           <v-list-item link v-if="!isLoggedIn">
             <v-list-item-title>
-              <router-link style="text-decoration: none; color: inherit;" tag="button" to="/register">
+              <router-link class="navbar-link" tag="button" to="/register">
                 Register
               </router-link>
             </v-list-item-title>
@@ -32,8 +32,14 @@
         </v-list>
       </v-menu>
     </v-app-bar>
-    <v-navigation-drawer v-model="sidebarMenu" app floating :permanent="sidebarMenu" :mini-variant.sync="mini"
-                         v-if="isLoggedIn">
+    <v-navigation-drawer
+        app
+        floating
+        v-model="sidebarMenu"
+        :permanent="sidebarMenu"
+        :mini-variant.sync="mini"
+        v-if="isLoggedIn"
+    >
       <v-list dense color="primary" dark>
         <v-list-item>
           <v-list-item-action>
@@ -41,7 +47,7 @@
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>
-              <h3 style="font-size: 15px" class="font-weight-thin">Vuetify Admin</h3>
+              <h3 class="font-weight-thin nav-logo">Vuetify Admin</h3>
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -169,6 +175,15 @@ export default {
 
 .footer {
   margin: 15px;
+}
+
+.navbar-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.nav-logo {
+  font-size: 20px;
 }
 
 </style>

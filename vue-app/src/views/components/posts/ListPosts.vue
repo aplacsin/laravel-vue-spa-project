@@ -7,24 +7,48 @@
       <v-container class="container-btn">
         <v-row>
           <v-col cols="12" md="12" lg="12" sm="12" xs="12" class="d-flex">
-            <v-btn class="filter-btn" depressed v-b-toggle.collapse-2>
-              <span class="mdi mdi-filter"></span>
-            </v-btn>
-            <ImportDialog :onFileChange="this.onFileChange"
-                          :processImport="this.processImport">
-            </ImportDialog>
-            <v-btn class="export-btn" depressed @click="getExport">
-              <span class="mdi mdi-export"></span>
-            </v-btn>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                    class="filter-btn"
+                    depressed
+                    v-b-toggle.collapse-2
+                    v-bind="attrs"
+                    v-on="on"
+                >
+                  <v-icon class="mdi mdi-align-horizontal-left"></v-icon>
+                </v-btn>
+              </template>
+              <span>Filter</span>
+            </v-tooltip>
+            <ImportDialog
+                :onFileChange="this.onFileChange"
+                :processImport="this.processImport"
+            />
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                    class="export-btn"
+                    depressed
+                    v-bind="attrs"
+                    v-on="on"
+                    @click="getExport"
+                >
+                  <v-icon class="mdi mdi-tray-arrow-up"></v-icon>
+                </v-btn>
+              </template>
+              <span>Export</span>
+            </v-tooltip>
           </v-col>
         </v-row>
         <v-row>
           <v-col cols="12" md="2" lg="2" sm="2" xs="2">
-            <ProgressBar :visible="progressBar.visible"
-                         :total="progressBar.total"
-                         :current="progressBar.current"
-                         :progress="progressBar.progress">
-            </ProgressBar>
+            <ProgressBar
+                :visible="progressBar.visible"
+                :total="progressBar.total"
+                :current="progressBar.current"
+                :progress="progressBar.progress"
+            />
           </v-col>
         </v-row>
       </v-container>
@@ -33,63 +57,75 @@
           <div class="filter-field-wrapper">
             <b-collapse id="collapse-2" class="collapse-menu">
               <v-col cols="12" md="12" lg="12" sm="12" xs="12" class="d-flex">
-                <v-text-field class="filter-search-field"
-                              v-model="keyword"
-                              prepend-icon="mdi-table-search"
-                              label="Search...">
-                </v-text-field>
-                <v-menu ref="menu1"
-                        v-model="menu1"
-                        :close-on-content-click="false"
-                        transition="scale-transition"
-                        offset-y
-                        max-width="290px"
-                        min-width="auto">
+                <v-text-field
+                    class="filter-search-field"
+                    v-model="keyword"
+                    prepend-icon="mdi-table-search"
+                    label="Search..."
+                ></v-text-field>
+                <v-menu
+                    ref="menu1"
+                    v-model="menu1"
+                    :close-on-content-click="false"
+                    transition="scale-transition"
+                    offset-y
+                    max-width="290px"
+                    min-width="auto"
+                >
                   <template v-slot:activator="{ on, attrs }">
-                    <v-text-field v-model="startDateFormatted"
-                                  label="Start Date"
-                                  persistent-hint
-                                  prepend-icon="mdi-calendar"
-                                  readonly
-                                  v-bind="attrs"
-                                  v-on="on"
-                                  class="filter-date-field">
-                    </v-text-field>
+                    <v-text-field
+                        v-model="startDateFormatted"
+                        label="Start Date"
+                        persistent-hint
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                        class="filter-date-field"
+                    ></v-text-field>
                   </template>
-                  <v-date-picker v-model="startDate"
-                                 :max="endDate"
-                                 no-title
-                                 @input="menu1 = false">
-                  </v-date-picker>
+                  <v-date-picker
+                      v-model="startDate"
+                      :max="endDate"
+                      no-title
+                      @input="menu1 = false"
+                  ></v-date-picker>
                 </v-menu>
-                <v-menu ref="menu2"
-                        v-model="menu2"
-                        :close-on-content-click="false"
-                        transition="scale-transition"
-                        offset-y
-                        max-width="290px"
-                        min-width="auto">
+                <v-menu
+                    ref="menu2"
+                    v-model="menu2"
+                    :close-on-content-click="false"
+                    transition="scale-transition"
+                    offset-y
+                    max-width="290px"
+                    min-width="auto"
+                >
                   <template v-slot:activator="{ on, attrs }">
-                    <v-text-field v-model="endDateFormatted"
-                                  label="End Date"
-                                  persistent-hint
-                                  prepend-icon="mdi-calendar"
-                                  readonly
-                                  :disabled="inputDisabled"
-                                  v-bind="attrs"
-                                  v-on="on">
-                    </v-text-field>
+                    <v-text-field
+                        v-model="endDateFormatted"
+                        label="End Date"
+                        persistent-hint
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        :disabled="inputDisabled"
+                        v-bind="attrs"
+                        v-on="on"
+                    ></v-text-field>
                   </template>
-                  <v-date-picker v-model="endDate"
-                                 :min='startDate'
-                                 no-title
-                                 @input="menu2 = false">
-                  </v-date-picker>
+                  <v-date-picker
+                      v-model="endDate"
+                      :min='startDate'
+                      no-title
+                      @input="menu2 = false"
+                  ></v-date-picker>
                 </v-menu>
               </v-col>
               <v-col cols="12">
-                <v-btn class="comment-btn" depressed @click="clearFilter">
-                  Reset
+                <v-btn
+                    class="comment-btn"
+                    depressed
+                    @click="clearFilter"
+                > Reset
                 </v-btn>
               </v-col>
             </b-collapse>
@@ -133,11 +169,14 @@
           <td class="td-post-action">
             <router-link :to="{ name: 'ShowPost', params: { id: post.id }}"
                          class="button-action flex-column post-action-btn">
-              <span class="mdi mdi-eye"></span>
+              <v-icon color="orange" class="mdi mdi-eye"></v-icon>
             </router-link>
-            <EditPost :posts="post.id" :getPost="getPosts"/>
+            <EditPost
+                :posts="post.id"
+                :getPost="getPosts"
+            />
             <button class="button-action flex-column post-action-delete-btn" @click="delPost(post.id)">
-              <span class="mdi mdi-delete"></span>
+              <v-icon color="red" class="mdi mdi-delete-forever"></v-icon>
             </button>
           </td>
         </tr>
@@ -150,11 +189,14 @@
       </template>
     </v-simple-table>
     <div class="text-center">
-      <v-pagination v-model="pagination.current"
-                    :total-visible="8"
-                    :length="pagination.total"
-                    @input="onPageChange">
-      </v-pagination>
+      <v-pagination
+          v-model="pagination.current"
+          :total-visible="8"
+          :length="pagination.total"
+          @input="onPageChange"
+          prev-icon="mdi-menu-left"
+          next-icon="mdi-menu-right"
+      ></v-pagination>
     </div>
   </div>
 </template>
@@ -380,7 +422,7 @@ export default {
 
 .td-post-action {
   text-align: center;
-  min-width: 100px;
+  min-width: 110px;
 }
 
 .td-post-data {
@@ -389,13 +431,6 @@ export default {
 
 .post-action-btn {
   text-decoration: none;
-  color: inherit;
-  font-size: 20px;
-}
-
-.post-action-delete-btn {
-  color: red;
-  font-size: 20px;
 }
 
 .arrow {
@@ -412,11 +447,6 @@ export default {
   min-width: 0 !important;
   padding: 0 16px !important;
   width: 36px !important;
-
-  .mdi-export {
-    font-size: 20px;
-    transform: rotate(-90deg);
-  }
 }
 
 .filter-btn {
@@ -425,10 +455,6 @@ export default {
   min-width: 0 !important;
   padding: 0 16px !important;
   width: 36px !important;
-
-  .mdi-filter {
-    font-size: 20px;
-  }
 }
 
 .mdi-arrow-up {

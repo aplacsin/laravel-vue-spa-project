@@ -13,7 +13,13 @@
         </v-card-text>
       </v-responsive>
       <v-divider></v-divider>
-      <Comments :id="post.id" :type="type" :comments="post.comments" :content="comments.content" :getComment="getPost"/>
+      <Comments
+          :id="post.id"
+          :type="type"
+          :comments="post.comments"
+          :content="comments.content"
+          :getComment="getPost"
+      />
     </v-card>
   </div>
 </template>

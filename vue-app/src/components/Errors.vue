@@ -1,9 +1,14 @@
 <template>
-<div>
-  <v-alert dense outlined type="error" v-if="errors">
-    {{ errors[0] }}
-  </v-alert>
-</div>
+  <div>
+    <v-alert
+        dense
+        outlined
+        type="error"
+        v-if="errors"
+    >
+      {{ errors[0] }}
+    </v-alert>
+  </div>
 </template>
 
 <script>

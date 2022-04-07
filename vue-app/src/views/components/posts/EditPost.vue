@@ -1,14 +1,18 @@
 <template>
   <div class="wrapper-edit-content">
-    <v-dialog :retain-focus="false"
-              v-model="dialog"
-              max-width="700">
+    <v-dialog
+        :retain-focus="false"
+        v-model="dialog"
+        max-width="700"
+    >
       <template v-slot:activator="{ on, attrs }">
-        <button v-bind="attrs" v-on="on"
-                class="button-action flex-column post-action-btn"
-                @click="getEditPost(posts)"
-                @click.stop="dialog = true">
-          <span class="mdi mdi-pencil"></span>
+        <button
+            v-bind="attrs" v-on="on"
+            class="button-action flex-column post-action-btn"
+            @click="getEditPost(posts)"
+            @click.stop="dialog = true"
+        >
+          <v-icon color="green" class="mdi mdi-pencil"></v-icon>
         </button>
       </template>
       <v-card>
@@ -17,26 +21,32 @@
         </v-card-title>
         <div class="wrapper-content">
           <v-col>
-            <v-text-field v-model="post.title"
-                          :counter="150"
-                          label="Title"
-                          required
+            <v-text-field
+                v-model="post.title"
+                :counter="150"
+                label="Title"
+                required
             ></v-text-field>
           </v-col>
-          <editor v-model="post.description"
-                  api-key="k3hpsqyq7bdu9tzvo6bsl0c8zig9qhpzxwntl6lllolbl1is"
-                  :init="options">
-          </editor>
+          <editor
+              v-model="post.description"
+              api-key="k3hpsqyq7bdu9tzvo6bsl0c8zig9qhpzxwntl6lllolbl1is"
+              :init="options"
+          ></editor>
         </div>
         <v-card-actions class="btn-wrapper">
           <v-spacer></v-spacer>
-          <v-btn color="red darken-1" text @click.stop="dialog = false">
-            Cancel
+          <v-btn
+              color="red darken-1"
+              text
+              @click.stop="dialog = false"
+          >Cancel
           </v-btn>
-          <v-btn text
-                 @click="updatePost(post.id)"
-                 @click.stop="dialog = false">
-            Save
+          <v-btn
+              text
+              @click="updatePost(post.id)"
+              @click.stop="dialog = false"
+          >Save
           </v-btn>
         </v-card-actions>
       </v-card>

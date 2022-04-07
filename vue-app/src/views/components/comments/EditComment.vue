@@ -1,29 +1,40 @@
 <template>
   <div>
-    <v-btn class="comment-btn"
-           @click.exact="dialog = true"
-           @click="getEditComment(comments)"
-           text>
-      Edit
+    <v-btn
+        class="comment-btn"
+        @click.exact="dialog = true"
+        @click="getEditComment(comments)"
+        text
+    >Edit
     </v-btn>
-    <v-dialog v-model="dialog"
-              max-width="500">
+    <v-dialog
+        v-model="dialog"
+        max-width="500"
+    >
       <v-card>
         <v-card-title class="text-h5 justify-center">
           Edit Comment
         </v-card-title>
         <div class="wrapper-content">
-          <v-textarea v-model="comment.content" clearable clear-icon="mdi-close-circle"/>
+          <v-textarea
+              v-model="comment.content"
+              clearable
+              clear-icon="mdi-close-circle"
+          />
         </div>
         <v-card-actions class="import-btn-wrapper">
           <v-spacer></v-spacer>
-          <v-btn color="red darken-1" text @click.stop="dialog = false">
-            Cancel
+          <v-btn
+              color="red darken-1"
+              text
+              @click.stop="dialog = false"
+          >Cancel
           </v-btn>
-          <v-btn text
-                 @click="editComment(comments)"
-                 @click.stop="dialog = false">
-            Save
+          <v-btn
+              text
+              @click="editComment(comments)"
+              @click.stop="dialog = false"
+          >Save
           </v-btn>
         </v-card-actions>
       </v-card>

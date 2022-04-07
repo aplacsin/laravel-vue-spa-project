@@ -21,21 +21,30 @@
             </div>
             <div class="d-flex">
               <div class="reply">
-                <v-btn class="comment-btn" text @click="isShow = !isShow">
+                <v-btn
+                    class="comment-btn"
+                    text
+                    @click="isShow = !isShow"
+                >
                   Reply
                 </v-btn>
               </div>
               <div>
               </div>
               <div v-if="user.id === reply.user_id">
-                <EditComment :comments="reply.id" :getComment="getComment"/>
+                <EditComment
+                    :comments="reply.id"
+                    :getComment="getComment"
+                />
               </div>
               <div v-if="user">
-                <v-btn v-if="user.id === reply.user_id"
-                       class="comment-btn"
-                       color="red darken-1"
-                       text
-                       @click="deleteComment(reply.id)">
+                <v-btn
+                    class="comment-btn"
+                    color="red darken-1"
+                    text
+                    v-if="user.id === reply.user_id"
+                    @click="deleteComment(reply.id)"
+                >
                   Delete
                 </v-btn>
               </div>
@@ -44,10 +53,18 @@
         </div>
         <div v-show="isShow">
           <v-container fluid>
-            <v-textarea clearable clear-icon="mdi-close-circle" label="Your comment" v-model="content">
-            </v-textarea>
+            <v-textarea
+                clearable
+                clear-icon="mdi-close-circle"
+                label="Your comment"
+                v-model="content"
+            ></v-textarea>
           </v-container>
-          <v-btn class="comment-btn" depressed @click="storeComment(reply.id, content)">
+          <v-btn
+              class="comment-btn"
+              depressed
+              @click="storeComment(reply.id, content)"
+          >
             Send
           </v-btn>
         </div>

@@ -1,7 +1,11 @@
 <template>
   <div class="text-center wrapper-paginate">
-    <v-pagination v-model="page" :total-visible="8" :length="total"
-                  @input="onPageChange"></v-pagination>
+    <v-pagination
+        v-model="page"
+        :total-visible="8"
+        :length="total"
+        @input="onPageChange"
+    ></v-pagination>
   </div>
 </template>
 

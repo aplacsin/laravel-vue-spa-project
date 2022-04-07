@@ -1,12 +1,22 @@
 <template>
   <div>
-    <v-btn class="import-btn" depressed
-           @click.stop="dialog = true">
-      <span class="mdi mdi-import"></span>
-    </v-btn>
+    <v-tooltip bottom>
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+            class="import-btn" depressed
+            v-bind="attrs"
+            v-on="on"
+            @click.stop="dialog = true"
+        >
+          <v-icon class="mdi mdi-tray-arrow-down"></v-icon>
+        </v-btn>
+      </template>
+      <span>Import</span>
+    </v-tooltip>
     <v-dialog
         v-model="dialog"
-        max-width="290">
+        max-width="290"
+    >
       <v-card>
         <v-card-title class="text-h5 justify-center">
           Import
@@ -17,17 +27,21 @@
         <v-card-actions class="import-btn-wrapper">
           <v-spacer></v-spacer>
           <v-file-input
-              v-model="importFile"
               type="file"
               ref="importFile"
               label="File input"
               id="input-file-import"
               name="fileImport"
-              @change="onFileChange"
               outlined
               dense
+              v-model="importFile"
+              @change="onFileChange"
           ></v-file-input>
-          <v-btn depressed @click="processImport" @click.stop="dialog = false">
+          <v-btn
+              depressed
+              @click="processImport"
+              @click.stop="dialog = false"
+          >
             Import
           </v-btn>
         </v-card-actions>
@@ -63,11 +77,6 @@ export default {
   min-width: 0 !important;
   padding: 0 16px !important;
   width: 36px !important;
-
-  .mdi-import {
-    font-size: 20px;
-    transform: rotate(90deg);
-  }
 }
 
 .v-file-input {

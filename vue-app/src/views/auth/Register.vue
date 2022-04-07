@@ -10,24 +10,51 @@
             </v-toolbar>
             <v-card-text>
               <v-form>
-                <v-text-field type="name" label="Name" prepend-icon="mdi-account" v-model="form.name"
-                              class="form-control" id="name"></v-text-field>
+                <v-text-field
+                    type="name"
+                    label="Name"
+                    prepend-icon="mdi-account"
+                    class="form-control"
+                    id="name"
+                    v-model="form.name"
+                ></v-text-field>
                 <Errors :errors="errors.name"/>
-                <v-text-field type="email" label="Email Address" prepend-icon="mdi-email" v-model="form.email"
-                              class="form-control" id="email"></v-text-field>
+                <v-text-field
+                    type="email"
+                    label="Email Address"
+                    prepend-icon="mdi-email"
+                    class="form-control"
+                    id="email"
+                    v-model="form.email"
+                ></v-text-field>
                 <Errors :errors="errors.email"/>
-                <v-text-field type="password" label="Password" prepend-icon="mdi-lock" v-model="form.password"
-                              class="form-control" id="password"></v-text-field>
+                <v-text-field
+                    type="password"
+                    label="Password"
+                    prepend-icon="mdi-lock"
+                    class="form-control"
+                    id="password"
+                    v-model="form.password"
+                ></v-text-field>
                 <Errors :errors="errors.password"/>
-                <v-text-field type="password" label="Confirm Password" prepend-icon="mdi-check"
-                              v-model="form.password_confirmation" class="form-control"
-                              id="password_confirmation"></v-text-field>
+                <v-text-field
+                    type="password"
+                    label="Confirm Password"
+                    prepend-icon="mdi-check"
+                    class="form-control"
+                    id="password_confirmation"
+                    v-model="form.password_confirmation"
+                ></v-text-field>
                 <Errors :errors="errors.password_confirmation"/>
               </v-form>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" @click.prevent="register">Register</v-btn>
+              <v-btn
+                  color="primary"
+                  @click.prevent="register"
+              >Register
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>

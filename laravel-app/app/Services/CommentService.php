@@ -27,6 +27,7 @@ class CommentService
         $comment = new Comment;
         $comment->content = $commentDTO->getContent();
         $comment->user()->associate($commentDTO->getUserId());
+
         if ($commentDTO->getParentId()) {
             $comment->parent_id = $commentDTO->getParentId();
         }

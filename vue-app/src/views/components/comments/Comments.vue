@@ -4,20 +4,30 @@
     <v-divider></v-divider>
     <template>
       <v-container fluid>
-        <v-textarea clearable clear-icon="mdi-close-circle" label="Your comment"
-                    v-model="content"
-                    @blur="updateVal($event.target.value)"
-                    @keyup.enter="updateVal($event.target.value)">
-        </v-textarea>
+        <v-textarea
+            clearable clear-icon="mdi-close-circle" label="Your comment"
+            v-model="content"
+            @blur="updateVal($event.target.value)"
+            @keyup.enter="updateVal($event.target.value)"
+        ></v-textarea>
       </v-container>
-      <v-btn class="comment-btn" depressed @click="storeComment(parentId)">
-        Send
+      <v-btn
+          class="comment-btn"
+          depressed
+          @click="storeComment(parentId)"
+      >Send
       </v-btn>
     </template>
     <br><br>
     <v-divider></v-divider>
     <div class="comment-title-text">Display comment</div>
-    <FetchComments :comments="comments" :getComment="getComment" :id="id" :type="type" :storeComment="storeComment"/>
+    <FetchComments
+        :comments="comments"
+        :getComment="getComment"
+        :id="id"
+        :type="type"
+        :storeComment="storeComment"
+    />
   </div>
 </template>
 

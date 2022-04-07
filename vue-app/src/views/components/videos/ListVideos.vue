@@ -20,13 +20,16 @@
         </v-card-actions>
       </v-card>
     </div>
-    <div class="text-center" v-else>No Videos Found</div>
+    <div class="text-center found-text-video" v-else>No Videos Found</div>
     <div class="text-center wrapper-paginate">
-      <v-pagination v-model="pagination.current"
-                    :length="pagination.total"
-                    :total-visible="8"
-                    @input="onPageChange">
-      </v-pagination>
+      <v-pagination
+          v-model="pagination.current"
+          :length="pagination.total"
+          :total-visible="8"
+          @input="onPageChange"
+          prev-icon="mdi-menu-left"
+          next-icon="mdi-menu-right"
+      ></v-pagination>
     </div>
   </div>
 </template>
@@ -93,6 +96,10 @@ export default ({
 
 .wrapper-paginate {
   margin-top: 15px;
+}
+
+.found-text-video {
+  font-size: 20px;
 }
 
 </style>

@@ -10,17 +10,33 @@
             </v-toolbar>
             <v-card-text>
               <v-form>
-                <v-text-field type="email" label="Email" prepend-icon="mdi-email" v-model="form.email"
-                              class="form-control" id="email"></v-text-field>
+                <v-text-field
+                    type="email"
+                    label="Email"
+                    prepend-icon="mdi-email"
+                    class="form-control"
+                    id="email"
+                    v-model="form.email"
+                ></v-text-field>
                 <Errors :errors="errors.email"/>
-                <v-text-field type="password" label="Password" prepend-icon="mdi-lock" v-model="form.password"
-                              class="form-control" id="password"></v-text-field>
+                <v-text-field
+                    type="password"
+                    label="Password"
+                    prepend-icon="mdi-lock"
+                    class="form-control"
+                    id="password"
+                    v-model="form.password"
+                ></v-text-field>
                 <Errors :errors="errors.password"/>
               </v-form>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" @click.prevent="login">Login</v-btn>
+              <v-btn
+                  color="primary"
+                  @click.prevent="login"
+              >Login
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>

@@ -20,22 +20,29 @@
           </div>
           <div class="d-flex">
             <div class="reply">
-              <v-btn class="comment-btn" text @click="isShow = !isShow">
-                Reply
+              <v-btn
+                  class="comment-btn"
+                  text
+                  @click="isShow = !isShow"
+              >Reply
               </v-btn>
             </div>
             <div>
             </div>
             <div v-if="user.id === comment.user_id">
-              <EditComment :comments="comment.id" :getComment="getComment"/>
+              <EditComment
+                  :comments="comment.id"
+                  :getComment="getComment"
+              />
             </div>
             <div v-if="user">
-              <v-btn v-if="user.id === comment.user_id"
-                     class="comment-btn"
-                     color="red darken-1"
-                     text
-                     @click="delComment(comment.id)">
-                Delete
+              <v-btn
+                  class="comment-btn"
+                  color="red darken-1"
+                  text
+                  v-if="user.id === comment.user_id"
+                  @click="delComment(comment.id)"
+              >Delete
               </v-btn>
             </div>
           </div>
@@ -43,18 +50,26 @@
       </div>
       <div v-show="isShow">
         <v-container fluid>
-          <v-textarea clearable clear-icon="mdi-close-circle" label="Your comment" v-model="content">
-          </v-textarea>
+          <v-textarea
+              clearable
+              clear-icon="mdi-close-circle"
+              label="Your comment"
+              v-model="content"
+          ></v-textarea>
         </v-container>
-        <v-btn class="comment-btn" depressed @click="storeReplyComment(comment.id, content)">
-          Send
+        <v-btn
+            class="comment-btn"
+            depressed
+            @click="storeReplyComment(comment.id, content)"
+        >Send
         </v-btn>
       </div>
-      <ReplyComments :comment="comment"
-                     :getComment="getComment"
-                     :deleteComment="delComment"
-                     :storeComment="storeReplyComment">
-      </ReplyComments>
+      <ReplyComments
+          :comment="comment"
+          :getComment="getComment"
+          :deleteComment="delComment"
+          :storeComment="storeReplyComment"
+      />
     </div>
   </div>
   <div v-else>
