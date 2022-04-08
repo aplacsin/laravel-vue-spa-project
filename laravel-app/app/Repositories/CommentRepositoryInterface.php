@@ -1,12 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories;
+
+use App\Models\Comment;
 
 interface CommentRepositoryInterface
 {
-    public function save($comment, $item);
+    public function save(Comment $comment, object $item);
 
-    public function update($comment): bool;
+    public function update(Comment $comment): bool;
 
     public function removeById(int $id, int $userId): void;
 

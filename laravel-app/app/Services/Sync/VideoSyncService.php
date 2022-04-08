@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Sync;
 
 use App\Repositories\VideoRepositoryInterface;
@@ -10,7 +12,10 @@ class VideoSyncService
     private VideoRepositoryInterface $videoRepository;
     private VideoService $videoService;
 
-    public function __construct(VideoRepositoryInterface $videoRepository, VideoService $videoService)
+    public function __construct(
+        VideoRepositoryInterface $videoRepository,
+        VideoService             $videoService
+    )
     {
         $this->videoRepository = $videoRepository;
         $this->videoService = $videoService;
@@ -26,7 +31,7 @@ class VideoSyncService
     public function videoSync(array $video): void
     {
         $videoId = explode('/', $video['uri']);
-        $modelVideo = $this->videoRepository->findByVideoId($videoId[2]);
+        $modelVideo = $this->videoRepository->findByVideoId((int)$videoId[2]);
 
         if ($modelVideo == null) {
             $this->videoService->create($video);

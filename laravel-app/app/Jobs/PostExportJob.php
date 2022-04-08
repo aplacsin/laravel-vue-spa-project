@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs;
 
 use Illuminate\Bus\Batchable;
@@ -14,7 +16,7 @@ class PostExportJob implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $data;
+    public object $data;
     public $file;
 
     /**

@@ -8,6 +8,7 @@ import {BootstrapVue, IconsPlugin} from 'bootstrap-vue';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
+import './plugins/tiptap-vuetify'
 
 Vue.use(Toast, {
     transition: "Vue-Toastification__bounce",

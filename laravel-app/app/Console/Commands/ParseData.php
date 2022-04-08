@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Services\Sync\PostSyncService;
@@ -31,7 +33,11 @@ class ParseData extends Command
      *
      * @return void
      */
-    public function __construct(PostSyncService $postSyncService, VideoSyncService $videoSyncService, VimeoManager $vimeo)
+    public function __construct(
+        PostSyncService  $postSyncService,
+        VideoSyncService $videoSyncService,
+        VimeoManager     $vimeo
+    )
     {
         parent::__construct();
         $this->postSyncService = $postSyncService;

@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Exports;
 
 use App\Jobs\PostExportJob;
 use App\Models\Post;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Throwable;
 
@@ -12,7 +15,7 @@ class PostExportService
     /**
      * @throws Throwable
      */
-    public function query($request): StreamedResponse
+    public function query(Request $request): StreamedResponse
     {
         $postsArray = explode(',', $request->input('id'));
         $posts = Post::query()->whereKey($postsArray)->get();
@@ -23,7 +26,7 @@ class PostExportService
     /**
      * @throws Throwable
      */
-    public function map($posts): StreamedResponse
+    public function map(object $posts): StreamedResponse
     {
         $header = array('guid', 'title', 'description');
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Imports;
 
 use App\Enums\DiskType;
@@ -16,7 +18,10 @@ class PostImportService
     private PostRepositoryInterface $postRepository;
     private ProcessPostRepositoryInterface $processPostRepository;
 
-    public function __construct(PostRepositoryInterface $postRepository, ProcessPostRepositoryInterface $processPostRepository)
+    public function __construct(
+        PostRepositoryInterface        $postRepository,
+        ProcessPostRepositoryInterface $processPostRepository
+    )
     {
         $this->postRepository = $postRepository;
         $this->processPostRepository = $processPostRepository;
@@ -25,7 +30,7 @@ class PostImportService
     /**
      * @throws Throwable
      */
-    public function importFile($file): void
+    public function importFile(object $file): void
     {
         if (!$file) {
             return;
@@ -39,7 +44,7 @@ class PostImportService
     /**
      * @throws Throwable
      */
-    public function parseFile($file)
+    public function parseFile(object $file): void
     {
         $header = [];
         $data = [];
@@ -64,13 +69,14 @@ class PostImportService
     /**
      * @throws Throwable
      */
-    public function chunkData(array $data, array $header, string $fileName)
+    public function chunkData(array $data, array $header, string $fileName): void
     {
         $totalPost = count($data);
         $processPost = new ProcessPost();
         $processPost->total = $totalPost;
         $processPost->file_name = $fileName;
         $processPost->save();
+        $insertId = $processPost->id;
 
         $chunks = array_chunk($data, 2000);
 

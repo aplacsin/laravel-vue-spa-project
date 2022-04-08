@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\DTO\CommentDTO;
@@ -15,7 +17,11 @@ class CommentService
     private PostService $postService;
     private VideoService $videoService;
 
-    public function __construct(CommentRepositoryInterface $commentRepository, PostService $postService, VideoService $videoService)
+    public function __construct(
+        CommentRepositoryInterface $commentRepository,
+        PostService                $postService,
+        VideoService               $videoService
+    )
     {
         $this->commentRepository = $commentRepository;
         $this->postService = $postService;

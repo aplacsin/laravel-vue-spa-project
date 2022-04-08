@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\API\Post;
 
 use App\Http\Controllers\Controller;
@@ -12,9 +14,9 @@ class PostExportController extends Controller
 {
     private PostExportService $postExportService;
 
-    public function __construct(PostExportService $exportCSVService)
+    public function __construct(PostExportService $postExportService)
     {
-        $this->postExportService = $exportCSVService;
+        $this->postExportService = $postExportService;
     }
 
     /**

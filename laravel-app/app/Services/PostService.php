@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\DTO\PostDTO;
@@ -17,7 +19,7 @@ class PostService
         $this->postRepository = $postRepository;
     }
 
-    public function create($item): void
+    public function create(object $item): void
     {
         $namespaces = $item->getNamespaces(true);
         $yandex = $item->children($namespaces['yandex']);

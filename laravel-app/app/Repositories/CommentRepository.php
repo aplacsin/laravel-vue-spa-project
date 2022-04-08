@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories;
 
 use App\Models\Comment;
 
 class CommentRepository implements CommentRepositoryInterface
 {
-    public function save($comment, $item)
+    public function save(Comment $comment, object $item)
     {
         return $item->comments()->save($comment);
     }
@@ -31,7 +33,7 @@ class CommentRepository implements CommentRepositoryInterface
             ->findOrFail($id);
     }
 
-    public function update($comment): bool
+    public function update(Comment $comment): bool
     {
         return $comment->save();
     }

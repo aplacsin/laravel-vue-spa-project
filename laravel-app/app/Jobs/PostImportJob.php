@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs;
 
 use App\Models\ProcessPost;
@@ -15,15 +17,15 @@ class PostImportJob implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $header;
-    public $data;
+    public array $header;
+    public array $data;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($data, $header)
+    public function __construct(array $data, array $header)
     {
         $this->data = $data;
         $this->header = $header;

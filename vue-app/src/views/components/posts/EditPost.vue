@@ -3,7 +3,7 @@
     <v-dialog
         :retain-focus="false"
         v-model="dialog"
-        max-width="700"
+        max-width="900"
     >
       <template v-slot:activator="{ on, attrs }">
         <button
@@ -28,11 +28,11 @@
                 required
             ></v-text-field>
           </v-col>
-          <editor
+          <tiptap-vuetify
               v-model="post.description"
-              api-key="k3hpsqyq7bdu9tzvo6bsl0c8zig9qhpzxwntl6lllolbl1is"
-              :init="options"
-          ></editor>
+              :extensions="extensions"
+              :toolbar-attributes="{ color: '' }"
+          />
         </div>
         <v-card-actions class="btn-wrapper">
           <v-spacer></v-spacer>
@@ -56,12 +56,32 @@
 
 <script>
 import PostService from "@/service/PostService";
-import Editor from "@tinymce/tinymce-vue";
+import {
+  TiptapVuetify,
+  Heading,
+  Bold,
+  Italic,
+  Strike,
+  Underline,
+  Code,
+  Paragraph,
+  BulletList,
+  OrderedList,
+  ListItem,
+  Link,
+  Blockquote,
+  HardBreak,
+  HorizontalRule,
+  History,
+  Image,
+  Table,
+  TableCell,
+  TableHeader,
+  TableRow
+} from 'tiptap-vuetify'
 
 export default {
-  components: {
-    editor: Editor,
-  },
+  components: { TiptapVuetify },
   props: {
     posts: [],
     getPost: {
@@ -76,17 +96,37 @@ export default {
   data() {
     return {
       dialog: false,
-      editor: false,
       post: [],
-      options: {
-        height: 500,
-        menubar: true,
-        plugins: 'autolink charmap code codesample directionality emoticons',
-        toolbar1: 'formatselect fontsizeselect | bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat',
-        content_css: [
-          '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+      extensions: [
+        History,
+        Table,
+        TableCell,
+        TableHeader,
+        TableRow,
+        Blockquote,
+        Link,
+        Underline,
+        Strike,
+        Italic,
+        ListItem,
+        BulletList,
+        OrderedList,
+        Image,
+        [
+          Heading,
+          {
+            options: {
+              levels: [1, 2, 3]
+            }
+          }
         ],
-      }
+        Bold,
+        Link,
+        Code,
+        HorizontalRule,
+        Paragraph,
+        HardBreak
+      ],
     }
   },
   methods: {
@@ -122,6 +162,7 @@ export default {
   text-decoration: none;
   color: inherit;
   font-size: 20px;
+  outline: none;
 }
 
 .wrapper-content {
