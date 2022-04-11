@@ -1,28 +1,65 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark elevation="0">
+    <v-app-bar app color="primary" dark elevation="0" class="wrapper-app">
       <v-app-bar-nav-icon @click.stop="sidebarMenu = !sidebarMenu"></v-app-bar-nav-icon>
       <v-spacer></v-spacer>
       <v-btn @click="toggleTheme" color="primary" class="mr-2">{{ buttonText }}</v-btn>
-      <v-menu offset-y>
+      <v-menu
+          bottom
+          min-width="200px"
+          rounded
+          offset-y>
         <template v-slot:activator="{ on, attrs }">
-          <v-icon v-bind="attrs" v-on="on">mdi-account</v-icon>
+          <v-btn
+              icon
+              x-large
+              v-on="on"
+          >
+            <v-avatar size="35">
+              <v-icon v-bind="attrs" v-on="on">mdi-account</v-icon>
+            </v-avatar>
+          </v-btn>
         </template>
-        <v-list>
-          <v-list-item link v-if="isLoggedIn">
-            <v-list-item-title>
-              <span tag="button" class="nav-toggle" @click.prevent="logout">
+        <v-card v-if="isLoggedIn">
+          <v-list-item-content class="justify-center" v-if="user">
+            <div class="mx-auto text-center">
+              <v-avatar color="blue">
+                <span class="white--text text-h5">A</span>
+              </v-avatar>
+              <h3>{{ user.name }}</h3>
+              <p class="text-caption mt-1">
+                {{ user.email }}
+              </p>
+              <v-divider class="my-3"></v-divider>
+              <v-btn
+                  depressed
+                  rounded
+                  text
+                  to="/profile"
+              >
+                My profile
+              </v-btn>
+              <v-divider class="my-3"></v-divider>
+              <v-btn
+                  depressed
+                  rounded
+                  text
+                  @click.prevent="logout"
+              >
                 Logout
-              </span></v-list-item-title>
-          </v-list-item>
-          <v-list-item link v-if="!isLoggedIn">
+              </v-btn>
+            </div>
+          </v-list-item-content>
+        </v-card>
+        <v-list v-if="!isLoggedIn">
+          <v-list-item link>
             <v-list-item-title>
               <router-link class="navbar-link" tag="button" to="/login">
                 Login
               </router-link>
             </v-list-item-title>
           </v-list-item>
-          <v-list-item link v-if="!isLoggedIn">
+          <v-list-item link>
             <v-list-item-title>
               <router-link class="navbar-link" tag="button" to="/register">
                 Register
@@ -47,7 +84,7 @@
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>
-              <h3 class="font-weight-thin nav-logo">Vuetify Admin</h3>
+              <h3 class="nav-logo">Admin Panel</h3>
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -86,12 +123,12 @@
         </v-row>
       </v-container>
     </v-main>
-    <div id="footer" class="footer"></div>
+    <footer id="footer" class="footer"></footer>
   </v-app>
 </template>
 
 <script>
-import User from "@/service/UserService";
+import User from '@/service/UserService';
 
 export default {
   data() {
@@ -101,29 +138,29 @@ export default {
       sidebarMenu: true,
       toggleMini: false,
       items: [{
-        title: "Home",
-        href: "/",
-        icon: "mdi-home-outline"
+        title: 'Home',
+        href: '/',
+        icon: 'mdi-home-outline'
       },
         {
-          title: "Dashboard",
-          href: "/dashboard",
-          icon: "mdi-shield-account"
+          title: 'Dashboard',
+          href: '/dashboard',
+          icon: 'mdi-shield-account'
         },
         {
-          title: "Posts",
-          href: "/posts",
-          icon: "mdi-note"
+          title: 'Posts',
+          href: '/posts',
+          icon: 'mdi-note'
         },
         {
-          title: "Videos",
-          href: "/videos",
-          icon: "mdi-video"
+          title: 'Videos',
+          href: '/videos',
+          icon: 'mdi-video'
         },
         {
-          title: "Settings",
-          href: "/settings",
-          icon: "mdi-settings"
+          title: 'Settings',
+          href: '/settings',
+          icon: 'mdi-settings'
         },
       ],
     };
@@ -138,34 +175,34 @@ export default {
       },
     },
     buttonText() {
-      return !this.$vuetify.theme.dark ? 'Go Dark' : 'Go Light';
+      return !this.$vuetify.theme.dark ? 'Dark' : 'Light';
     }
   },
   mounted() {
-    this.$root.$on("login", () => {
+    this.$root.$on('login', () => {
       this.isLoggedIn = true;
     });
-    this.isLoggedIn = !!localStorage.getItem("token");
-    this.user = JSON.parse(localStorage.getItem('userData'))
-    const theme = localStorage.getItem("dark");
+    this.isLoggedIn = !!localStorage.getItem('token');
+    this.user = JSON.parse(localStorage.getItem('userData'));
+    const theme = localStorage.getItem('dark');
     if (theme) {
-      this.$vuetify.theme.dark = theme === "true";
+      this.$vuetify.theme.dark = theme === 'true';
     }
   },
   methods: {
     logout() {
       User.logout().then(() => {
-        localStorage.removeItem("token");
+        localStorage.removeItem('token');
         localStorage.removeItem('userData');
         this.isLoggedIn = false;
         this.$router.push({
-          name: "Login"
+          name: 'Login'
         });
       });
     },
     toggleTheme() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
-      localStorage.setItem("dark", this.$vuetify.theme.dark.toString());
+      localStorage.setItem('dark', this.$vuetify.theme.dark.toString());
     }
   }
 };
@@ -184,6 +221,10 @@ export default {
 
 .nav-logo {
   font-size: 20px;
+}
+
+.wrapper-app {
+  height: 64px !important;
 }
 
 </style>

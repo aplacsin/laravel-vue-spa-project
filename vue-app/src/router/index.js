@@ -9,7 +9,8 @@ import ShowPost from '@/views/components/posts/ShowPost';
 import EditPost from '@/views/components/posts/EditPost';
 import ListVideos from '@/views/components/videos/ListVideos';
 import ShowVideo from '@/views/components/videos/ShowVideo';
-import Forbidden from '@/components/Forbidden';
+import Forbidden from '@/components/ui/errors/Forbidden';
+import Profile from '@/views/components/profile/Profile';
 
 Vue.use(VueRouter);
 
@@ -73,6 +74,12 @@ const routes = [
         component: Forbidden,
         meta: { authOnly: true }
     },
+    {
+        path: '/profile',
+        name: 'Profile',
+        component: Profile,
+        meta: { authOnly: true }
+    }
 ];
 
 const router = new VueRouter({

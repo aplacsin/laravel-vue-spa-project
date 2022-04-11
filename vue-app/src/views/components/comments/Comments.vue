@@ -5,6 +5,7 @@
     <template>
       <v-container fluid>
         <v-textarea
+            outlined
             clearable clear-icon="mdi-close-circle" label="Your comment"
             v-model="content"
             @blur="updateVal($event.target.value)"

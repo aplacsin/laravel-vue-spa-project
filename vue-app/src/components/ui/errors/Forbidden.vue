@@ -8,8 +8,8 @@
 </template>
 
 <style scoped lang="scss">
-@import "../assets/styles/fonts";
-@import "../assets/styles/colors";
+@import "../../../assets/styles/fonts";
+@import "../../../assets/styles/colors";
 
 html, body {
     width: 100%;

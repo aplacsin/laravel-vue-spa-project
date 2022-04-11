@@ -48,7 +48,7 @@
 <script>
 
 
-import Errors from "../../components/Errors";
+import Errors from "../../components/ui/errors/Errors";
 import AuthUserService from "../../service/UserService";
 import User from "@/service/UserService";
 

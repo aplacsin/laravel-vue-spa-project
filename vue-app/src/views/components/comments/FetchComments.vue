@@ -51,6 +51,7 @@
       <div v-show="isShow">
         <v-container fluid>
           <v-textarea
+              outlined
               clearable
               clear-icon="mdi-close-circle"
               label="Your comment"
@@ -81,7 +82,7 @@
 
 <script>
 import CommentService from "@/service/CommentService";
-import ConfirmDlg from "@/views/components/dialogs/ConfirmDlg";
+import ConfirmDlg from "@/components/ui/dialogs/ConfirmDlg";
 import EditComment from "@/views/components/comments/EditComment";
 import ReplyComments from "@/views/components/comments/ReplyComments";
 

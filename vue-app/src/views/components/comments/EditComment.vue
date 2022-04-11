@@ -18,6 +18,7 @@
         <div class="wrapper-content">
           <v-textarea
               v-model="comment.content"
+              outlined
               clearable
               clear-icon="mdi-close-circle"
           />

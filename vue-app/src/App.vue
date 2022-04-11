@@ -7,7 +7,7 @@
 
 <script>
 import Navigation from "@/components/Navigation.vue";
-import PageLoader from "@/components/PageLoader";
+import PageLoader from "@/components/ui/pageloader/Pageloader";
 
 export default {
   components: {

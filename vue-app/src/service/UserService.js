@@ -1,20 +1,24 @@
-import Api from "./Api";
+import Api from './Api';
 
 const AuthUserService = {
     register(form) {
-        return Api().post("/register", form);
+        return Api().post('/register', form);
     },
 
     login(form) {
-        return Api().post("/login", form);
+        return Api().post('/login', form);
     },
 
     logout() {
-        return Api().post("/logout");
+        return Api().post('/logout');
     },
 
     auth() {
-        return Api().get("/user");
+        return Api().get('/user');
+    },
+
+    profile() {
+        return Api.get('/profile');
     }
 };
 

@@ -3,10 +3,7 @@
 </template>
 
 <script>
-
-function HelloWorld() {
-
-}
+import HelloWorld from '@/components/HelloWorld'
 
 export default {
   name: 'Home',

@@ -25,6 +25,7 @@
                 v-model="post.title"
                 :counter="150"
                 label="Title"
+                outlined
                 required
             ></v-text-field>
           </v-col>
@@ -81,7 +82,9 @@ import {
 } from 'tiptap-vuetify'
 
 export default {
-  components: { TiptapVuetify },
+  components: {
+    TiptapVuetify
+  },
   props: {
     posts: [],
     getPost: {

@@ -204,9 +204,9 @@
 <script>
 import {debounce} from 'lodash';
 import PostService from '@/service/PostService';
-import ProgressBar from "@/components/ProgressBar";
+import ProgressBar from "@/components/ui/bars/ProgressBar";
 import ImportDialog from "@/views/components/posts/import/ImportDialog";
-import ConfirmDlg from "@/views/components/dialogs/ConfirmDlg";
+import ConfirmDlg from "@/components/ui/dialogs/ConfirmDlg";
 import EditPost from "@/views/components/posts/EditPost";
 
 export default {

@@ -43,7 +43,7 @@ class PostSyncService
 
     private function syncPost(object $post): void
     {
-        $modelPost = $this->postRepository->findByGuId($post->guid);
+        $modelPost = $this->postRepository->findByGuId((string)$post->guid);
 
         if ($modelPost == null) {
             $this->postService->create($post);

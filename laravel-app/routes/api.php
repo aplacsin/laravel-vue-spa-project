@@ -5,6 +5,7 @@ use App\Http\Controllers\API\Comment\CommentController;
 use App\Http\Controllers\API\Post\PostExportController;
 use App\Http\Controllers\API\Post\PostImportController;
 use App\Http\Controllers\API\Post\PostController;
+use App\Http\Controllers\API\Profile\UserProfileController;
 use App\Http\Controllers\API\Video\VideoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -54,4 +55,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('import/', [PostImportController::class, 'import'])->middleware('can:import posts');
     Route::get('process-status/{id}', [PostImportController::class, 'status'])->middleware('can:import posts');
     Route::post('completed/{status}', [PostImportController::class, 'completed'])->middleware('can:import posts');
+
+    /* Profile Page */
+    Route::get('profile/', [UserProfileController::class, 'index']);
 });
