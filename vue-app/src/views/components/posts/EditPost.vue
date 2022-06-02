@@ -89,12 +89,7 @@ export default {
     posts: [],
     getPost: {
       type: Function
-    },
-    readonly: {
-      type: Boolean,
-      required: false,
-      default: false
-    },
+    }
   },
   data() {
     return {
@@ -133,10 +128,8 @@ export default {
     }
   },
   methods: {
-    getEditPost(id) {
-      PostService.edit(id).then(response => {
-        this.post = response.data.data;
-      });
+    getEditPost(post) {
+      this.post = Object.assign({}, post);
     },
     updatePost(id) {
       const data = {

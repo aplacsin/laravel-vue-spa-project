@@ -15,8 +15,10 @@ class ProcessPostRepository implements ProcessPostRepositoryInterface
             ->first();
     }
 
-    public function save(ProcessPost $complete): bool
+    public function save(ProcessPost $complete): ProcessPost
     {
-        return $complete->save();
+        $complete->save();
+
+        return $complete;
     }
 }

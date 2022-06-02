@@ -138,7 +138,7 @@
         <thead slot="head">
         <tr>
           <th>
-            <v-checkbox v-model="selectAll"/>
+            <v-checkbox v-model="selectOnPage"/>
           </th>
           <th data-field="title" class="text-center col-9" @click.prevent="sortBy('title')">
             Title
@@ -172,7 +172,7 @@
               <v-icon color="orange" class="mdi mdi-eye"></v-icon>
             </router-link>
             <EditPost
-                :posts="post.id"
+                :posts="post"
                 :getPost="getPosts"
             />
             <button class="button-action flex-column post-action-delete-btn" @click="delPost(post.id)">
@@ -231,7 +231,7 @@ export default {
         field: null,
       },
       checked: [],
-      selectAll: false,
+      selectOnPage: false,
       importFile: null,
       progressBar: {
         progress: 0,
@@ -271,14 +271,14 @@ export default {
       this.pagination.current = 1;
       this.getPosts(this.endDate);
     }, 300),
-    selectAll: function (value) {
+    selectOnPage: function (value) {
       this.checked = [];
       if (value) {
         this.posts.data.forEach(post => {
           this.checked.push(post.id);
         });
       } else {
-        this.selectAll = false;
+        this.selectOnPage = false;
       }
     },
   },

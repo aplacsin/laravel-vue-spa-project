@@ -133,7 +133,7 @@ import User from '@/service/UserService';
 export default {
   data() {
     return {
-      user: null,
+      user: [],
       isLoggedIn: false,
       sidebarMenu: true,
       toggleMini: false,

@@ -17,7 +17,7 @@ class VideoService
         $this->videoRepository = $videoRepository;
     }
 
-    public function create(array $item): bool
+    public function create(array $item): void
     {
         $videoId = explode('/', $item['uri']);
 
@@ -25,7 +25,7 @@ class VideoService
         $video->title = $item['name'];
         $video->video_id = $videoId[2];
 
-        return $this->videoRepository->save($video);
+        $this->videoRepository->save($video);
     }
 
     public function getVideo(): LengthAwarePaginator

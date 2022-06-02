@@ -11,7 +11,6 @@ use App\Models\ProcessPost;
 use App\Repositories\PostRepositoryInterface;
 use App\Repositories\ProcessPostRepositoryInterface;
 use Illuminate\Support\Facades\Storage;
-use Throwable;
 
 class PostImportService
 {
@@ -27,9 +26,6 @@ class PostImportService
         $this->processPostRepository = $processPostRepository;
     }
 
-    /**
-     * @throws Throwable
-     */
     public function importFile(object $file): void
     {
         if (!$file) {
@@ -41,9 +37,6 @@ class PostImportService
         $this->parseFile($file);
     }
 
-    /**
-     * @throws Throwable
-     */
     public function parseFile(object $file): void
     {
         $header = [];
@@ -66,9 +59,6 @@ class PostImportService
         $this->chunkData($data, $header, $fileName);
     }
 
-    /**
-     * @throws Throwable
-     */
     public function chunkData(array $data, array $header, string $fileName): void
     {
         $totalPost = count($data);
@@ -95,14 +85,14 @@ class PostImportService
         }
     }
 
-    public function import(array $item): bool
+    public function import(array $item): void
     {
         $post = new Post();
         $post->title = $item['title'];
         $post->description = $item['description'];
         $post->guid = $item['guid'];
 
-        return $this->postRepository->save($post);
+        $this->postRepository->save($post);
     }
 
     public function status(int $id)
@@ -110,11 +100,11 @@ class PostImportService
         return $this->processPostRepository->findById($id);
     }
 
-    public function complete(bool $status): bool
+    public function complete(bool $status): void
     {
         $complete = $this->processPostRepository->findById(1);
         $complete->processed = $status;
 
-        return $this->processPostRepository->save($complete);
+        $this->processPostRepository->save($complete);
     }
 }

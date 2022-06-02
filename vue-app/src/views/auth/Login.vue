@@ -75,6 +75,9 @@ export default {
             User.auth().then(response => {
               const user = response.data
               localStorage.setItem('userData', JSON.stringify(user));
+
+              this.message = 'Successful authorization!';
+              this.$toast.success(this.message);
             });
             this.$router.push({
               name: "Dashboard"

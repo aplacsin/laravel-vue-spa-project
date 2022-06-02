@@ -3,12 +3,12 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 import vuetify from './plugins/vuetify';
-import '@/assets/styles/main.scss';
-import {BootstrapVue, IconsPlugin} from 'bootstrap-vue';
-import 'bootstrap-vue/dist/bootstrap-vue.css';
 import Toast from "vue-toastification";
+import {BootstrapVue, IconsPlugin} from 'bootstrap-vue';
+import '@/assets/styles/main.scss';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
 import "vue-toastification/dist/index.css";
-import './plugins/tiptap-vuetify'
+import './plugins/tiptap-vuetify';
 
 Vue.use(Toast, {
     transition: "Vue-Toastification__bounce",

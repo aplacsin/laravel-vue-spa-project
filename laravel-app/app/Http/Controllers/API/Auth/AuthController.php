@@ -35,16 +35,17 @@ class AuthController
         return response()->json(['token' => $token]);
     }
 
-    public function register(RegisterUserRequest $request)
+    public function register(RegisterUserRequest $request): void
     {
-        User::query()->create([
+        $user = User::query()->create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
+        $user->assignRole('subscriber');
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request): void
     {
         $request->user()->tokens()->delete();
     }

@@ -33,8 +33,10 @@ class CommentRepository implements CommentRepositoryInterface
             ->findOrFail($id);
     }
 
-    public function update(Comment $comment): bool
+    public function update(Comment $comment): Comment
     {
-        return $comment->save();
+        $comment->save();
+
+        return $comment;
     }
 }

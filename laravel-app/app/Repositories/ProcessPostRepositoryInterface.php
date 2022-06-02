@@ -10,5 +10,5 @@ interface ProcessPostRepositoryInterface
 {
     public function findById(int $id);
 
-    public function save(ProcessPost $complete): bool;
+    public function save(ProcessPost $complete): ProcessPost;
 }

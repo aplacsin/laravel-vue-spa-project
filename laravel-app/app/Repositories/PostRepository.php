@@ -8,14 +8,17 @@ use App\Filters\PostFilter;
 use App\Models\Post;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class PostRepository implements PostRepositoryInterface
 {
     const PER_PAGE = 15;
 
-    public function save(Post $post): bool
+    public function save(Post $post): Post
     {
-        return $post->save();
+        $post->save();
+
+        return $post;
     }
 
     public function list(PostFilter $filter): LengthAwarePaginator
@@ -55,5 +58,34 @@ class PostRepository implements PostRepositoryInterface
         Post::query()
             ->findOrFail($id)
             ->delete();
+    }
+
+    public function rawListByKeyId(array $id)
+    {
+        return Post::query()
+            ->whereKey($id)
+            ->get();
+    }
+
+    public function listPosts(?int $offset, ?int $limit, ?array $ids): array
+    {
+        $query = DB::table('posts');
+        $this->buildCollection($query);
+
+        if ($ids) {
+            $query->whereIn('posts.id', $ids);
+        }
+
+        return $query
+            ->limit($limit)
+            ->offset($offset)
+            ->orderBy('id')
+            ->get()
+            ->toArray();
+    }
+
+    private function buildCollection($builder)
+    {
+        $builder->select('posts.id as id', 'posts.guid as guid', 'posts.title as title', 'posts.description as description');
     }
 }

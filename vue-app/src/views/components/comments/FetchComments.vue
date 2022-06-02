@@ -31,7 +31,7 @@
             </div>
             <div v-if="user.id === comment.user_id">
               <EditComment
-                  :comments="comment.id"
+                  :comments="comment"
                   :getComment="getComment"
               />
             </div>

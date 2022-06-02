@@ -33,7 +33,7 @@
           </v-btn>
           <v-btn
               text
-              @click="editComment(comments)"
+              @click="editComment(comments.id)"
               @click.stop="dialog = false"
           >Save
           </v-btn>
@@ -60,10 +60,8 @@ export default {
     }
   },
   methods: {
-    getEditComment(id) {
-      CommentService.edit(id).then(response => {
-        this.comment = response.data.data;
-      });
+    getEditComment(comment) {
+      this.comment = Object.assign({}, comment);
     },
     editComment(id) {
       const data = {

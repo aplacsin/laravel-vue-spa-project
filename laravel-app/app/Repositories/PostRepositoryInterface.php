@@ -10,7 +10,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface PostRepositoryInterface
 {
-    public function save(Post $post): bool;
+    public function save(Post $post): Post;
 
     public function list(PostFilter $filter): LengthAwarePaginator;
 
@@ -19,4 +19,8 @@ interface PostRepositoryInterface
     public function findById(int $id);
 
     public function removeById(int $id): void;
+
+    public function rawListByKeyId(array $id);
+
+    public function listPosts(?int $offset, ?int $limit, ?array $ids): array;
 }

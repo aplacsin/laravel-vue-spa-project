@@ -91,6 +91,8 @@ export default {
             this.$router.push({
               name: "Login"
             });
+            this.message = 'Successful registration!';
+            this.$toast.success(this.message);
           })
           .catch(error => {
             if (error.response.status === 422) {

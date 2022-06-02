@@ -9,11 +9,11 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface VideoRepositoryInterface
 {
-    public function save(Video $video): bool;
+    public function save(Video $video): Video;
 
     public function list(): LengthAwarePaginator;
 
-    public function findByVideoId(int $id);
+    public function findByVideoId(int $videoId);
 
     public function findById(int $id);
 

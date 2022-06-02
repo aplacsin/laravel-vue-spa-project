@@ -11,9 +11,11 @@ class VideoRepository implements VideoRepositoryInterface
 {
     const PER_PAGE = 10;
 
-    public function save(Video $video): bool
+    public function save(Video $video): Video
     {
-        return $video->save();
+        $video->save();
+
+        return $video;
     }
 
     public function list(): LengthAwarePaginator
@@ -22,10 +24,10 @@ class VideoRepository implements VideoRepositoryInterface
             ->paginate(self::PER_PAGE);
     }
 
-    public function findByVideoId(int $id)
+    public function findByVideoId(int $videoId)
     {
         return Video::query()
-            ->where('video_id', $id)
+            ->where('video_id', $videoId)
             ->first();
     }
 

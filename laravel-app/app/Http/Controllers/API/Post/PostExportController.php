@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Services\Exports\PostExportService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Throwable;
 
 class PostExportController extends Controller
 {
@@ -19,11 +18,8 @@ class PostExportController extends Controller
         $this->postExportService = $postExportService;
     }
 
-    /**
-     * @throws Throwable
-     */
     public function postExport(Request $request): StreamedResponse
     {
-        return $this->postExportService->query($request);
+        return $this->postExportService->export($request->input('id'));
     }
 }

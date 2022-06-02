@@ -4,62 +4,78 @@ declare(strict_types=1);
 
 namespace App\Services\Exports;
 
-use App\Jobs\PostExportJob;
-use App\Models\Post;
-use Illuminate\Http\Request;
+use App\Enums\DiskType;
+use App\Repositories\PostRepository;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Throwable;
 
 class PostExportService
 {
-    /**
-     * @throws Throwable
-     */
-    public function query(Request $request): StreamedResponse
-    {
-        $postsArray = explode(',', $request->input('id'));
-        $posts = Post::query()->whereKey($postsArray)->get();
+    const LIMIT = 1000;
+    const FILE_NAME = 'export.csv';
 
-        return $this->map($posts);
+    private PostRepository $postRepository;
+
+    public function __construct(PostRepository $postRepository)
+    {
+        $this->postRepository = $postRepository;
     }
 
-    /**
-     * @throws Throwable
-     */
-    public function map(object $posts): StreamedResponse
+    public function export(?string $id): StreamedResponse
     {
-        $header = array('guid', 'title', 'description');
+        $offset = 0;
+        $limit = self::LIMIT;
+        $ids = null;
 
-        $callback = function () use ($posts, $header) {
-            $file = fopen('php://output', 'w');
-            fputcsv($file, $header);
+        Storage::disk(DiskType::public()->value)->put(self::FILE_NAME, '');
+        $file = Storage::disk(DiskType::public()->value)->path(self::FILE_NAME);
 
-            foreach ($posts as $post) {
-                $row['guid'] = $post->guid;
-                $row['title'] = $post->title;
-                $row['description'] = $post->description;
+        $handle = fopen($file, 'w');
+        fputcsv($handle, $this->headerList());
 
-                fputcsv($file, array($row['guid'], $row['title'], $row['description']));
+        if ($id) {
+            $ids = explode(',', $id);
+        }
+
+        while (true) {
+            $posts = $this->postRepository->listPosts($offset, $limit, $ids);
+
+            if (count($posts) === 0) {
+                fclose($handle);
+                break;
             }
 
-            /*PostExportJob::dispatch($posts, $file);*/
+            foreach ($posts as $post) {
+                $fields = $this->map(json_decode(json_encode($post), true));
+                fputcsv($handle, $fields);
+            }
 
-            fclose($file);
-        };
+            $offset += $limit;
+        }
 
-        return $this->export($callback);
+        return $this->download();
     }
 
-    public function export($callback): StreamedResponse
+    public function headerList(): array
     {
-        $headers = array(
-            "Content-type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=export.csv",
-            "Pragma" => "no-cache",
-            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
-            "Expires" => "0"
-        );
+        return [
+            'guid' => 'GUID',
+            'title' => 'TITLE',
+            'description' => 'DESCRIPTION'
+        ];
+    }
 
-        return response()->stream($callback, 200, $headers);
+    public function map(array $post): array
+    {
+        return [
+            'guid' => $post['guid'],
+            'title' => $post['title'],
+            'description' => $post['description']
+        ];
+    }
+
+    public function download(): StreamedResponse
+    {
+        return Storage::disk(DiskType::public()->value)->download(self::FILE_NAME);
     }
 }

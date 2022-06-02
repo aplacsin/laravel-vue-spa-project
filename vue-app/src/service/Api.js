@@ -32,6 +32,7 @@ BaseApi.interceptors.response.use(null, error => {
     router.push(path).then(() => {
         // Do something after login is successful.
     });
+
     return Promise.reject(error);
 });
 

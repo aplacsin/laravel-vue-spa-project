@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ImportFileRequest;
 use App\Http\Resources\Post\PostProcessResource;
 use App\Services\Imports\PostImportService;
-use Throwable;
 
 class PostImportController extends Controller
 {
@@ -19,9 +18,6 @@ class PostImportController extends Controller
         $this->postImportService = $postImportService;
     }
 
-    /**
-     * @throws Throwable
-     */
     public function import(ImportFileRequest $request)
     {
         $this->postImportService->importFile($request->file('importFile'));
