@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
-use App\Models\ProcessPost;
+use App\Repositories\ProcessPostRepositoryInterface;
 use App\Services\Imports\PostImportService;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
@@ -19,16 +19,18 @@ class PostImportJob implements ShouldQueue
 
     public array $header;
     public array $data;
+    public int $id;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(array $data, array $header)
+    public function __construct(array $data, array $header, int $id)
     {
         $this->data = $data;
         $this->header = $header;
+        $this->id = $id;
     }
 
     /**
@@ -36,13 +38,16 @@ class PostImportJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle(PostImportService $postImportService)
+    public function handle(
+        PostImportService              $postImportService,
+        ProcessPostRepositoryInterface $processPostRepository
+    )
     {
-        $processPost = new ProcessPost();
+        $processPost = $processPostRepository->findById($this->id);
 
         foreach ($this->data as $post) {
-            /*$processPost->current = count($post);
-            $processPost->save();*/
+            $processPost->current = count($this->data);
+            $processPost->save();
 
             $postData = array_combine($this->header, $post);
             $postImportService->syncPost($postData);

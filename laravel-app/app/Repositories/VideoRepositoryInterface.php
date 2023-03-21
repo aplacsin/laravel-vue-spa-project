@@ -18,4 +18,8 @@ interface VideoRepositoryInterface
     public function findById(int $id);
 
     public function removeById(int $id): void;
+
+    public function totalVideo();
+
+    public function weekVideo();
 }

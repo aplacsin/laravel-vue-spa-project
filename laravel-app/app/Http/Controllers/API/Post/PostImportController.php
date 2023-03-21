@@ -18,9 +18,12 @@ class PostImportController extends Controller
         $this->postImportService = $postImportService;
     }
 
-    public function import(ImportFileRequest $request)
+    public function import(ImportFileRequest $request): int
     {
-        $this->postImportService->importFile($request->file('importFile'));
+        $id = $this->postImportService->processPost();
+        $this->postImportService->importFile($request->file('importFile'), $id->id);
+
+        return $id->id;
     }
 
     public function status(int $id): PostProcessResource
@@ -30,8 +33,8 @@ class PostImportController extends Controller
         return new PostProcessResource($status);
     }
 
-    public function completed(bool $status)
+    public function completed(int $id): void
     {
-        $this->postImportService->complete($status);
+        $this->postImportService->complete($id);
     }
 }

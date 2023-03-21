@@ -133,7 +133,10 @@
         </v-row>
       </v-container>
     </div>
-    <v-simple-table>
+    <v-skeleton-loader v-if="firstLoad" :loading="loading" type="table"></v-skeleton-loader>
+    <v-simple-table
+        v-show="!firstLoad"
+        :loading="loading">
       <template v-slot:default>
         <thead slot="head">
         <tr>
@@ -243,6 +246,8 @@ export default {
         current: JSON.parse(this.$route.query.page || '1'),
         total: 0,
       },
+      loading: true,
+      firstLoad: true,
     }
   },
   created() {
@@ -306,12 +311,19 @@ export default {
         this.pagination.current = response.data.meta.current_page;
         this.pagination.total = response.data.meta.last_page;
         this.$router.push(params);
+        this.loading = true;
       }).catch(error => {
         if (error.response.status === 422) {
           this.errors = error.response.data.errors;
           this.$toast.error(this.errors);
         }
       });
+
+      setTimeout(() => {
+        if (this.firstLoad)
+          this.firstLoad = false;
+        this.loading = false;
+      }, 500);
     },
     getExport() {
       let checkedPost = this.checked;
@@ -342,6 +354,7 @@ export default {
 
       PostService.import(formData).then(response => {
         if (response.status === 200) {
+          localStorage.setItem('processId', response.request.response)
           this.processBar();
         }
       }).catch(error => {
@@ -355,11 +368,14 @@ export default {
       return this.checked.includes(post_id);
     },
     processBar() {
-      PostService.status(1).then(response => {
+      const id = localStorage.getItem('processId');
+      PostService.status(id).then(response => {
         if (response.data.data.processed) {
           this.progressBar.current = this.progressBar.total;
           this.progressBar.progress = 100;
           this.progressBar.visible = false;
+          localStorage.removeItem('processId')
+          this.$toast.success('Import Success!');
           return;
         }
 
@@ -369,7 +385,7 @@ export default {
         this.progressBar.progress = Math.ceil(this.progressBar.current / this.progressBar.total * 100);
 
         if (this.progressBar.total === this.progressBar.current) {
-          PostService.complete(true);
+          PostService.complete(id);
         }
 
         this.processBar();

@@ -23,4 +23,8 @@ interface PostRepositoryInterface
     public function rawListByKeyId(array $id);
 
     public function listPosts(?int $offset, ?int $limit, ?array $ids): array;
+
+    public function totalPost();
+
+    public function weekPost();
 }

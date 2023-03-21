@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\Auth\AuthController;
 use App\Http\Controllers\API\Comment\CommentController;
+use App\Http\Controllers\API\Dashboard\DashboardController;
 use App\Http\Controllers\API\Post\PostExportController;
 use App\Http\Controllers\API\Post\PostImportController;
 use App\Http\Controllers\API\Post\PostController;
@@ -58,4 +59,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     /* Profile Page */
     Route::get('profile/', [UserProfileController::class, 'index']);
+
+    Route::get('stat/', [DashboardController::class, 'index']);
 });

@@ -59,9 +59,9 @@ class PostExportService
     public function headerList(): array
     {
         return [
-            'guid' => 'GUID',
-            'title' => 'TITLE',
-            'description' => 'DESCRIPTION'
+            'guid' => 'guid',
+            'title' => 'title',
+            'description' => 'description'
         ];
     }
 

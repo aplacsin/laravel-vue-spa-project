@@ -145,7 +145,7 @@ export default {
         {
           title: 'Dashboard',
           href: '/dashboard',
-          icon: 'mdi-shield-account'
+          icon: 'mdi-view-dashboard'
         },
         {
           title: 'Posts',
@@ -160,7 +160,7 @@ export default {
         {
           title: 'Settings',
           href: '/settings',
-          icon: 'mdi-settings'
+          icon: 'mdi-set-right'
         },
       ],
     };

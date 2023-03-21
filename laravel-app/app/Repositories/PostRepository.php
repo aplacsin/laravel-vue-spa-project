@@ -6,6 +6,7 @@ namespace App\Repositories;
 
 use App\Filters\PostFilter;
 use App\Models\Post;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -87,5 +88,22 @@ class PostRepository implements PostRepositoryInterface
     private function buildCollection($builder)
     {
         $builder->select('posts.id as id', 'posts.guid as guid', 'posts.title as title', 'posts.description as description');
+    }
+
+    public function totalPost()
+    {
+        return DB::table('posts')
+            ->select(DB::raw('COUNT(*) as totalPost'))
+            ->first();
+    }
+
+    public function weekPost()
+    {
+        $data = Carbon::today()->subDays(7);
+
+        return DB::table('posts')
+            ->select(DB::raw('COUNT(*) as weekPost'))
+            ->where('created_at', '>=', $data)
+            ->first();
     }
 }

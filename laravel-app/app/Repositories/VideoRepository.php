@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use App\Models\Video;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class VideoRepository implements VideoRepositoryInterface
 {
@@ -45,5 +47,22 @@ class VideoRepository implements VideoRepositoryInterface
         Video::query()
             ->findOrFail($id)
             ->delete();
+    }
+
+    public function totalVideo()
+    {
+        return DB::table('videos')
+            ->select(DB::raw('COUNT(*) as totalVideo'))
+            ->first();
+    }
+
+    public function weekVideo()
+    {
+        $data = Carbon::today()->subDays(7);
+
+        return DB::table('videos')
+            ->select(DB::raw('COUNT(*) as weekVideo'))
+            ->where('created_at', '>=', $data)
+            ->first();
     }
 }
